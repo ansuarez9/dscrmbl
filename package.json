@@ -1,6 +1,6 @@
 {
-  "name": "dscrmbl",
-  "version": "1.0.0",
+  "name": "DSCRMBL",
+  "version": "2.0.0",
   "description": "Word game where letters flash once in a non-sequential order and the player has to guess what the word is",
   "scripts": {
     "build:js": "gulp bundleJs",
