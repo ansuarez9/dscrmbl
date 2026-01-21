@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSCRMBL</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="./styles/styles.css">
+</head>
+
+<body>
+    <!-- Scanline overlay -->
+    <div class="scanlines"></div>
+
+    <!-- Ambient glow -->
+    <div class="ambient-glow"></div>
+
+    <div class="game-container">
+        <!-- Header -->
+        <header class="game-header">
+            <div class="logo-container">
+                <h1 class="logo" data-text="DSCRMBL">DSCRMBL</h1>
+                <span class="version-tag">v2.0</span>
+            </div>
+            <div class="header-actions">
+                <button id="dark-mode-toggle" class="icon-btn" title="Toggle Theme" aria-label="Toggle Theme">
+                    <span class="icon-glow"></span>
+                    <span class="icon-text">🌙</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Instructions trigger -->
+        <div class="instructions-bar">
+            <button id="instructions" class="instructions-link">
+                <span class="bracket">[</span>
+                <span class="link-text">HOW TO PLAY</span>
+                <span class="bracket">]</span>
+            </button>
+            <p class="tagline">A new challenge every day. Compete with friends!</p>
+        </div>
+
+        <!-- Settings Panel -->
+        <div class="settings-panel">
+            <div class="setting-item">
+                <span class="setting-label">TIMER MODE</span>
+                <label class="cyber-toggle">
+                    <input type="checkbox" id="timer-mode-toggle">
+                    <span class="toggle-track">
+                        <span class="toggle-thumb"></span>
+                    </span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-grid action-grid--daily">
+            <button type="button" id="start-game" class="cyber-btn cyber-btn--primary">
+                <span class="btn-glitch" data-text="PLAY TODAY'S CHALLENGE">PLAY TODAY'S CHALLENGE</span>
+                <span class="btn-tag" id="daily-number">#000</span>
+            </button>
+            <button type="button" id="repeat" class="cyber-btn cyber-btn--secondary" disabled>
+                <span class="btn-glitch" data-text="REPLAY">REPLAY</span>
+                <span class="btn-tag">2x</span>
+            </button>
+        </div>
+
+        <!-- Already Played Message -->
+        <div id="already-played" class="already-played display-none">
+            <div class="already-played-content">
+                <span class="already-played-icon">✓</span>
+                <p>You've completed today's challenge!</p>
+                <p class="already-played-score">Your score: <strong id="today-score">0</strong></p>
+                <p class="already-played-timer">Next challenge in: <strong id="countdown-timer">--:--:--</strong></p>
+            </div>
+        </div>
+
+        <!-- Game Status -->
+        <div class="status-bar">
+            <div id="timer-display" class="status-item status-item--timer display-none">
+                <span class="status-icon">⏱</span>
+                <span class="status-value">30s</span>
+            </div>
+            <div id="streak-display" class="status-item status-item--streak display-none">
+                <span class="status-icon">🔥</span>
+                <span class="status-value">0</span>
+            </div>
+        </div>
+
+        <!-- Attempts Display -->
+        <div class="attempts-display">
+            <div id="attempt-container-1" class="attempt-orb">
+                <div class="orb-inner">
+                    <span class="attempt">?</span>
+                    <span id="result-1" class="result"></span>
+                </div>
+                <div class="orb-ring"></div>
+            </div>
+            <div id="attempt-container-2" class="attempt-orb">
+                <div class="orb-inner">
+                    <span class="attempt">?</span>
+                    <span id="result-2" class="result"></span>
+                </div>
+                <div class="orb-ring"></div>
+            </div>
+            <div id="attempt-container-3" class="attempt-orb">
+                <div class="orb-inner">
+                    <span class="attempt">?</span>
+                    <span id="result-3" class="result"></span>
+                </div>
+                <div class="orb-ring"></div>
+            </div>
+        </div>
+
+        <!-- Main Game Display -->
+        <div class="game-display">
+            <div class="display-screen">
+                <div class="screen-border"></div>
+                <div id="typewritter-output" class="word-output"></div>
+                <div id="letter-count" class="letter-hint"></div>
+            </div>
+        </div>
+
+        <!-- Input Area -->
+        <div class="input-zone">
+            <div class="input-wrapper">
+                <span class="input-prefix">&gt;</span>
+                <input
+                    class="cyber-input"
+                    id="user-input"
+                    type="text"
+                    placeholder="ENTER GUESS..."
+                    autocomplete="off"
+                    spellcheck="false"
+                >
+                <button type="button" id="submit-action" class="submit-btn" disabled>
+                    <span class="submit-text">SUBMIT</span>
+                    <span class="submit-arrow">→</span>
+                </button>
+            </div>
+            <p class="error-message">
+                Press <strong id="button-text"></strong> or enter a guess!
+            </p>
+        </div>
+
+        <!-- Word Progress -->
+        <div class="progress-track">
+            <div class="track-label">WORD PROGRESS</div>
+            <div class="word-slots">
+                <div class="word-slot">
+                    <span class="slot-number">01</span>
+                    <span class="word">Word</span>
+                </div>
+                <div class="word-slot">
+                    <span class="slot-number">02</span>
+                    <span class="word">Word</span>
+                </div>
+                <div class="word-slot">
+                    <span class="slot-number">03</span>
+                    <span class="word">Word</span>
+                </div>
+                <div class="word-slot">
+                    <span class="slot-number">04</span>
+                    <span class="word">Word</span>
+                </div>
+                <div class="word-slot">
+                    <span class="slot-number">05</span>
+                    <span class="word">Word</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- How To Play Modal -->
+    <div id="instruction-modal" class="modal-overlay display-none">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2 class="modal-title">// HOW TO PLAY</h2>
+                <div class="modal-decoration"></div>
+            </div>
+
+            <div class="modal-content">
+                <section class="instruction-section">
+                    <h3>OBJECTIVE</h3>
+                    <p>Guess each word in the series in 3 tries or less. Each series contains 5 random words with progressive difficulty.</p>
+                </section>
+
+                <section class="instruction-section">
+                    <h3>AFTER A FAILED GUESS</h3>
+                    <ul>
+                        <li>The orb flips showing <span class="text-danger">RED</span></li>
+                        <li>Word replays automatically after 1.5s</li>
+                        <li>One replay per unsuccessful guess</li>
+                        <li>After 3rd failed try, word reveals</li>
+                    </ul>
+                </section>
+
+                <section class="instruction-section">
+                    <h3>AFTER A CORRECT GUESS</h3>
+                    <ul>
+                        <li>The orb flips showing <span class="text-success">GREEN</span></li>
+                        <li>Word automatically reveals</li>
+                        <li>Progress indicator updates</li>
+                    </ul>
+                </section>
+
+                <section class="instruction-section">
+                    <h3>SCORING</h3>
+                    <div class="score-formula">
+                        <code>SCORE = LETTERS × REMAINING_TRIES</code>
+                    </div>
+                    <ul>
+                        <li><strong>Replay penalty:</strong> -3 first use, -5 second use</li>
+                        <li><strong>Timer bonus:</strong> +3 if solved under 10s</li>
+                        <li><strong>Streak bonus:</strong> streak × 2 for consecutive first-tries</li>
+                    </ul>
+                </section>
+
+                <section class="instruction-section">
+                    <h3>FEATURES</h3>
+                    <ul class="feature-list">
+                        <li><span class="feature-tag">TIMER</span> 30 seconds per word</li>
+                        <li><span class="feature-tag">DAILY</span> Same words for everyone</li>
+                        <li><span class="feature-tag">STREAK</span> Bonus for consecutive wins</li>
+                    </ul>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <!-- Final Score Modal -->
+    <div id="final-score-modal" class="modal-overlay display-none">
+        <div class="modal-container modal-container--score">
+            <div class="score-display">
+                <div class="score-label" id="modal-title">FINAL SCORE</div>
+                <div class="score-value" id="score">0</div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-label">GAMES</span>
+                    <span class="stat-value" id="gamesPlayed">0</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">HIGH</span>
+                    <span class="stat-value" id="highScore">0</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">AVG</span>
+                    <span class="stat-value" id="averageScore">0</span>
+                </div>
+            </div>
+
+            <div class="percentile-section">
+                <span class="percentile-label">HISTORICAL RANKING</span>
+                <div class="percentile-bar">
+                    <span id="percentage-fill" class="percentile-fill"></span>
+                    <span id="marker" class="percentile-marker"></span>
+                    <span id="marker-text" class="percentile-text"></span>
+                </div>
+            </div>
+
+            <button type="button" id="share-btn" class="cyber-btn cyber-btn--share">
+                <span class="btn-glitch" data-text="SHARE RESULTS">SHARE RESULTS</span>
+                <span class="btn-tag">📋</span>
+            </button>
+        </div>
+    </div>
+
+    <script src="./js/app.js"></script>
+</body>
+
+</html>
