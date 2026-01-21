@@ -6,25 +6,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DSCRMBL</title>
 
-    <!-- <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css"> -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous"> -->
     <link rel="stylesheet" href="./styles/styles.css">
 </head>
 
 <body>
     <div class="container mt-3">
-        <h1 class="title">DSCRMBL</h1>
+        <!-- Header with title and controls -->
+        <div class="header-controls">
+            <h1 class="title">DSCRMBL</h1>
+            <button id="dark-mode-toggle" class="icon-btn" title="Toggle Dark Mode">🌙</button>
+        </div>
+
         <section class="description mb-4 w-75">
             <span id="instructions">How To Play</span>
             <p>Press <strong>Start DSCRMBLNG!</strong> to play. Can you guess the word in three tries or less?</p>
         </section>
-        <!-- add ability to select different categories: names, places, hobbies, colors, anything goes (wildcard) -->
-        <!-- add different difficulty levels -->
+
+        <!-- Settings toggles -->
+        <div class="settings-row">
+            <div class="toggle-setting">
+                <span class="toggle-label">Timer Mode</span>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="timer-mode-toggle">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Action buttons -->
         <div class="action-buttons">
             <button type="button" id="start-game" class="btn btn-success">Start DSCRMBLNG!</button>
+            <button type="button" id="daily-challenge" class="btn btn-warning">Daily Challenge</button>
             <button type="button" id="repeat" class="btn btn-secondary" disabled>Replay</button>
         </div>
+
+        <!-- Timer and streak display -->
+        <div id="timer-display" class="display-none"></div>
+        <div id="streak-display" class="display-none"></div>
+
         <h3 class="attempts mb-4 mt-4">
             <span id="attempt-container-1" class="attempt-container">
                 <span class="attempt">?</span>
@@ -39,14 +61,18 @@
                 <span id="result-3" class="result"></span>
             </span>
         </h3>
+
         <div class="input-container">
             <input class="form-control w-50" id="user-input" type="text" placeholder="Guess the word...">
             <button type="button" id="submit-action" class="btn btn-primary" disabled>Guess</button>
         </div>
+
         <div class="output-container text-align-center mt-4">
             <h1 id="typewritter-output"></h1>
+            <div id="letter-count"></div>
             <h5 class="error-message">Press <strong id="button-text"></strong> or enter a guess!</h5>
         </div>
+
         <div class="plays">
             <span class="word">Word</span>
             <span class="word">Word</span>
@@ -60,9 +86,6 @@
     <div id="instruction-modal" style="height: fit-content" class="modal-container display-none">
         <div class="modal-wrapper">
             <section class="instruction-section">
-                <!-- <span id="close-modal" class="close-modal">
-                    <i class="fa-solid fa-xmark"></i>
-                </span> -->
                 <h4><strong>How To Play</strong></h4>
                 <h6>Guess each word in the series in 3 tries or less. Each series contains a set of 5 random words.</h6>
 
@@ -85,6 +108,7 @@
                     <li>The word indicator at the bottom turns <span class="green-text">green</span> and displays the
                         aggregate score for each word solved.</li>
                 </ul>
+
                 <p class="mb-0">Scoring System:</p>
                 <ul>
                     <li>The length of the word is multiplied by the remaining guesses plus 1.</li>
@@ -107,26 +131,25 @@
                         </div>
                     </li>
                 </ul>
+
+                <p class="mb-0">New Features:</p>
+                <ul>
+                    <li><strong>Replay:</strong> Replay the letter animation (max 2 times, -3 then -5 points)</li>
+                    <li><strong>Skip:</strong> Skip a word (0 points)</li>
+                    <li><strong>Timer Mode:</strong> 30 seconds per word, +3 bonus for solving in under 10 seconds</li>
+                    <li><strong>Streak Bonus:</strong> Consecutive first-try guesses earn bonus points (streak * 2)</li>
+                    <li><strong>Daily Challenge:</strong> Same words for everyone each day</li>
+                    <li><strong>Progressive Difficulty:</strong> Words get longer as you progress</li>
+                </ul>
             </section>
 
             <hr>
             <section class="instruction-section">
-                <h6><strong>Coming Soon</strong></h6>
+                <h6><strong>Settings</strong></h6>
                 <ul class="coming-soon-ul">
-                    <li>
-                        <em>Difficulty Levels</em>:
-                        <ul>
-                            <li>Easy - 4 characters or less</li>
-                            <li>Moderate - 6 characters or less</li>
-                            <li>Hard - 8 characters or less</li>
-                            <li>Expert - 10 characters or less</li>
-                        </ul>
-                    </li>
-                    <li>Create Your Own Word List.
-                        <ul>
-                            <li>Mainly so this game can be played in other languages.</li>
-                        </ul>
-                    </li>
+                    <li><strong>Timer Mode:</strong> Race against the clock</li>
+                    <li><strong>Dark Mode:</strong> Toggle in the header</li>
+                    <li><strong>Sound:</strong> Toggle sound effects in the header</li>
                 </ul>
             </section>
         </div>
@@ -136,7 +159,7 @@
     <div id="final-score-modal" class="modal-container display-none">
         <div class="modal-wrapper final-score-wrapper">
             <section class="final-score">
-                <h1>Score: <span id="score"></span></h1>
+                <h1><span id="modal-title">Score:</span> <span id="score"></span></h1>
                 <div>
                     <ul>
                         <li><strong>Games Played</strong>
@@ -157,6 +180,9 @@
                         <span id="marker" class="percentage-marker"></span>
                         <span id="marker-text" class="marker-text"></span>
                     </div>
+                </div>
+                <div class="share-container">
+                    <button type="button" id="share-btn" class="btn btn-primary">Share Results</button>
                 </div>
             </section>
         </div>
