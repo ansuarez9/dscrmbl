@@ -20,9 +20,9 @@ const originalWords = [...words];
 
 let playableList = [];
 let chosenWord = '';
-let attempts;
-let wordCount;
-let previousScore;
+let attempts = 1;
+let wordCount = 0;
+let previousScore = 0;
 
 // New game state variables
 let replayCount = 0;
@@ -36,7 +36,7 @@ let isDailyChallenge = false;
 let wordResults = []; // Track results for share feature
 
 // Preferences
-let darkMode = localStorage.getItem('darkMode') === 'true';
+let lightMode = localStorage.getItem('lightMode') === 'true';
 let soundMuted = localStorage.getItem('soundMuted') === 'true';
 
 // Audio context for sound effects
@@ -44,7 +44,6 @@ let audioContext = null;
 
 const submitBtn = document.getElementById('submit-action');
 const startBtn = document.getElementById('start-game');
-const dailyBtn = document.getElementById('daily-challenge');
 const outputContainer = document.getElementById('typewritter-output');
 const userInput = document.getElementById('user-input');
 const repeatBtn = document.getElementById('repeat');
@@ -63,11 +62,17 @@ const streakDisplayEl = document.getElementById('streak-display');
 const timerModeToggle = document.getElementById('timer-mode-toggle');
 const darkModeToggle = document.getElementById('dark-mode-toggle');
 const shareBtn = document.getElementById('share-btn');
+const alreadyPlayedEl = document.getElementById('already-played');
+const todayScoreEl = document.getElementById('today-score');
+const countdownTimerEl = document.getElementById('countdown-timer');
+const dailyNumberEl = document.getElementById('daily-number');
+
+// Countdown interval
+let countdownInterval = null;
 
 // Event listeners
 submitBtn.addEventListener('click', handleSubmitClick);
-startBtn.addEventListener('click', () => handleStartGame(false));
-dailyBtn.addEventListener('click', () => handleStartGame(true));
+startBtn.addEventListener('click', () => handleStartGame(true)); // Always daily mode
 repeatBtn.addEventListener('click', handleRepeatAction);
 userInput.addEventListener('keypress', handleKeyPress);
 instructionsLink.addEventListener('click', () => handleInstructionsClick(instructionModalEl, true));
@@ -81,18 +86,86 @@ timerModeToggle.addEventListener('change', handleTimerModeToggle);
 darkModeToggle.addEventListener('click', handleDarkModeToggle);
 shareBtn.addEventListener('click', handleShareClick);
 
-// Initialize preferences on load
+// Initialize on load
 initializePreferences();
+initializeDailyChallenge();
 
 function initializePreferences() {
     // Timer mode
     timerModeToggle.checked = timerModeEnabled;
     updateReplayButtonText();
 
-    // Dark mode
-    if (darkMode) {
-        document.body.classList.add('dark-mode');
-        darkModeToggle.textContent = '☀️';
+    // Light mode (default is dark/arcade theme)
+    if (lightMode) {
+        document.body.classList.add('light-mode');
+        darkModeToggle.querySelector('.icon-text').textContent = '🌙';
+    } else {
+        darkModeToggle.querySelector('.icon-text').textContent = '☀️';
+    }
+}
+
+function initializeDailyChallenge() {
+    // Update daily number on button
+    const dailyNum = getDailyNumber();
+    if (dailyNumberEl) {
+        dailyNumberEl.textContent = `#${dailyNum}`;
+    }
+
+    // Check if already played today
+    if (!canPlayDaily()) {
+        showAlreadyPlayed();
+    }
+}
+
+function showAlreadyPlayed() {
+    // Get today's score
+    const dailyStats = JSON.parse(localStorage.getItem('dscrmbl-daily'));
+    if (dailyStats && todayScoreEl) {
+        todayScoreEl.textContent = dailyStats.score || 0;
+    }
+
+    // Hide start button, show already played message
+    if (startBtn) {
+        startBtn.classList.add('display-none');
+    }
+    if (alreadyPlayedEl) {
+        alreadyPlayedEl.classList.remove('display-none');
+    }
+
+    // Hide game elements (replay btn, attempt orbs, input, etc.)
+    hideGameElements();
+
+    // Start countdown timer
+    startCountdown();
+}
+
+function startCountdown() {
+    updateCountdown();
+    countdownInterval = setInterval(updateCountdown, 1000);
+}
+
+function updateCountdown() {
+    const now = new Date();
+    const tomorrow = new Date(now);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(0, 0, 0, 0);
+
+    const diff = tomorrow - now;
+
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+    const timeString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+    if (countdownTimerEl) {
+        countdownTimerEl.textContent = timeString;
+    }
+
+    // Check if it's a new day
+    if (diff <= 0) {
+        clearInterval(countdownInterval);
+        location.reload(); // Refresh page for new challenge
     }
 }
 
@@ -101,10 +174,10 @@ function handleTimerModeToggle() {
 }
 
 function handleDarkModeToggle() {
-    darkMode = !darkMode;
-    localStorage.setItem('darkMode', darkMode);
-    document.body.classList.toggle('dark-mode');
-    darkModeToggle.textContent = darkMode ? '☀️' : '🌙';
+    lightMode = !lightMode;
+    localStorage.setItem('lightMode', lightMode);
+    document.body.classList.toggle('light-mode');
+    darkModeToggle.querySelector('.icon-text').textContent = lightMode ? '🌙' : '☀️';
 }
 
 // Sound effects using Web Audio API
@@ -264,7 +337,7 @@ function handleRevealAction(solved) {
     addDisabledAttr(startBtn, false);
     addDisabledAttr(repeatBtn, true);
     outputContainer.innerText = chosenWord;
-    outputContainer.className = 'fade-in-result';
+    outputContainer.className = 'word-output fade-in-result';
     updateLetterCount(chosenWord.length, true);
 
     if (solved) {
@@ -276,8 +349,6 @@ function handleRevealAction(solved) {
 
 function handleRepeatAction() {
     if (replayCount >= 2) return;
-
-    const hiddenEl = document.getElementsByClassName('hidden-output');
 
     // Apply replay penalty
     replayCount++;
@@ -296,20 +367,21 @@ function handleRepeatAction() {
     updateReplayButtonText();
 
     // Replay the fade-in animation
-    if(hiddenEl.length === 0) {
+    const letterEls = outputContainer.querySelectorAll('span');
+    if(letterEls.length === 0) {
         if(outputContainer.classList.contains('fade-in-result')){
             outputContainer.classList.remove('fade-in-result');
         }
+        outputContainer.className = 'word-output';
         outputContainer.innerText = '';
         chosenWord.split('').forEach(val => {
             insertSpanElement(val);
         });
     } else {
-        for(let i = 0; i < hiddenEl.length; i++){
-            if(hiddenEl[i].classList.contains('fade-in-output')){
-                hiddenEl[i].classList.remove('fade-in-output');
-            }
-        }
+        // Reset animation by removing and re-adding class
+        letterEls.forEach((el) => {
+            el.classList.remove('fade-in-output');
+        });
     }
     triggerFadeInEffect();
 
@@ -318,20 +390,34 @@ function handleRepeatAction() {
 
 function updateReplayButtonText() {
     const remaining = 2 - replayCount;
+    const btnGlitch = repeatBtn.querySelector('.btn-glitch');
+    const btnTag = repeatBtn.querySelector('.btn-tag');
     if (remaining > 0) {
-        repeatBtn.textContent = `Replay (${remaining} left)`;
+        if (btnGlitch) {
+            btnGlitch.textContent = 'REPLAY';
+            btnGlitch.setAttribute('data-text', 'REPLAY');
+        }
+        if (btnTag) {
+            btnTag.textContent = `${remaining}x`;
+        }
     } else {
-        repeatBtn.textContent = 'Replay';
+        if (btnGlitch) {
+            btnGlitch.textContent = 'REPLAY';
+            btnGlitch.setAttribute('data-text', 'REPLAY');
+        }
+        if (btnTag) {
+            btnTag.textContent = '0x';
+        }
     }
 }
 
 function resetGame() {
-    const attemptContainersEls = document.getElementsByClassName('attempt-container');
+    const attemptContainersEls = document.getElementsByClassName('attempt-orb');
     const resultEls = document.getElementsByClassName('result');
 
-    attemptContainersEls[0].className = 'attempt-container';
-    attemptContainersEls[1].className = 'attempt-container';
-    attemptContainersEls[2].className = 'attempt-container';
+    attemptContainersEls[0].className = 'attempt-orb';
+    attemptContainersEls[1].className = 'attempt-orb';
+    attemptContainersEls[2].className = 'attempt-orb';
 
     resultEls[0].className = 'result';
     resultEls[1].className = 'result';
@@ -385,6 +471,19 @@ function addDisabledAttr(el, disabled){
     }
 }
 
+// Update button text for cyber-btn structure
+function updateButtonText(btn, text, tag) {
+    const btnGlitch = btn.querySelector('.btn-glitch');
+    const btnTag = btn.querySelector('.btn-tag');
+    if (btnGlitch) {
+        btnGlitch.textContent = text;
+        btnGlitch.setAttribute('data-text', text);
+    }
+    if (btnTag && tag) {
+        btnTag.textContent = tag;
+    }
+}
+
 function focusInput() {
     setTimeout(() => {
         userInput.focus();
@@ -402,7 +501,10 @@ function updateLetterCount(length, revealed = false) {
 
 function updateStreakDisplay() {
     if (streak > 0) {
-        streakDisplayEl.textContent = `🔥 Streak: ${streak}`;
+        const valueEl = streakDisplayEl.querySelector('.status-value');
+        if (valueEl) {
+            valueEl.textContent = streak;
+        }
         streakDisplayEl.classList.remove('display-none');
     } else {
         streakDisplayEl.classList.add('display-none');
@@ -443,7 +545,10 @@ function stopTimer() {
 }
 
 function updateTimerDisplay() {
-    timerDisplayEl.textContent = `⏱️ ${timeRemaining}s`;
+    const valueEl = timerDisplayEl.querySelector('.status-value');
+    if (valueEl) {
+        valueEl.textContent = `${timeRemaining}s`;
+    }
 }
 
 function handleTimerExpired() {
@@ -474,7 +579,16 @@ function handleTimerExpired() {
     userInput.value = '';
 }
 
-function handleStartGame(isDaily = false) {
+function handleStartGame(isDaily = true) {
+    // Always daily mode
+    isDailyChallenge = true;
+
+    // Check if already played
+    if (!canPlayDaily()) {
+        showAlreadyPlayed();
+        return;
+    }
+
     resetGame();
 
     // Reset word results for new game
@@ -482,24 +596,11 @@ function handleStartGame(isDaily = false) {
         wordResults = [];
         streak = 0;
         streakBonus = 0;
+        previousScore = 0;
         updateStreakDisplay();
-    }
-
-    isDailyChallenge = isDaily;
-
-    if(playableList.length === 0){
-        if (isDaily) {
-            if (!canPlayDaily()) {
-                alert('You have already played today\'s Daily Challenge! Come back tomorrow.');
-                return;
-            }
-            playableList = getDailyWords();
-        } else {
-            createPlayableList(5);
-        }
+        playableList = getDailyWords();
         resetWordSolvedIndicator();
-        startBtn.innerText='Next Word';
-        dailyBtn.classList.add('display-none');
+        updateButtonText(startBtn, 'NEXT WORD', 'NEXT');
     }
 
     wordCount = 5 - playableList.length;
@@ -515,10 +616,8 @@ function handleStartGame(isDaily = false) {
 
     attempts = 1;
 
-    if(outputContainer.classList.contains('fade-in-result')) {
-        outputContainer.classList.remove('fade-in-result')
-    }
-
+    // Reset output container
+    outputContainer.className = 'word-output';
     outputContainer.innerText = '';
 
     // Take words in order (shortest to longest)
@@ -644,6 +743,9 @@ function getHistory(history, score) {
 }
 
 function finalScoreCalculations(score) {
+    // Ensure score is a valid number
+    score = isNaN(score) ? 0 : score;
+
     const storageKey = isDailyChallenge ? 'dscrmbl-daily' : 'dscrmbl';
     const cached = JSON.parse(localStorage.getItem(storageKey));
     const average = calculateScoreAverage(cached?.average, cached?.gamesPlayed, score);
@@ -653,9 +755,9 @@ function finalScoreCalculations(score) {
 
     const cachedScore = {
         score: score,
-        average: average,
+        average: isNaN(average) ? score : average,
         gamesPlayed: gamesPlayed,
-        highScore: highScore,
+        highScore: isNaN(highScore) ? score : highScore,
         history: historyPercentile.history,
         lastPlayed: isDailyChallenge ? new Date().toDateString() : cached?.lastPlayed
     }
@@ -666,27 +768,32 @@ function finalScoreCalculations(score) {
 }
 
 function showFinalScoreModal(solved) {
-    const finalScore = document.getElementsByClassName('word')[4].innerText;
+    // Use previousScore variable instead of reading from DOM
+    const finalScore = previousScore;
     scoreEl.innerText = finalScore;
 
-    const {cachedScore, historyPercentile} = finalScoreCalculations(Number(finalScore));
+    // Hide game elements
+    hideGameElements();
+
+    const {cachedScore, historyPercentile} = finalScoreCalculations(finalScore);
     gamesPlayedEl.innerText = cachedScore.gamesPlayed;
     highScoreEl.innerText = cachedScore.highScore;
     averageScoreEl.innerText = Math.round(cachedScore.average);
 
-    // Update modal title for daily challenge
+    // Update modal title - always daily challenge now
     const modalTitle = document.getElementById('modal-title');
-    if (isDailyChallenge) {
-        modalTitle.textContent = `Daily #${getDailyNumber()}`;
-    } else {
-        modalTitle.textContent = 'Score:';
-    }
+    modalTitle.textContent = `DAILY #${getDailyNumber()}`;
 
     finalScoreModalEl.classList.remove('display-none');
     finalScoreModalEl.classList.add('show-modal');
 
     // Play victory sound
     playVictorySound();
+
+    // Show already played message after closing modal
+    setTimeout(() => {
+        showAlreadyPlayed();
+    }, 500);
 
     setTimeout(() => {
         // and scroll to bottom of page
@@ -700,11 +807,43 @@ function showFinalScoreModal(solved) {
     }, 1000)
 }
 
-function generateShareText() {
-    const finalScore = document.getElementsByClassName('word')[4].innerText;
-    const dailyNum = isDailyChallenge ? ` Daily #${getDailyNumber()}` : '';
+function hideGameElements() {
+    // Hide action grid (start/replay buttons)
+    const actionGrid = document.querySelector('.action-grid');
+    if (actionGrid) {
+        actionGrid.classList.add('display-none');
+    }
+    // Hide attempt orbs
+    const attemptsDisplay = document.querySelector('.attempts-display');
+    if (attemptsDisplay) {
+        attemptsDisplay.classList.add('display-none');
+    }
+    // Hide input zone
+    const inputZone = document.querySelector('.input-zone');
+    if (inputZone) {
+        inputZone.classList.add('display-none');
+    }
+    // Hide game display
+    const gameDisplay = document.querySelector('.game-display');
+    if (gameDisplay) {
+        gameDisplay.classList.add('display-none');
+    }
+    // Hide status bar
+    const statusBar = document.querySelector('.status-bar');
+    if (statusBar) {
+        statusBar.classList.add('display-none');
+    }
+    // Hide settings panel
+    const settingsPanel = document.querySelector('.settings-panel');
+    if (settingsPanel) {
+        settingsPanel.classList.add('display-none');
+    }
+}
 
-    let shareText = `DSCRMBL${dailyNum} 🎯 Score: ${finalScore}\n`;
+function generateShareText() {
+    const finalScore = previousScore;
+
+    let shareText = `DSCRMBL Daily #${getDailyNumber()} 🎯 Score: ${finalScore}\n`;
 
     // Generate emoji grid for word results
     const wordEls = document.getElementsByClassName('word');
@@ -730,13 +869,18 @@ function generateShareText() {
 
 function handleShareClick() {
     const shareText = generateShareText();
+    const btnGlitch = shareBtn.querySelector('.btn-glitch');
 
     navigator.clipboard.writeText(shareText).then(() => {
-        const originalText = shareBtn.textContent;
-        shareBtn.textContent = 'Copied!';
-        setTimeout(() => {
-            shareBtn.textContent = originalText;
-        }, 2000);
+        if (btnGlitch) {
+            const originalText = btnGlitch.textContent;
+            btnGlitch.textContent = 'COPIED!';
+            btnGlitch.setAttribute('data-text', 'COPIED!');
+            setTimeout(() => {
+                btnGlitch.textContent = originalText;
+                btnGlitch.setAttribute('data-text', originalText);
+            }, 2000);
+        }
     }).catch(err => {
         console.error('Failed to copy: ', err);
         alert('Failed to copy to clipboard');
@@ -745,17 +889,18 @@ function handleShareClick() {
 
 function handleSubmitClick() {
     const guess = userInput.value.trim();
-    const h5El = document.getElementsByTagName('h5')[0];
+    const errorMsgEl = document.querySelector('.error-message');
 
     if(
         (!(!!chosenWord) && (!!guess)) ||
         ((!!chosenWord) && !(!!guess)) ||
         !(!!chosenWord) || !(!!guess)){
-        document.getElementById('button-text').innerHTML = startBtn.innerText;
-        h5El.classList.add('fade-out');
+        const btnGlitch = startBtn.querySelector('.btn-glitch');
+        document.getElementById('button-text').innerHTML = btnGlitch ? btnGlitch.textContent : 'START';
+        errorMsgEl.classList.add('fade-out');
 
         setTimeout(() => {
-            h5El.classList.remove('fade-out');
+            errorMsgEl.classList.remove('fade-out');
         }, 2000);
         return;
     }
@@ -766,10 +911,10 @@ function handleSubmitClick() {
     const attemptContainerIdEl = document.getElementById(`attempt-container-${attempts}`);
 
     if((correct || attempts === 3) && playableList.length === 0){
-        startBtn.innerText='Start New DSCRMBL!';
-        dailyBtn.classList.remove('display-none');
+        // Game complete - hide start button since daily is done
+        addDisabledAttr(startBtn, true);
     } else if((correct || attempts === 3) && playableList.length === 1) {
-        startBtn.innerText='Final Word in Set';
+        updateButtonText(startBtn, 'FINAL WORD', 'LAST');
     }
 
     if(!correct){
@@ -817,10 +962,10 @@ function insertSpanElement(val) {
 }
 
 function triggerFadeInEffect() {
-    const hiddenEl = document.getElementsByClassName('hidden-output');
-    for(let i = 0; i < hiddenEl.length; i++){
+    const hiddenEl = Array.from(document.getElementsByClassName('hidden-output'));
+    hiddenEl.forEach((el) => {
         setTimeout(() => {
-            hiddenEl[i].className = 'hidden-output fade-in-output';
+            el.classList.add('fade-in-output');
         }, randomTimeout());
-    }
+    });
 }
