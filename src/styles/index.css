@@ -435,6 +435,10 @@ body.light-mode .ambient-glow {
     font-family: var(--font-mono);
 }
 
+.already-played .cyber-btn {
+    margin-top: var(--spacing-md);
+}
+
 .cyber-btn {
     position: relative;
     font-family: var(--font-mono);
@@ -1201,25 +1205,35 @@ body.light-mode .ambient-glow {
 .percentile-marker {
     position: absolute;
     top: -4px;
+    left: 0;
     width: 3px;
     height: 16px;
     background: var(--text-primary);
     border-radius: 2px;
     transform: translateX(-50%);
+    transition: left 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.percentile-marker.marker-animate {
+    transition: left 1.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .percentile-text {
     position: absolute;
     top: -24px;
+    left: 0;
     font-size: 0.7rem;
     font-weight: 700;
     color: var(--text-primary);
     transform: translateX(-50%);
     opacity: 0;
+    transition: left 1.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .percentile-text.marker-text-fade-in {
     animation: markerFadeIn 0.5s ease forwards;
+    animation-delay: 1.2s;
+    transition: left 1.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @keyframes markerFadeIn {
