@@ -1051,6 +1051,10 @@ body.light-mode .ambient-glow {
 .modal-header {
     padding: var(--spacing-lg);
     border-bottom: 1px solid var(--bg-tertiary);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--spacing-lg);
 }
 
 .modal-title {
@@ -1067,6 +1071,32 @@ body.light-mode .ambient-glow {
     background: linear-gradient(90deg, var(--cyan), transparent);
     margin-top: var(--spacing-sm);
     border-radius: 2px;
+}
+
+.modal-close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+    flex-shrink: 0;
+}
+
+.modal-close-btn:hover {
+    color: var(--cyan);
+    text-shadow: var(--glow-cyan);
+    transform: scale(1.1);
+}
+
+.modal-close-btn:active {
+    transform: scale(0.95);
 }
 
 .modal-content {

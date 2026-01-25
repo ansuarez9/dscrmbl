@@ -31,8 +31,11 @@ export function InstructionsModal({ isOpen, onClose }: InstructionsModalProps) {
     <div id="instruction-modal" className={overlayClass} onClick={onClose}>
       <div className="modal-container" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <h2 className="modal-title">// HOW TO PLAY</h2>
-          <div className="modal-decoration"></div>
+          <div>
+            <h2 className="modal-title">// HOW TO PLAY</h2>
+            <div className="modal-decoration"></div>
+          </div>
+          <button className="modal-close-btn" onClick={onClose} aria-label="Close instructions">✕</button>
         </div>
 
         <div className="modal-content">

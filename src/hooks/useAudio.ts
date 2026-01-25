@@ -16,10 +16,17 @@ export function useAudio() {
 
   const resumeAudioContext = useCallback(() => {
     const context = initAudio();
-    if (context && context.state === 'suspended') {
-      context.resume().catch(err => {
-        console.error('Failed to resume audio context:', err);
-      });
+    if (context) {
+      console.log('AudioContext state:', context.state);
+      if (context.state === 'suspended') {
+        context.resume().then(() => {
+          console.log('AudioContext resumed successfully');
+        }).catch(err => {
+          console.error('Failed to resume audio context:', err);
+        });
+      } else {
+        console.log('AudioContext already running');
+      }
     }
     isInitializedRef.current = true;
   }, [initAudio]);
@@ -27,17 +34,17 @@ export function useAudio() {
   // Resume audio context on first user interaction
   useEffect(() => {
     const handleUserInteraction = () => {
+      console.log('User interaction detected, resuming audio context');
       resumeAudioContext();
-      document.removeEventListener('touchstart', handleUserInteraction);
-      document.removeEventListener('click', handleUserInteraction);
     };
 
-    document.addEventListener('touchstart', handleUserInteraction, { once: true });
-    document.addEventListener('click', handleUserInteraction, { once: true });
+    // Use capturing phase to catch interactions earlier
+    document.addEventListener('touchstart', handleUserInteraction, { once: true, capture: true });
+    document.addEventListener('click', handleUserInteraction, { once: true, capture: true });
 
     return () => {
-      document.removeEventListener('touchstart', handleUserInteraction);
-      document.removeEventListener('click', handleUserInteraction);
+      document.removeEventListener('touchstart', handleUserInteraction, true);
+      document.removeEventListener('click', handleUserInteraction, true);
     };
   }, [resumeAudioContext]);
 
@@ -45,33 +52,39 @@ export function useAudio() {
     if (muted) return;
 
     const context = initAudio();
-    if (!context) return;
+    if (!context) {
+      console.warn('Audio context not available');
+      return;
+    }
 
     // Ensure context is running (for iOS)
-    if (context.state === 'suspended') {
-      context.resume().catch(err => {
-        console.error('Failed to resume audio context for tone:', err);
-      });
-    }
+    const resumePromise = context.state === 'suspended' ? context.resume() : Promise.resolve();
 
-    try {
-      const oscillator = context.createOscillator();
-      const gainNode = context.createGain();
+    resumePromise.then(() => {
+      try {
+        const oscillator = context.createOscillator();
+        const gainNode = context.createGain();
 
-      oscillator.connect(gainNode);
-      gainNode.connect(context.destination);
+        oscillator.connect(gainNode);
+        gainNode.connect(context.destination);
 
-      oscillator.frequency.value = frequency;
-      oscillator.type = type;
+        oscillator.frequency.value = frequency;
+        oscillator.type = type;
 
-      gainNode.gain.setValueAtTime(0.3, context.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.01, context.currentTime + duration);
+        // Increased volume for mobile devices (was 0.3, now 0.8)
+        gainNode.gain.setValueAtTime(0.8, context.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, context.currentTime + duration);
 
-      oscillator.start(context.currentTime);
-      oscillator.stop(context.currentTime + duration);
-    } catch (error) {
-      console.error('Error playing tone:', error);
-    }
+        oscillator.start(context.currentTime);
+        oscillator.stop(context.currentTime + duration);
+
+        console.log(`Playing tone: ${frequency}Hz for ${duration}s (context state: ${context.state})`);
+      } catch (error) {
+        console.error('Error playing tone:', error);
+      }
+    }).catch(err => {
+      console.error('Failed to resume audio context:', err);
+    });
   }, [muted, initAudio]);
 
   const playCorrectSound = useCallback(() => {
