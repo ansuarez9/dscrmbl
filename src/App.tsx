@@ -20,7 +20,7 @@ import { getTimeUntilNextDay } from './utils/seededRandom';
 import type { DailyStats, HistoryPercentile } from './types/game';
 
 function GameContent() {
-  const { state, startGame, nextWord, submitGuess, replayWord, timerExpired, toggleTimerMode, triggerAnimation } = useGameContext();
+  const { state, startGame, nextWord, submitGuess, replayWord, timerExpired, toggleTimerMode, triggerAnimation, resetGame } = useGameContext();
   const { playCorrectSound, playWrongSound, playVictorySound, playTimerWarningSound } = useAudioContext();
   const { dailyNumber, dailyWords, canPlayToday, todayScore, todayResults, dailyStats, updateDailyStats } = useDailyChallenge();
 
@@ -30,6 +30,15 @@ function GameContent() {
   const [finalPercentile, setFinalPercentile] = useState<HistoryPercentile>({ history: [], percentile: 100 });
   const [countdown, setCountdown] = useState('--:--:--');
   const [gameCompleteHandled, setGameCompleteHandled] = useState(false);
+
+  // Auto-show instructions for new players
+  useEffect(() => {
+    const hasSeenInstructions = localStorage.getItem('dscrmbl-seen-instructions');
+    if (!hasSeenInstructions) {
+      setShowInstructions(true);
+      localStorage.setItem('dscrmbl-seen-instructions', 'true');
+    }
+  }, []);
 
   // Stable callbacks for timer
   const handleTimerExpire = useCallback(() => {
@@ -150,12 +159,14 @@ function GameContent() {
   const getStartButtonText = () => {
     if (state.phase === 'idle') return "PLAY TODAY'S CHALLENGE";
     if (state.playableWords.length === 0) return 'FINAL WORD';
+    if (state.playableWords.length === 1) return 'LAST WORD';
     return 'NEXT WORD';
   };
 
   const getStartButtonTag = () => {
     if (state.phase === 'idle') return `#${dailyNumber}`;
     if (state.playableWords.length === 0) return 'LAST';
+    if (state.playableWords.length === 1) return 'LAST';
     return 'NEXT';
   };
 
@@ -168,13 +179,22 @@ function GameContent() {
 
   // Handler to view past results
   const handleViewResults = useCallback(() => {
-    if (todayResults && dailyStats) {
+    if (dailyStats) {
       const { stats, percentile } = calculateFinalScore(todayScore ?? 0, true, dailyStats);
       setFinalStats(stats);
       setFinalPercentile(percentile);
       setShowFinalScore(true);
     }
-  }, [todayResults, todayScore, dailyStats]);
+  }, [todayScore, dailyStats]);
+
+  // Handler to close final score modal
+  const handleCloseFinalScore = useCallback(() => {
+    setShowFinalScore(false);
+    // Reset game to idle so "already played" screen shows
+    if (state.phase === 'complete') {
+      resetGame();
+    }
+  }, [state.phase, resetGame]);
 
   // Already played today
   if (!canPlayToday && state.phase === 'idle') {
@@ -188,15 +208,13 @@ function GameContent() {
             <p>You've completed today's challenge!</p>
             <p className="already-played-score">Your score: <strong id="today-score">{todayScore ?? 0}</strong></p>
             <p className="already-played-timer">Next challenge in: <strong id="countdown-timer">{countdown}</strong></p>
-            {todayResults && (
-              <CyberButton
-                id="view-results"
-                variant="secondary"
-                onClick={handleViewResults}
-              >
-                VIEW RESULTS
-              </CyberButton>
-            )}
+            <CyberButton
+              id="view-results"
+              variant="secondary"
+              onClick={handleViewResults}
+            >
+              VIEW RESULTS
+            </CyberButton>
           </div>
         </div>
 
@@ -210,7 +228,7 @@ function GameContent() {
 
         <FinalScoreModal
           isOpen={showFinalScore}
-          onClose={() => setShowFinalScore(false)}
+          onClose={handleCloseFinalScore}
           dailyNumber={dailyNumber}
           score={todayScore ?? 0}
           stats={finalStats}
@@ -305,7 +323,7 @@ function GameContent() {
 
       <FinalScoreModal
         isOpen={showFinalScore}
-        onClose={() => setShowFinalScore(false)}
+        onClose={handleCloseFinalScore}
         dailyNumber={dailyNumber}
         score={state.score}
         stats={finalStats}
