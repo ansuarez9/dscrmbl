@@ -14,6 +14,7 @@ import { ProgressTrack } from './components/Game/ProgressTrack';
 import { InstructionsModal } from './components/Modals/InstructionsModal';
 import { FinalScoreModal } from './components/Modals/FinalScoreModal';
 import { useDailyChallenge } from './hooks/useDailyChallenge';
+import { useDailyTheme } from './hooks/useDailyTheme';
 import { useTimer } from './hooks/useTimer';
 import { calculateFinalScore } from './utils/scoring';
 import { getTimeUntilNextDay } from './utils/seededRandom';
@@ -22,7 +23,8 @@ import type { DailyStats, HistoryPercentile } from './types/game';
 function GameContent() {
   const { state, startGame, nextWord, submitGuess, replayWord, timerExpired, toggleTimerMode, triggerAnimation, resetGame } = useGameContext();
   const { playCorrectSound, playWrongSound, playVictorySound, playTimerWarningSound } = useAudioContext();
-  const { dailyNumber, dailyWords, canPlayToday, todayScore, todayResults, dailyStats, updateDailyStats } = useDailyChallenge();
+  const { dailyNumber, canPlayToday, todayScore, todayResults, dailyStats, updateDailyStats } = useDailyChallenge();
+  const { theme, isLoading: isThemeLoading, error: themeError } = useDailyTheme();
 
   const [showInstructions, setShowInstructions] = useState(false);
   const [showFinalScore, setShowFinalScore] = useState(false);
@@ -125,9 +127,9 @@ function GameContent() {
   }, [state.phase]);
 
   const handleStartGame = useCallback(() => {
-    if (!canPlayToday) return;
-    startGame(dailyWords);
-  }, [canPlayToday, dailyWords, startGame]);
+    if (!canPlayToday || !theme) return;
+    startGame(theme.wordList);
+  }, [canPlayToday, theme, startGame]);
 
   const handleNextWord = useCallback(() => {
     nextWord();
@@ -157,7 +159,10 @@ function GameContent() {
   }, [state.replayCount, replayWord]);
 
   const getStartButtonText = () => {
-    if (state.phase === 'idle') return "PLAY TODAY'S CHALLENGE";
+    if (state.phase === 'idle') {
+      if (isThemeLoading) return 'LOADING...';
+      return "PLAY TODAY'S CHALLENGE";
+    }
     if (state.playableWords.length === 0) return 'FINAL WORD';
     if (state.playableWords.length === 1) return 'LAST WORD';
     return 'NEXT WORD';
@@ -174,7 +179,7 @@ function GameContent() {
   const isRevealing = state.phase === 'revealing';
   const isComplete = state.phase === 'complete';
   const isFinalWordRevealing = isRevealing && state.wordIndex === 4 && state.playableWords.length === 0;
-  const canStart = state.phase === 'idle' || (isRevealing && !isFinalWordRevealing);
+  const canStart = (state.phase === 'idle' && !isThemeLoading && !!theme) || (isRevealing && !isFinalWordRevealing);
   const showGameElements = isPlaying || isRevealing;
 
   // Handler to view past results
@@ -249,6 +254,28 @@ function GameContent() {
           timerModeEnabled={state.timerModeEnabled}
           onTimerModeToggle={toggleTimerMode}
         />
+      )}
+
+      {/* Theme Display - show in idle state */}
+      {state.phase === 'idle' && theme && !isThemeLoading && (
+        <div className="theme-display">
+          <div className="theme-name">{theme.themeName}</div>
+          <div className="theme-description">{theme.description}</div>
+        </div>
+      )}
+
+      {/* Theme Loading State */}
+      {state.phase === 'idle' && isThemeLoading && (
+        <div className="theme-display">
+          <div className="theme-loading">Loading today's theme...</div>
+        </div>
+      )}
+
+      {/* Theme Error State */}
+      {state.phase === 'idle' && themeError && (
+        <div className="theme-display theme-error">
+          <div className="theme-error-message">Failed to load theme. Using fallback words.</div>
+        </div>
       )}
 
       {/* Action Buttons - hide when complete or when revealing final word */}

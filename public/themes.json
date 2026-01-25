@@ -1,0 +1,68 @@
+{
+  "2026-01-25": {
+    "themeName": "DOUBLE TROUBLE",
+    "description": "Words featuring double letters",
+    "wordList": [
+      "coffee",
+      "puzzle",
+      "mirror",
+      "cheese",
+      "balloon"
+    ]
+  },
+  "2026-01-26": {
+    "themeName": "SILENT PARTNERS",
+    "description": "Words with silent letters hiding in plain sight",
+    "wordList": [
+      "knight",
+      "island",
+      "castle",
+      "salmon",
+      "whistle"
+    ]
+  },
+  "2026-01-27": {
+    "themeName": "NATURE'S PALETTE",
+    "description": "Colors found in the natural world",
+    "wordList": [
+      "amber",
+      "violet",
+      "indigo",
+      "crimson",
+      "scarlet"
+    ]
+  },
+  "2026-01-28": {
+    "themeName": "COMPOUND CRITTERS",
+    "description": "Animals hiding inside compound words",
+    "wordList": [
+      "beehive",
+      "anthill",
+      "catwalk",
+      "dogwood",
+      "foxhole"
+    ]
+  },
+  "2026-01-29": {
+    "themeName": "BODY OF WORK",
+    "description": "Words built from body parts",
+    "wordList": [
+      "eyebrow",
+      "kneecap",
+      "headache",
+      "backbone",
+      "handsome"
+    ]
+  },
+  "_fallback": {
+    "themeName": "GENERAL",
+    "description": "A mix of everyday words",
+    "wordList": [
+      "python",
+      "rocket",
+      "castle",
+      "garden",
+      "planet"
+    ]
+  }
+}
