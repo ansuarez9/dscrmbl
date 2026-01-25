@@ -7,7 +7,7 @@ export function generateShareText(
   streakBonus: number
 ): string {
   const dailyNum = getDailyNumber();
-  let shareText = `DSCRMBL Daily #${dailyNum} Score: ${score}\n`;
+  let shareText = `DSCRMBL Daily #${dailyNum}\nScore: ${score}\n`;
 
   // Generate emoji row for word results
   let emojiRow = '';

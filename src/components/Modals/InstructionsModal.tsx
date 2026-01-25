@@ -76,7 +76,6 @@ export function InstructionsModal({ isOpen, onClose }: InstructionsModalProps) {
             <h3>FEATURES</h3>
             <ul className="feature-list">
               <li><span className="feature-tag">TIMER</span> 30 seconds per word</li>
-              <li><span className="feature-tag">DAILY</span> Same words for everyone</li>
               <li><span className="feature-tag">STREAK</span> Bonus for consecutive wins</li>
             </ul>
           </section>
