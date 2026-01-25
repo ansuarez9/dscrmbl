@@ -25,7 +25,8 @@ export function useDailyTheme(): UseDailyThemeResult {
 
     async function fetchThemes() {
       try {
-        const response = await fetch('/themes.json');
+        const themesUrl = `${import.meta.env.BASE_URL}themes.json`;
+        const response = await fetch(themesUrl);
         if (!response.ok) {
           throw new Error(`Failed to fetch themes: ${response.status}`);
         }
