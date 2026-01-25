@@ -6,76 +6,74 @@ export function useAudio() {
   const audioContextRef = useRef<AudioContext | null>(null);
   const isUnlockedRef = useRef(false);
 
-  // Initialize and unlock audio context for iOS
-  const unlockAudioContext = useCallback(() => {
+  // Get or create AudioContext
+  const getAudioContext = useCallback(() => {
+    if (!audioContextRef.current) {
+      const AudioContextClass = window.AudioContext ||
+        (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      audioContextRef.current = new AudioContextClass();
+    }
+    return audioContextRef.current;
+  }, []);
+
+  // Unlock audio for iOS - must happen during user gesture
+  const unlockAudio = useCallback(() => {
     if (isUnlockedRef.current) return;
 
     try {
-      const AudioContextClass = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      const context = getAudioContext();
 
-      if (!audioContextRef.current) {
-        audioContextRef.current = new AudioContextClass();
-      }
-
-      const context = audioContextRef.current;
-
-      // iOS unlock pattern: create and play a silent buffer
-      const buffer = context.createBuffer(1, 1, 22050);
+      // Create silent buffer using context's native sample rate
+      const buffer = context.createBuffer(1, 1, context.sampleRate);
       const source = context.createBufferSource();
       source.buffer = buffer;
       source.connect(context.destination);
       source.start(0);
 
-      // Resume if suspended
+      // Resume if needed
       if (context.state === 'suspended') {
         context.resume();
       }
 
       isUnlockedRef.current = true;
-      console.log('Audio unlocked successfully');
-    } catch (error) {
-      console.error('Failed to unlock audio:', error);
+    } catch (e) {
+      console.error('Audio unlock failed:', e);
     }
-  }, []);
+  }, [getAudioContext]);
 
-  // Set up unlock listeners
+  // Set up unlock on user interaction
   useEffect(() => {
-    const events = ['touchstart', 'touchend', 'mousedown', 'keydown'];
-
-    const unlock = () => {
-      unlockAudioContext();
-      // Remove listeners after first unlock
-      events.forEach(event => {
-        document.removeEventListener(event, unlock);
-      });
+    const handleInteraction = () => {
+      unlockAudio();
     };
 
-    events.forEach(event => {
-      document.addEventListener(event, unlock, { once: true, passive: true });
-    });
+    // Listen on both capture and bubble phase for maximum compatibility
+    const options = { passive: true };
+
+    document.addEventListener('touchstart', handleInteraction, options);
+    document.addEventListener('touchend', handleInteraction, options);
+    document.addEventListener('click', handleInteraction, options);
+    document.addEventListener('keydown', handleInteraction, options);
 
     return () => {
-      events.forEach(event => {
-        document.removeEventListener(event, unlock);
-      });
+      document.removeEventListener('touchstart', handleInteraction);
+      document.removeEventListener('touchend', handleInteraction);
+      document.removeEventListener('click', handleInteraction);
+      document.removeEventListener('keydown', handleInteraction);
     };
-  }, [unlockAudioContext]);
+  }, [unlockAudio]);
 
   const playTone = useCallback((frequency: number, duration: number, type: OscillatorType = 'sine') => {
     if (muted) return;
 
-    const context = audioContextRef.current;
-    if (!context) {
-      console.warn('Audio context not available');
-      return;
-    }
-
-    // Ensure context is running
-    if (context.state === 'suspended') {
-      context.resume();
-    }
-
     try {
+      const context = getAudioContext();
+
+      // Always try to resume
+      if (context.state === 'suspended') {
+        context.resume();
+      }
+
       const oscillator = context.createOscillator();
       const gainNode = context.createGain();
 
@@ -86,15 +84,16 @@ export function useAudio() {
       oscillator.type = type;
 
       const now = context.currentTime;
-      gainNode.gain.setValueAtTime(0.5, now);
-      gainNode.gain.exponentialRampToValueAtTime(0.01, now + duration);
+      // Use higher gain for mobile
+      gainNode.gain.setValueAtTime(0.7, now);
+      gainNode.gain.exponentialRampToValueAtTime(0.001, now + duration);
 
       oscillator.start(now);
       oscillator.stop(now + duration);
     } catch (error) {
       console.error('Error playing tone:', error);
     }
-  }, [muted]);
+  }, [muted, getAudioContext]);
 
   const playCorrectSound = useCallback(() => {
     if (muted) return;
