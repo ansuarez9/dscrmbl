@@ -12,6 +12,7 @@ interface FinalScoreModalProps {
   percentile: HistoryPercentile;
   wordResults: WordResult[];
   streakBonus: number;
+  themeName?: string;
 }
 
 export function FinalScoreModal({
@@ -22,7 +23,8 @@ export function FinalScoreModal({
   stats,
   percentile,
   wordResults,
-  streakBonus
+  streakBonus,
+  themeName
 }: FinalScoreModalProps) {
   const [isVisible, setIsVisible] = useState(false);
   const [isHiding, setIsHiding] = useState(false);
@@ -52,13 +54,13 @@ export function FinalScoreModal({
   }, [isOpen, isVisible]);
 
   const handleShare = useCallback(async () => {
-    const text = generateShareText(score, wordResults, streakBonus);
+    const text = generateShareText(score, wordResults, streakBonus, themeName);
     const success = await copyToClipboard(text);
     if (success) {
       setShareText('COPIED!');
       setTimeout(() => setShareText('SHARE RESULTS'), 2000);
     }
-  }, [score, wordResults, streakBonus]);
+  }, [score, wordResults, streakBonus, themeName]);
 
   if (!isVisible) return null;
 
@@ -70,6 +72,7 @@ export function FinalScoreModal({
       <div className="modal-container modal-container--score" onClick={(e) => e.stopPropagation()}>
         <div className="score-display">
           <div className="score-label" id="modal-title">DAILY #{dailyNumber}</div>
+          {themeName && <div className="score-theme">{themeName}</div>}
           <div className="score-value" id="score">{score}</div>
         </div>
 

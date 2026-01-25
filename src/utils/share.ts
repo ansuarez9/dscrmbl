@@ -4,10 +4,18 @@ import { getDailyNumber } from './seededRandom';
 export function generateShareText(
   score: number,
   wordResults: WordResult[],
-  streakBonus: number
+  streakBonus: number,
+  themeName?: string
 ): string {
   const dailyNum = getDailyNumber();
-  let shareText = `DSCRMBL Daily #${dailyNum}\nScore: ${score}\n`;
+  let shareText = `DSCRMBL Daily #${dailyNum}\n`;
+
+  // Add theme name on its own line if provided
+  if (themeName) {
+    shareText += `${themeName}\n`;
+  }
+
+  shareText += `Score: ${score}\n`;
 
   // Generate emoji row for word results
   let emojiRow = '';

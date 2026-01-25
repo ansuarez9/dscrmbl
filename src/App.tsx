@@ -240,6 +240,7 @@ function GameContent() {
           percentile={finalPercentile}
           wordResults={todayResults?.wordResults ?? []}
           streakBonus={todayResults?.streakBonus ?? 0}
+          themeName={theme?.themeName}
         />
       </GameContainer>
     );
@@ -256,8 +257,8 @@ function GameContent() {
         />
       )}
 
-      {/* Theme Display - show in idle state */}
-      {state.phase === 'idle' && theme && !isThemeLoading && (
+      {/* Theme Display - always show when available */}
+      {theme && !isThemeLoading && (
         <div className="theme-display">
           <div className="theme-name">{theme.themeName}</div>
           <div className="theme-description">{theme.description}</div>
@@ -265,14 +266,14 @@ function GameContent() {
       )}
 
       {/* Theme Loading State */}
-      {state.phase === 'idle' && isThemeLoading && (
+      {isThemeLoading && (
         <div className="theme-display">
           <div className="theme-loading">Loading today's theme...</div>
         </div>
       )}
 
       {/* Theme Error State */}
-      {state.phase === 'idle' && themeError && (
+      {themeError && (
         <div className="theme-display theme-error">
           <div className="theme-error-message">Failed to load theme. Using fallback words.</div>
         </div>
@@ -357,6 +358,7 @@ function GameContent() {
         percentile={finalPercentile}
         wordResults={state.wordResults}
         streakBonus={state.streakBonus}
+        themeName={theme?.themeName}
       />
     </GameContainer>
   );

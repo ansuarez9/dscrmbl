@@ -1202,6 +1202,15 @@ body.light-mode .ambient-glow {
     margin-bottom: var(--spacing-xs);
 }
 
+.score-theme {
+    font-family: var(--font-display);
+    font-size: 0.7rem;
+    color: var(--amber);
+    text-shadow: var(--glow-amber);
+    letter-spacing: 0.15em;
+    margin-bottom: var(--spacing-sm);
+}
+
 .score-value {
     font-family: var(--font-display);
     font-size: 3rem;
@@ -1579,6 +1588,10 @@ body.light-mode .ambient-glow {
         font-size: 2.5rem;
     }
 
+    .score-theme {
+        font-size: 0.6rem;
+    }
+
     .stats-grid {
         gap: var(--spacing-xs);
     }
@@ -1623,6 +1636,10 @@ body.light-mode .ambient-glow {
 
     .score-value {
         font-size: 2rem;
+    }
+
+    .score-theme {
+        font-size: 0.55rem;
     }
 }
 
