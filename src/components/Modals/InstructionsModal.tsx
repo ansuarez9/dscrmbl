@@ -38,7 +38,17 @@ export function InstructionsModal({ isOpen, onClose }: InstructionsModalProps) {
         <div className="modal-content">
           <section className="instruction-section">
             <h3>OBJECTIVE</h3>
-            <p>Guess each word in the series in 3 tries or less. Each series contains 5 random words with progressive difficulty.</p>
+            <p>Guess all 5 words in today's themed challenge in 3 tries or less. Each day features a new theme with words that share a lateral thinking connection.</p>
+          </section>
+
+          <section className="instruction-section">
+            <h3>DAILY THEMES</h3>
+            <p>Each day's words follow a specific theme inspired by NYT Connections. Themes explore creative categories like:</p>
+            <ul>
+              <li>Words with shared letter patterns or sounds</li>
+              <li>Words hidden within compound words</li>
+              <li>Words united by meaning or origin</li>
+            </ul>
           </section>
 
           <section className="instruction-section">

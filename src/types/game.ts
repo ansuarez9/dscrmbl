@@ -72,3 +72,20 @@ export interface HistoryPercentile {
   history: number[];
   percentile: number;
 }
+
+// Daily Theme types
+export interface DailyTheme {
+  themeName: string;
+  description: string;
+  wordList: string[];
+}
+
+export interface ThemesData {
+  [date: string]: DailyTheme;
+}
+
+export interface UseDailyThemeResult {
+  theme: DailyTheme | null;
+  isLoading: boolean;
+  error: string | null;
+}
