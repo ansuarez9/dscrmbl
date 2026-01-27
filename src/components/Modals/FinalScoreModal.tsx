@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { CyberButton } from '../Buttons/CyberButton';
-import { generateShareText, copyToClipboard } from '../../utils/share';
+import { generateShareText, copyToClipboard, canUseWebShare, shareViaWeb } from '../../utils/share';
 import type { DailyStats, WordResult, HistoryPercentile } from '../../types/game';
 
 interface FinalScoreModalProps {
@@ -55,12 +55,29 @@ export function FinalScoreModal({
 
   const handleShare = useCallback(async () => {
     const text = generateShareText(score, wordResults, streakBonus, themeName);
-    const success = await copyToClipboard(text);
-    if (success) {
-      setShareText('COPIED!');
-      setTimeout(() => setShareText('SHARE RESULTS'), 2000);
+    const title = `DSCRMBL Daily #${dailyNumber}`;
+
+    // Fall back to clipboard copy (desktop or Web Share cancelled)
+    await copyToClipboard(text, title);
+    setShareText('COPIED!');
+    setTimeout(() => setShareText('SHARE RESULTS'), 2000);
+
+    // Try Web Share API first (mobile devices)
+    if (canUseWebShare()) {
+      const webShareSuccess = await shareViaWeb(text, title);
+      if (webShareSuccess) {
+        setShareText('SHARED!');
+        setTimeout(() => setShareText('SHARE RESULTS'), 2000);
+        return;
+      }
+      // If Web Share failed or was cancelled, fall through to clipboard copy
     }
-  }, [score, wordResults, streakBonus, themeName]);
+
+    // // Fall back to clipboard copy (desktop or Web Share cancelled)
+    // await copyToClipboard(text, title);
+    // setShareText('COPIED!');
+    // setTimeout(() => setShareText('SHARE RESULTS'), 2000);
+  }, [score, wordResults, streakBonus, themeName, dailyNumber]);
 
   if (!isVisible) return null;
 
