@@ -29,7 +29,7 @@ export interface GameState {
 }
 
 export type GameAction =
-  | { type: 'START_GAME'; words: string[] }
+  | { type: 'START_GAME'; words: string[]; initialStreak?: number }
   | { type: 'NEXT_WORD' }
   | { type: 'SUBMIT_GUESS'; guess: string }
   | { type: 'REPLAY_WORD' }
@@ -54,6 +54,7 @@ export interface DailyStats {
   highScore: number;
   history: number[];
   lastPlayed: string | null;
+  currentStreak: number;
   // Additional data for showing results modal again
   lastGameResults?: {
     wordResults: WordResult[];

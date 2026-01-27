@@ -1,4 +1,4 @@
-import { useMemo, useCallback } from 'react';
+import { useMemo, useCallback, useEffect } from 'react';
 import { useLocalStorage } from './useLocalStorage';
 import { getDailyWords, getDailyNumber } from '../utils/seededRandom';
 import type { DailyStats } from '../types/game';
@@ -7,6 +7,17 @@ const STORAGE_KEY = 'dscrmbl-daily';
 
 export function useDailyChallenge() {
   const [dailyStats, setDailyStats] = useLocalStorage<DailyStats | null>(STORAGE_KEY, null);
+
+  // Data migration: Add currentStreak to existing stats
+  useEffect(() => {
+    if (dailyStats && dailyStats.currentStreak === undefined) {
+      const migratedStats: DailyStats = {
+        ...dailyStats,
+        currentStreak: 0
+      };
+      setDailyStats(migratedStats);
+    }
+  }, [dailyStats, setDailyStats]);
 
   const dailyNumber = useMemo(() => getDailyNumber(), []);
 
@@ -40,6 +51,20 @@ export function useDailyChallenge() {
     setDailyStats(newStats);
   }, [setDailyStats]);
 
+  const getCurrentStreak = useMemo(() => {
+    return dailyStats?.currentStreak ?? 0;
+  }, [dailyStats]);
+
+  const updateStreak = useCallback((newStreak: number) => {
+    if (!dailyStats) return;
+
+    const updatedStats: DailyStats = {
+      ...dailyStats,
+      currentStreak: newStreak
+    };
+    setDailyStats(updatedStats);
+  }, [dailyStats, setDailyStats]);
+
   return {
     dailyNumber,
     dailyWords,
@@ -47,6 +72,8 @@ export function useDailyChallenge() {
     todayScore,
     todayResults,
     dailyStats,
-    updateDailyStats
+    updateDailyStats,
+    getCurrentStreak,
+    updateStreak
   };
 }

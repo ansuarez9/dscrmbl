@@ -29,6 +29,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
   switch (action.type) {
     case 'START_GAME': {
       const words = action.words;
+      const initialStreak = action.initialStreak ?? 0;
       return {
         ...initialState,
         phase: 'playing',
@@ -36,6 +37,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         playableWords: words.slice(1),
         wordIndex: 0,
         wordScores: [],
+        streak: initialStreak,
         timerModeEnabled: state.timerModeEnabled,
         isDailyChallenge: true,
         showLetters: true,
@@ -121,17 +123,12 @@ function gameReducer(state: GameState, action: GameAction): GameState {
     }
 
     case 'REPLAY_WORD': {
-      if (state.replayCount >= 2) return state;
-
-      const newReplayCount = state.replayCount + 1;
-      let penalty = state.replayPenalty;
-      if (newReplayCount === 1) penalty += 3;
-      else if (newReplayCount === 2) penalty += 5;
+      if (state.replayCount >= 1) return state;
 
       return {
         ...state,
-        replayCount: newReplayCount,
-        replayPenalty: penalty,
+        replayCount: 1,
+        replayPenalty: state.replayPenalty + 3,
         showLetters: true,
         animationTrigger: state.animationTrigger + 1
       };
@@ -267,8 +264,8 @@ export function useGameState() {
     saveState(state);
   }, [state]);
 
-  const startGame = useCallback((words: string[]) => {
-    dispatch({ type: 'START_GAME', words });
+  const startGame = useCallback((words: string[], initialStreak?: number) => {
+    dispatch({ type: 'START_GAME', words, initialStreak });
   }, []);
 
   const nextWord = useCallback(() => {

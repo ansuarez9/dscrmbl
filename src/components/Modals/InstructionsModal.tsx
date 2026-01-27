@@ -79,7 +79,7 @@ export function InstructionsModal({ isOpen, onClose }: InstructionsModalProps) {
               <code>SCORE = LETTERS x REMAINING_TRIES</code>
             </div>
             <ul>
-              <li><strong>Replay penalty:</strong> -3 first use, -5 second use</li>
+              <li><strong>Replay penalty:</strong> -3 points</li>
               <li><strong>Timer bonus:</strong> +3 if solved under 10s</li>
               <li><strong>Streak bonus:</strong> streak x 2 for consecutive first-tries</li>
             </ul>
