@@ -4,7 +4,7 @@ import type { GameState } from '../types/game';
 
 interface GameContextType {
   state: GameState;
-  startGame: (words: string[]) => void;
+  startGame: (words: string[], initialStreak?: number) => void;
   nextWord: () => void;
   submitGuess: (guess: string) => void;
   replayWord: () => void;

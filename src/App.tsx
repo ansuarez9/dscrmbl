@@ -257,7 +257,7 @@ function GameContent() {
 
   return (
     <GameContainer>
-      <Header onInstructionsClick={() => setShowInstructions(true)} streak={getCurrentStreak} />
+      <Header onInstructionsClick={() => setShowInstructions(true)} />
 
       {!isComplete && !isFinalWordRevealing && (
         <SettingsPanel
