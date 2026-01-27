@@ -85,7 +85,7 @@ export function getHistory(history: number[] | undefined, score: number): Histor
   };
 }
 
-export function calculateFinalScore(score: number, isDailyChallenge: boolean, cached: DailyStats | null): { stats: DailyStats; percentile: HistoryPercentile } {
+export function calculateFinalScore(score: number, isDailyChallenge: boolean, cached: DailyStats | null, finalStreak: number): { stats: DailyStats; percentile: HistoryPercentile } {
   const validScore = isNaN(score) ? 0 : score;
 
   const average = calculateScoreAverage(cached?.average, cached?.gamesPlayed, validScore);
@@ -99,7 +99,8 @@ export function calculateFinalScore(score: number, isDailyChallenge: boolean, ca
     gamesPlayed,
     highScore: isNaN(highScore) ? validScore : highScore,
     history: historyPercentile.history,
-    lastPlayed: isDailyChallenge ? new Date().toDateString() : cached?.lastPlayed ?? null
+    lastPlayed: isDailyChallenge ? new Date().toDateString() : cached?.lastPlayed ?? null,
+    currentStreak: finalStreak
   };
 
   return { stats, percentile: historyPercentile };

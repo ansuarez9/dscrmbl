@@ -216,6 +216,34 @@ body.light-mode .ambient-glow {
     text-transform: uppercase;
 }
 
+.streak-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.4em;
+    padding: 0.3em 0.8em;
+    background: linear-gradient(135deg, rgba(255, 100, 0, 0.2), rgba(255, 150, 0, 0.1));
+    border: 1px solid rgba(255, 100, 0, 0.4);
+    border-radius: 4px;
+    font-weight: bold;
+    color: #ff6400;
+    text-shadow: 0 0 8px rgba(255, 100, 0, 0.5);
+}
+
+.streak-flame {
+    font-size: 1.1em;
+    animation: streakFlame 1.5s ease-in-out infinite;
+}
+
+@keyframes streakFlame {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+}
+
+.streak-count {
+    font-size: 0.95rem;
+    font-variant-numeric: tabular-nums;
+}
+
 .header-actions {
     display: flex;
     gap: var(--spacing-sm);

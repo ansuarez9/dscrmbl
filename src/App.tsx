@@ -23,7 +23,7 @@ import type { DailyStats, HistoryPercentile } from './types/game';
 function GameContent() {
   const { state, startGame, nextWord, submitGuess, replayWord, timerExpired, toggleTimerMode, triggerAnimation, resetGame } = useGameContext();
   const { playCorrectSound, playWrongSound, playVictorySound, playTimerWarningSound } = useAudioContext();
-  const { dailyNumber, canPlayToday, todayScore, todayResults, dailyStats, updateDailyStats } = useDailyChallenge();
+  const { dailyNumber, canPlayToday, todayScore, todayResults, dailyStats, updateDailyStats, getCurrentStreak, updateStreak } = useDailyChallenge();
   const { theme, isLoading: isThemeLoading, error: themeError } = useDailyTheme();
 
   const [showInstructions, setShowInstructions] = useState(false);
@@ -97,12 +97,21 @@ function GameContent() {
     }
   }, [state.phase, state.wordIndex, state.playableWords.length, nextWord]);
 
+  // Persist streak breaks immediately
+  useEffect(() => {
+    if (state.phase === 'playing' || state.phase === 'revealing') {
+      if (getCurrentStreak > 0 && state.streak === 0) {
+        updateStreak(0); // Immediately save broken streak
+      }
+    }
+  }, [state.streak, state.phase, getCurrentStreak, updateStreak]);
+
   // Handle game completion - use ref to prevent infinite loop
   useEffect(() => {
     if (state.phase === 'complete' && !gameCompleteHandled) {
       setGameCompleteHandled(true);
       playVictorySound();
-      const { stats, percentile } = calculateFinalScore(state.score, true, dailyStats);
+      const { stats, percentile } = calculateFinalScore(state.score, true, dailyStats, state.streak);
       // Store game results for viewing later
       const statsWithResults = {
         ...stats,
@@ -117,7 +126,7 @@ function GameContent() {
       updateDailyStats(statsWithResults);
       setTimeout(() => setShowFinalScore(true), 1500);
     }
-  }, [state.phase, gameCompleteHandled, state.score, state.wordResults, state.streakBonus, state.wordScores, dailyStats, updateDailyStats, playVictorySound]);
+  }, [state.phase, gameCompleteHandled, state.score, state.streak, state.wordResults, state.streakBonus, state.wordScores, dailyStats, updateDailyStats, playVictorySound]);
 
   // Reset gameCompleteHandled when game restarts
   useEffect(() => {
@@ -128,8 +137,8 @@ function GameContent() {
 
   const handleStartGame = useCallback(() => {
     if (!canPlayToday || !theme) return;
-    startGame(theme.wordList);
-  }, [canPlayToday, theme, startGame]);
+    startGame(theme.wordList, getCurrentStreak);
+  }, [canPlayToday, theme, startGame, getCurrentStreak]);
 
   const handleNextWord = useCallback(() => {
     nextWord();
@@ -154,7 +163,7 @@ function GameContent() {
   }, [state.currentWord, state.attempts, submitGuess, triggerAnimation, playCorrectSound, playWrongSound]);
 
   const handleReplay = useCallback(() => {
-    if (state.replayCount >= 2) return;
+    if (state.replayCount >= 1) return;
     replayWord(); // This increments replay count and triggers animation
   }, [state.replayCount, replayWord]);
 
@@ -185,7 +194,7 @@ function GameContent() {
   // Handler to view past results
   const handleViewResults = useCallback(() => {
     if (dailyStats) {
-      const { stats, percentile } = calculateFinalScore(todayScore ?? 0, true, dailyStats);
+      const { stats, percentile } = calculateFinalScore(todayScore ?? 0, true, dailyStats, dailyStats.currentStreak);
       setFinalStats(stats);
       setFinalPercentile(percentile);
       setShowFinalScore(true);
@@ -248,7 +257,7 @@ function GameContent() {
 
   return (
     <GameContainer>
-      <Header onInstructionsClick={() => setShowInstructions(true)} />
+      <Header onInstructionsClick={() => setShowInstructions(true)} streak={getCurrentStreak} />
 
       {!isComplete && !isFinalWordRevealing && (
         <SettingsPanel
@@ -294,8 +303,8 @@ function GameContent() {
           <CyberButton
             id="repeat"
             variant="secondary"
-            tag={`${2 - state.replayCount}x`}
-            disabled={!isPlaying || state.replayCount >= 2}
+            tag="1x"
+            disabled={!isPlaying || state.replayCount >= 1}
             onClick={handleReplay}
           >
             REPLAY
@@ -304,12 +313,12 @@ function GameContent() {
       )}
 
       {/* Status Bar */}
-      {showGameElements && (
+      {(showGameElements || state.phase === 'idle') && (
         <StatusBar
           timeRemaining={timeRemaining}
           isTimerVisible={state.timerModeEnabled && isTimerRunning}
           isTimerWarning={isTimerWarning}
-          streak={state.streak}
+          streak={state.phase === 'idle' ? getCurrentStreak : state.streak}
         />
       )}
 
