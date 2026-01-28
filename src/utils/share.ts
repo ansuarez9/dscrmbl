@@ -1,12 +1,13 @@
 import type { WordResult } from '../types/game';
 
 export function generateShareText(
+  dailyNumber: number,
   score: number,
   wordResults: WordResult[],
   streakBonus: number,
   themeName?: string
 ): string {
-  let shareText = '';
+  let shareText = `DSCRMBL Daily #${dailyNumber}\n`;
 
   // Add theme name on its own line if provided
   if (themeName) {
@@ -35,9 +36,9 @@ export function generateShareText(
   return shareText;
 }
 
-export async function copyToClipboard(text: string, title: string): Promise<boolean> {
+export async function copyToClipboard(text: string): Promise<boolean> {
   try {
-    await navigator.clipboard.writeText(title + '\n' + text);
+    await navigator.clipboard.writeText(text);
     return true;
   } catch {
     console.error('Failed to copy to clipboard');

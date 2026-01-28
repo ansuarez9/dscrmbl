@@ -54,13 +54,13 @@ export function FinalScoreModal({
   }, [isOpen, isVisible]);
 
   const handleShare = useCallback(async () => {
-    const text = generateShareText(score, wordResults, streakBonus, themeName);
-    const title = `DSCRMBL Daily #${dailyNumber}`;
+    const text = generateShareText(dailyNumber, score, wordResults, streakBonus, themeName);
+    // const title = `DSCRMBL Daily #${dailyNumber}`;
 
     // Check if Web Share API is available (mobile devices)
     if (canUseWebShare()) {
       // Mobile - use Web Share API only
-      const webShareSuccess = await shareViaWeb(text, title);
+      const webShareSuccess = await shareViaWeb(text);
       if (webShareSuccess) {
         setShareText('SHARED!');
         setTimeout(() => setShareText('SHARE RESULTS'), 2000);
@@ -68,7 +68,7 @@ export function FinalScoreModal({
       // If user cancelled, don't do anything
     } else {
       // Desktop/laptop - copy to clipboard only
-      await copyToClipboard(text, title);
+      await copyToClipboard(text);
       setShareText('COPIED!');
       setTimeout(() => setShareText('SHARE RESULTS'), 2000);
     }
