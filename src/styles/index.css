@@ -198,6 +198,14 @@ body.light-mode .ambient-glow {
     animation: logoFlicker 4s ease-in-out infinite;
 }
 
+.logo-image {
+    height: 100px;
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 0 8px rgba(0, 255, 255, 0.3));
+    animation: logoFlicker 4s ease-in-out infinite;
+}
+
 @keyframes logoFlicker {
     0%, 100% { opacity: 1; }
     92% { opacity: 1; }

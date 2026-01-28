@@ -11,7 +11,7 @@ export function Header({ onInstructionsClick }: HeaderProps) {
     <>
       <header className="game-header">
         <div className="logo-container">
-          <h1 className="logo" data-text="DSCRMBL">DSCRMBL</h1>
+          <img src={`${import.meta.env.BASE_URL}logo.png`} alt="DSCRMBL" className="logo-image" />
           <span className="version-tag">v2.0</span>
         </div>
         <div className="header-actions">
