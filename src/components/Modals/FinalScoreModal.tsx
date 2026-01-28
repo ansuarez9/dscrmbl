@@ -57,26 +57,21 @@ export function FinalScoreModal({
     const text = generateShareText(score, wordResults, streakBonus, themeName);
     const title = `DSCRMBL Daily #${dailyNumber}`;
 
-    // Fall back to clipboard copy (desktop or Web Share cancelled)
-    await copyToClipboard(text, title);
-    setShareText('COPIED!');
-    setTimeout(() => setShareText('SHARE RESULTS'), 2000);
-
-    // Try Web Share API first (mobile devices)
+    // Check if Web Share API is available (mobile devices)
     if (canUseWebShare()) {
+      // Mobile - use Web Share API only
       const webShareSuccess = await shareViaWeb(text, title);
       if (webShareSuccess) {
         setShareText('SHARED!');
         setTimeout(() => setShareText('SHARE RESULTS'), 2000);
-        return;
       }
-      // If Web Share failed or was cancelled, fall through to clipboard copy
+      // If user cancelled, don't do anything
+    } else {
+      // Desktop/laptop - copy to clipboard only
+      await copyToClipboard(text, title);
+      setShareText('COPIED!');
+      setTimeout(() => setShareText('SHARE RESULTS'), 2000);
     }
-
-    // // Fall back to clipboard copy (desktop or Web Share cancelled)
-    // await copyToClipboard(text, title);
-    // setShareText('COPIED!');
-    // setTimeout(() => setShareText('SHARE RESULTS'), 2000);
   }, [score, wordResults, streakBonus, themeName, dailyNumber]);
 
   if (!isVisible) return null;

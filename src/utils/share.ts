@@ -45,8 +45,17 @@ export async function copyToClipboard(text: string, title: string): Promise<bool
   }
 }
 
+export function isMobileDevice(): boolean {
+  // Check if device is mobile based on user agent and touch support
+  const userAgent = navigator.userAgent.toLowerCase();
+  const isMobileUA = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent);
+  const hasTouchScreen = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+  return isMobileUA || (hasTouchScreen && window.innerWidth < 1024);
+}
+
 export function canUseWebShare(): boolean {
-  return !!navigator.share;
+  return !!navigator.share && isMobileDevice();
 }
 
 export async function shareViaWeb(text: string, title?: string): Promise<boolean> {
@@ -55,9 +64,12 @@ export async function shareViaWeb(text: string, title?: string): Promise<boolean
       return false;
     }
 
+    // Include title in text content for consistency across platforms/apps
+    const fullText = title ? `${title}\n${text}` : text;
+
     await navigator.share({
       title: title,
-      text: text
+      text: fullText
     });
 
     return true;
