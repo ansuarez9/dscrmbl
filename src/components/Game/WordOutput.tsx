@@ -6,6 +6,7 @@ interface WordOutputProps {
   showLetters: boolean;
   animationTrigger: number;
   onAnimationComplete?: () => void;
+  startCountdown?: 'ready' | 'set' | 'go' | null;
 }
 
 interface LetterState {
@@ -17,7 +18,7 @@ function randomTimeout(): number {
   return Math.floor(Math.random() * 1500);
 }
 
-export function WordOutput({ word, isRevealed, showLetters, animationTrigger, onAnimationComplete }: WordOutputProps) {
+export function WordOutput({ word, isRevealed, showLetters, animationTrigger, onAnimationComplete, startCountdown }: WordOutputProps) {
   const [letters, setLetters] = useState<LetterState[]>([]);
   const [animatedIndices, setAnimatedIndices] = useState<Set<number>>(new Set());
   const animationCompleteRef = useRef(false);
@@ -102,17 +103,25 @@ export function WordOutput({ word, isRevealed, showLetters, animationTrigger, on
     <div className="game-display">
       <div className="display-screen">
         <div className="screen-border"></div>
-        <div id="typewritter-output" className="word-output">
-          {letters.map((letter, index) => (
-            <span
-              key={`${letter.animationKey}-${index}`}
-              className={animatedIndices.has(index) ? 'hidden-output fade-in-output' : 'hidden-output'}
-            >
-              {letter.char}
-            </span>
-          ))}
-        </div>
-        <div id="letter-count" className="letter-hint">{letterHint}</div>
+        {startCountdown ? (
+          <div key={startCountdown} className="countdown-text">
+            {startCountdown.toUpperCase()}
+          </div>
+        ) : (
+          <>
+            <div id="typewritter-output" className="word-output">
+              {letters.map((letter, index) => (
+                <span
+                  key={`${letter.animationKey}-${index}`}
+                  className={animatedIndices.has(index) ? 'hidden-output fade-in-output' : 'hidden-output'}
+                >
+                  {letter.char}
+                </span>
+              ))}
+            </div>
+            <div id="letter-count" className="letter-hint">{letterHint}</div>
+          </>
+        )}
       </div>
     </div>
   );

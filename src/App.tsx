@@ -330,15 +330,6 @@ function GameContent() {
         />
       )}
 
-      {/* Start Countdown */}
-      {startCountdown && (
-        <div className="start-countdown">
-          <div key={startCountdown} className="countdown-text">
-            {startCountdown.toUpperCase()}
-          </div>
-        </div>
-      )}
-
       {/* Word Output */}
       {showGameElements && (
         <WordOutput
@@ -346,6 +337,7 @@ function GameContent() {
           isRevealed={isRevealing}
           showLetters={state.showLetters}
           animationTrigger={state.animationTrigger}
+          startCountdown={startCountdown}
         />
       )}
 
