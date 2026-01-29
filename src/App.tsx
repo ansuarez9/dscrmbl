@@ -282,6 +282,34 @@ function GameContent() {
         </div>
       )}
 
+      {/* Status Bar */}
+      {(showGameElements || state.phase === 'idle') && (
+        <StatusBar
+          timeRemaining={timeRemaining}
+          isTimerVisible={state.timerModeEnabled && isTimerRunning}
+          isTimerWarning={isTimerWarning}
+          streak={state.phase === 'idle' ? getCurrentStreak : state.streak}
+        />
+      )}
+
+      {/* Attempts Display */}
+      {showGameElements && (
+        <AttemptsDisplay
+          results={state.attemptResults}
+          currentAttempt={state.attempts}
+        />
+      )}
+
+      {/* Word Output */}
+      {showGameElements && (
+        <WordOutput
+          word={state.currentWord}
+          isRevealed={isRevealing}
+          showLetters={state.showLetters}
+          animationTrigger={state.animationTrigger}
+        />
+      )}
+
       {/* Action Buttons - hide when complete or when revealing final word */}
       {!isComplete && !isFinalWordRevealing && (
         <div className="action-grid action-grid--daily">
@@ -303,36 +331,6 @@ function GameContent() {
             REPLAY ({5 - state.replayCount})
           </CyberButton>
         </div>
-      )}
-
-      {/* Status Bar */}
-      {(showGameElements || state.phase === 'idle') && (
-        <StatusBar
-          timeRemaining={timeRemaining}
-          isTimerVisible={state.timerModeEnabled && isTimerRunning}
-          isTimerWarning={isTimerWarning}
-          streak={state.phase === 'idle' ? getCurrentStreak : state.streak}
-          replaysRemaining={5 - state.replayCount}
-          showReplays={state.phase === 'playing'}
-        />
-      )}
-
-      {/* Attempts Display */}
-      {showGameElements && (
-        <AttemptsDisplay
-          results={state.attemptResults}
-          currentAttempt={state.attempts}
-        />
-      )}
-
-      {/* Word Output */}
-      {showGameElements && (
-        <WordOutput
-          word={state.currentWord}
-          isRevealed={isRevealing}
-          showLetters={state.showLetters}
-          animationTrigger={state.animationTrigger}
-        />
       )}
 
       {/* Input Zone */}
