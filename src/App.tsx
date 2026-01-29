@@ -21,7 +21,7 @@ import { getTimeUntilNextDay } from './utils/seededRandom';
 import type { DailyStats, HistoryPercentile } from './types/game';
 
 function GameContent() {
-  const { state, startGame, nextWord, submitGuess, replayWord, timerExpired, toggleTimerMode, triggerAnimation, resetGame } = useGameContext();
+  const { state, startGame, nextWord, submitGuess, replayWord, timerExpired, toggleTimerMode, resetGame } = useGameContext();
   const { playCorrectSound, playWrongSound, playVictorySound, playTimerWarningSound } = useAudioContext();
   const { dailyNumber, canPlayToday, todayScore, todayResults, dailyStats, updateDailyStats, getCurrentStreak, updateStreak } = useDailyChallenge();
   const { theme, isLoading: isThemeLoading, error: themeError } = useDailyTheme();
@@ -146,25 +146,19 @@ function GameContent() {
 
   const handleSubmit = useCallback((guess: string) => {
     const wasCorrect = guess.toUpperCase() === state.currentWord;
-    const currentAttempts = state.attempts; // Capture current attempts before submit
     submitGuess(guess);
 
     if (wasCorrect) {
       playCorrectSound();
     } else {
       playWrongSound();
-      // Auto replay after wrong guess if attempts remain (check current, not next)
-      if (currentAttempts < 3) {
-        setTimeout(() => {
-          triggerAnimation(); // Trigger animation without incrementing replay count
-        }, 1500);
-      }
     }
-  }, [state.currentWord, state.attempts, submitGuess, triggerAnimation, playCorrectSound, playWrongSound]);
+  }, [state.currentWord, submitGuess, playCorrectSound, playWrongSound]);
 
   const handleReplay = useCallback(() => {
-    if (state.replayCount >= 1) return;
-    replayWord(); // This increments replay count and triggers animation
+    // Each word has 5 total replays
+    if (state.replayCount >= 5) return;
+    replayWord();
   }, [state.replayCount, replayWord]);
 
   const getStartButtonText = () => {
@@ -288,30 +282,6 @@ function GameContent() {
         </div>
       )}
 
-      {/* Action Buttons - hide when complete or when revealing final word */}
-      {!isComplete && !isFinalWordRevealing && (
-        <div className="action-grid action-grid--daily">
-          <CyberButton
-            id="start-game"
-            variant="primary"
-            tag={getStartButtonTag()}
-            disabled={!canStart}
-            onClick={canStart ? (state.phase === 'idle' ? handleStartGame : handleNextWord) : undefined}
-          >
-            {getStartButtonText()}
-          </CyberButton>
-          <CyberButton
-            id="repeat"
-            variant="secondary"
-            tag="1x"
-            disabled={!isPlaying || state.replayCount >= 1}
-            onClick={handleReplay}
-          >
-            REPLAY
-          </CyberButton>
-        </div>
-      )}
-
       {/* Status Bar */}
       {(showGameElements || state.phase === 'idle') && (
         <StatusBar
@@ -338,6 +308,29 @@ function GameContent() {
           showLetters={state.showLetters}
           animationTrigger={state.animationTrigger}
         />
+      )}
+
+      {/* Action Buttons - hide when complete or when revealing final word */}
+      {!isComplete && !isFinalWordRevealing && (
+        <div className="action-grid action-grid--daily">
+          <CyberButton
+            id="start-game"
+            variant="primary"
+            tag={getStartButtonTag()}
+            disabled={!canStart}
+            onClick={canStart ? (state.phase === 'idle' ? handleStartGame : handleNextWord) : undefined}
+          >
+            {getStartButtonText()}
+          </CyberButton>
+          <CyberButton
+            id="repeat"
+            variant="secondary"
+            disabled={!isPlaying || state.replayCount >= 5}
+            onClick={handleReplay}
+          >
+            REPLAY ({5 - state.replayCount})
+          </CyberButton>
+        </div>
       )}
 
       {/* Input Zone */}
