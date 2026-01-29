@@ -1506,6 +1506,37 @@ body.light-mode .ambient-glow {
     }
 }
 
+.share-options {
+    margin-bottom: var(--spacing-md);
+    display: flex;
+    justify-content: center;
+}
+
+.link-checkbox {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    user-select: none;
+}
+
+.link-checkbox input[type="checkbox"] {
+    cursor: pointer;
+    accent-color: var(--cyan);
+    width: 18px;
+    height: 18px;
+}
+
+.link-checkbox input[type="checkbox"]:hover {
+    accent-color: var(--lime);
+}
+
+.link-checkbox span {
+    letter-spacing: 0.05em;
+}
+
 /* ================================
    Utility Classes
    ================================ */

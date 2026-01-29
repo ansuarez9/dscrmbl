@@ -30,6 +30,7 @@ export function FinalScoreModal({
   const [isHiding, setIsHiding] = useState(false);
   const [showPercentile, setShowPercentile] = useState(false);
   const [shareText, setShareText] = useState('SHARE RESULTS');
+  const [includeLink, setIncludeLink] = useState(true);
 
   useEffect(() => {
     if (isOpen) {
@@ -54,7 +55,7 @@ export function FinalScoreModal({
   }, [isOpen, isVisible]);
 
   const handleShare = useCallback(async () => {
-    const text = generateShareText(dailyNumber, score, wordResults, streakBonus, themeName);
+    const text = generateShareText(dailyNumber, score, wordResults, streakBonus, themeName, includeLink);
     // const title = `DSCRMBL Daily #${dailyNumber}`;
 
     // Check if Web Share API is available (mobile devices)
@@ -72,7 +73,7 @@ export function FinalScoreModal({
       setShareText('COPIED!');
       setTimeout(() => setShareText('SHARE RESULTS'), 2000);
     }
-  }, [score, wordResults, streakBonus, themeName, dailyNumber]);
+  }, [score, wordResults, streakBonus, themeName, dailyNumber, includeLink]);
 
   if (!isVisible) return null;
 
@@ -124,6 +125,17 @@ export function FinalScoreModal({
               {percentile.percentile}%
             </span>
           </div>
+        </div>
+
+        <div className="share-options">
+          <label className="link-checkbox">
+            <input
+              type="checkbox"
+              checked={includeLink}
+              onChange={(e) => setIncludeLink(e.target.checked)}
+            />
+            <span>Include link to DSCRMBL</span>
+          </label>
         </div>
 
         <CyberButton

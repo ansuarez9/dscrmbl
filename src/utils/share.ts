@@ -5,7 +5,8 @@ export function generateShareText(
   score: number,
   wordResults: WordResult[],
   streakBonus: number,
-  themeName?: string
+  themeName?: string,
+  includeLink: boolean = true
 ): string {
   let shareText = `DSCRMBL Daily #${dailyNumber}\n`;
 
@@ -31,6 +32,11 @@ export function generateShareText(
   // Add streak bonus if applicable
   if (streakBonus > 0) {
     shareText += `${String.fromCodePoint(0x1F525)} Best Streak Bonus: +${streakBonus}\n`;
+  }
+
+  // Add link if requested
+  if (includeLink) {
+    shareText += '\nhttps://dscrmbl.com';
   }
 
   return shareText;
