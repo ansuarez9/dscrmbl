@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ansuarez9/unscramble.git"
+    "url": "git+https://github.com/ansuarez9/dscrmbl.git"
   },
   "keywords": [
     "javascript",
@@ -23,7 +23,7 @@
   ],
   "author": "Andres Suarez",
   "license": "All rights Reserved, Copyright",
-  "homepage": "http://dscrmbl.com",
+  "homepage": "https://www.dscrmbl.com",
   "dependencies": {
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
