@@ -145,6 +145,13 @@ function GameContent() {
     }
   }, [state.wordIndex]);
 
+  // Scroll to top after every guess
+  useEffect(() => {
+    if (state.phase === 'revealing' || (state.phase === 'playing' && state.attempts > 1)) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [state.phase, state.attempts]);
+
   // Countdown sequence when game starts
   useEffect(() => {
     if (state.phase === 'playing' && state.wordIndex === 0 && !countdownStartedRef.current) {
