@@ -55,11 +55,20 @@ export function InstructionsModal({ isOpen, onClose }: InstructionsModalProps) {
           </section>
 
           <section className="instruction-section">
+            <h3>REPLAYS</h3>
+            <ul>
+              <li>You get <strong>5 replays per word</strong></li>
+              <li>Use replays anytime to see the word again</li>
+              <li>Click the <strong>REPLAY</strong> button (shows remaining replays)</li>
+              <li>Use strategically to maximize your bonus</li>
+            </ul>
+          </section>
+
+          <section className="instruction-section">
             <h3>AFTER A FAILED GUESS</h3>
             <ul>
               <li>The orb flips showing <span className="text-danger">RED</span></li>
-              <li>Word replays automatically after 1.5s</li>
-              <li>One replay per unsuccessful guess</li>
+              <li>You can click REPLAY to see the word again</li>
               <li>After 3rd failed try, word reveals</li>
             </ul>
           </section>
@@ -76,12 +85,12 @@ export function InstructionsModal({ isOpen, onClose }: InstructionsModalProps) {
           <section className="instruction-section">
             <h3>SCORING</h3>
             <div className="score-formula">
-              <code>SCORE = LETTERS x REMAINING_TRIES</code>
+              <code>SCORE = (LETTERS x REMAINING_TRIES) + REPLAY_BONUS</code>
             </div>
             <ul>
-              <li><strong>Replay penalty:</strong> -3 points</li>
+              <li><strong>Replay bonus:</strong> 2 points per unused replay (max +10)</li>
               <li><strong>Timer bonus:</strong> +3 if solved under 10s</li>
-              <li><strong>Streak bonus:</strong> streak x 2 for consecutive first-tries</li>
+              <li><strong>Streak bonus:</strong> streak x 2 for consecutive first-tries without replays</li>
             </ul>
           </section>
 
