@@ -28,6 +28,9 @@ export function InputZone({ onSubmit, disabled, buttonText = 'SUBMIT' }: InputZo
 
     onSubmit(value.trim());
     setValue('');
+
+    // Hide mobile keyboard after submission
+    inputRef.current?.blur();
   };
 
   const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -47,6 +50,8 @@ export function InputZone({ onSubmit, disabled, buttonText = 'SUBMIT' }: InputZo
           type="text"
           placeholder="ENTER GUESS..."
           autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="off"
           spellCheck="false"
           value={value}
           onChange={(e) => setValue(e.target.value.toUpperCase())}
