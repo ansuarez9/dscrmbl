@@ -40,7 +40,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         streak: initialStreak,
         timerModeEnabled: state.timerModeEnabled,
         isDailyChallenge: true,
-        showLetters: true,
+        showLetters: false,
         animationTrigger: state.animationTrigger + 1
       };
     }

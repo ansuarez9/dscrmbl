@@ -21,7 +21,7 @@ import { getTimeUntilNextDay } from './utils/seededRandom';
 import type { DailyStats, HistoryPercentile } from './types/game';
 
 function GameContent() {
-  const { state, startGame, nextWord, submitGuess, replayWord, timerExpired, toggleTimerMode, resetGame } = useGameContext();
+  const { state, startGame, nextWord, submitGuess, replayWord, timerExpired, toggleTimerMode, resetGame, setShowLetters } = useGameContext();
   const { playCorrectSound, playWrongSound, playVictorySound, playTimerWarningSound } = useAudioContext();
   const { dailyNumber, canPlayToday, todayScore, todayResults, dailyStats, updateDailyStats, getCurrentStreak, updateStreak } = useDailyChallenge();
   const { theme, isLoading: isThemeLoading, error: themeError } = useDailyTheme();
@@ -134,6 +134,16 @@ function GameContent() {
       setGameCompleteHandled(false);
     }
   }, [state.phase]);
+
+  // Show letters with 1.5 second delay when game starts
+  useEffect(() => {
+    if (state.phase === 'playing' && state.wordIndex === 0 && !state.showLetters) {
+      const timer = setTimeout(() => {
+        setShowLetters(true);
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [state.phase, state.wordIndex, state.showLetters, setShowLetters]);
 
   const handleStartGame = useCallback(() => {
     if (!canPlayToday || !theme) return;

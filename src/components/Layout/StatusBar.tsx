@@ -26,12 +26,10 @@ export function StatusBar({ timeRemaining, isTimerVisible, isTimerWarning, strea
           <span className="status-value">{replaysRemaining}</span>
         </div>
       )}
-      {streak > 0 && (
-        <div id="streak-display" className="status-item status-item--streak">
-          <span className="status-icon">{String.fromCodePoint(0x1F525)}</span>
-          <span className="status-value">{streak}</span>
-        </div>
-      )}
+      <div id="streak-display" className="status-item status-item--streak">
+        <span className="status-icon">{String.fromCodePoint(0x1F525)}</span>
+        <span className="status-value">{streak}</span>
+      </div>
     </div>
   );
 }
