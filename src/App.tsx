@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { ThemeProvider } from './context/ThemeContext';
 import { AudioProvider, useAudioContext } from './context/AudioContext';
 import { GameProvider, useGameContext } from './context/GameContext';
@@ -32,6 +32,8 @@ function GameContent() {
   const [finalPercentile, setFinalPercentile] = useState<HistoryPercentile>({ history: [], percentile: 100 });
   const [countdown, setCountdown] = useState('--:--:--');
   const [gameCompleteHandled, setGameCompleteHandled] = useState(false);
+  const [startCountdown, setStartCountdown] = useState<'ready' | 'set' | 'go' | null>(null);
+  const countdownStartedRef = useRef(false);
 
   // Auto-show instructions for new players
   useEffect(() => {
@@ -132,18 +134,36 @@ function GameContent() {
   useEffect(() => {
     if (state.phase === 'idle') {
       setGameCompleteHandled(false);
+      countdownStartedRef.current = false;
     }
   }, [state.phase]);
 
-  // Show letters with 1.5 second delay when game starts
+  // Reset countdown ref when moving to next word
   useEffect(() => {
-    if (state.phase === 'playing' && state.wordIndex === 0 && !state.showLetters) {
-      const timer = setTimeout(() => {
-        setShowLetters(true);
-      }, 1500);
-      return () => clearTimeout(timer);
+    if (state.wordIndex > 0) {
+      countdownStartedRef.current = false;
     }
-  }, [state.phase, state.wordIndex, state.showLetters, setShowLetters]);
+  }, [state.wordIndex]);
+
+  // Countdown sequence when game starts
+  useEffect(() => {
+    if (state.phase === 'playing' && state.wordIndex === 0 && !countdownStartedRef.current) {
+      countdownStartedRef.current = true;
+
+      const runCountdown = async () => {
+        setStartCountdown('ready');
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        setStartCountdown('set');
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        setStartCountdown('go');
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        setStartCountdown(null);
+        setShowLetters(true);
+      };
+
+      runCountdown();
+    }
+  }, [state.phase, state.wordIndex, setShowLetters]);
 
   const handleStartGame = useCallback(() => {
     if (!canPlayToday || !theme) return;
@@ -308,6 +328,15 @@ function GameContent() {
           results={state.attemptResults}
           currentAttempt={state.attempts}
         />
+      )}
+
+      {/* Start Countdown */}
+      {startCountdown && (
+        <div className="start-countdown">
+          <div key={startCountdown} className="countdown-text">
+            {startCountdown.toUpperCase()}
+          </div>
+        </div>
       )}
 
       {/* Word Output */}

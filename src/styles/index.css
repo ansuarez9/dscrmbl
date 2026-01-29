@@ -894,6 +894,43 @@ body.light-mode .ambient-glow {
     }
 }
 
+/* ================================
+   Start Countdown
+   ================================ */
+.start-countdown {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 120px;
+}
+
+.countdown-text {
+    font-family: var(--font-display);
+    font-size: 3rem;
+    font-weight: bold;
+    color: var(--cyan);
+    text-shadow: var(--glow-cyan);
+    letter-spacing: 0.1em;
+    animation: countdownFade 1s ease-in-out forwards;
+}
+
+@keyframes countdownFade {
+    0% {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    100% {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+}
+
 .letter-hint {
     font-size: 0.75rem;
     color: var(--text-muted);
