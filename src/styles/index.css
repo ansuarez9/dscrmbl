@@ -724,6 +724,10 @@ body.light-mode .ambient-glow {
     color: var(--amber);
 }
 
+.status-item--replays {
+    color: var(--lime);
+}
+
 /* ================================
    Attempts Display
    ================================ */

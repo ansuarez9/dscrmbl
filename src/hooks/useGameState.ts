@@ -78,7 +78,6 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         const { wordScore, newStreak, streakBonusAdded } = calculateWordScore({
           wordLength: state.currentWord.length,
           attempts: state.attempts,
-          replayPenalty: state.replayPenalty,
           timerModeEnabled: state.timerModeEnabled,
           timeRemaining: state.timeRemaining,
           streak: state.streak,
@@ -123,12 +122,12 @@ function gameReducer(state: GameState, action: GameAction): GameState {
     }
 
     case 'REPLAY_WORD': {
-      if (state.replayCount >= 1) return state;
+      // Each word has 5 total replays available
+      if (state.replayCount >= 5) return state;
 
       return {
         ...state,
-        replayCount: 1,
-        replayPenalty: state.replayPenalty + 3,
+        replayCount: state.replayCount + 1,
         showLetters: true,
         animationTrigger: state.animationTrigger + 1
       };

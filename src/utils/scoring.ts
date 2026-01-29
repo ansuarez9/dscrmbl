@@ -3,7 +3,6 @@ import type { DailyStats, HistoryPercentile } from '../types/game';
 export interface ScoreParams {
   wordLength: number;
   attempts: number;
-  replayPenalty: number;
   timerModeEnabled: boolean;
   timeRemaining: number;
   streak: number;
@@ -12,7 +11,7 @@ export interface ScoreParams {
 }
 
 export function calculateWordScore(params: ScoreParams): { wordScore: number; newStreak: number; streakBonusAdded: number } {
-  const { wordLength, attempts, replayPenalty, timerModeEnabled, timeRemaining, streak, replayCount, solved } = params;
+  const { wordLength, attempts, timerModeEnabled, timeRemaining, streak, replayCount, solved } = params;
 
   if (!solved) {
     return { wordScore: 0, newStreak: 0, streakBonusAdded: 0 };
@@ -20,10 +19,10 @@ export function calculateWordScore(params: ScoreParams): { wordScore: number; ne
 
   let wordScore = wordLength * (4 - attempts);
 
-  // Apply replay penalty
-  if (replayPenalty > 0) {
-    wordScore = Math.max(0, wordScore - replayPenalty);
-  }
+  // Apply replay bonus (2 points per unused replay)
+  const replaysRemaining = 5 - replayCount;
+  const replayBonus = replaysRemaining * 2;
+  wordScore += replayBonus;
 
   // Apply timer bonus (if solved in under 10 seconds)
   if (timerModeEnabled && timeRemaining > 20) {
