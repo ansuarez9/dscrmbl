@@ -54,15 +54,1016 @@
       "handsome"
     ]
   },
+  "2026-01-31": {
+    "themeName": "TUBE TONES",
+    "description": "Vintage guitar and amplifier terms",
+    "wordList": [
+      "tweed",
+      "reverb",
+      "tremolo",
+      "sunburst",
+      "humbucker"
+    ]
+  },
+  "2026-02-01": {
+    "themeName": "BEAUTIFUL GAME",
+    "description": "Soccer terminology",
+    "wordList": [
+      "pitch",
+      "keeper",
+      "striker",
+      "midfield",
+      "goalkeeper"
+    ]
+  },
+  "2026-02-02": {
+    "themeName": "SOUND CHECK",
+    "description": "High-fidelity audio equipment",
+    "wordList": [
+      "vinyl",
+      "woofer",
+      "tweeter",
+      "speakers",
+      "turntable"
+    ]
+  },
+  "2026-02-03": {
+    "themeName": "DOUBLE TROUBLE",
+    "description": "Words with consecutive double letters",
+    "wordList": [
+      "teeth",
+      "coffee",
+      "balloon",
+      "committee",
+      "bookkeeper"
+    ]
+  },
+  "2026-02-04": {
+    "themeName": "WATER WORKS",
+    "description": "Bodies and flows of water",
+    "wordList": [
+      "creek",
+      "stream",
+      "cascade",
+      "waterway",
+      "reservoir"
+    ]
+  },
+  "2026-02-05": {
+    "themeName": "CHEF'S KISS",
+    "description": "Cooking techniques and methods",
+    "wordList": [
+      "broil",
+      "blanch",
+      "sauteed",
+      "marinate",
+      "caramelize"
+    ]
+  },
+  "2026-02-06": {
+    "themeName": "FISHY BUSINESS",
+    "description": "Types of fish",
+    "wordList": [
+      "trout",
+      "salmon",
+      "grouper",
+      "flounder",
+      "swordfish"
+    ]
+  },
+  "2026-02-07": {
+    "themeName": "BIRD'S EYE VIEW",
+    "description": "Feathered friends of the sky",
+    "wordList": [
+      "robin",
+      "falcon",
+      "pelican",
+      "cardinal",
+      "nighthawk"
+    ]
+  },
+  "2026-02-08": {
+    "themeName": "PREFIX PARTY",
+    "description": "Words starting with UN-",
+    "wordList": [
+      "unfit",
+      "unkind",
+      "unlucky",
+      "unlikely",
+      "uncertain"
+    ]
+  },
+  "2026-02-09": {
+    "themeName": "SPACE ODDITY",
+    "description": "Astronomy and celestial terms",
+    "wordList": [
+      "lunar",
+      "nebula",
+      "eclipse",
+      "asteroid",
+      "satellite"
+    ]
+  },
+  "2026-02-10": {
+    "themeName": "DOUBLE DUTY",
+    "description": "Words that work as both noun and verb",
+    "wordList": [
+      "dance",
+      "travel",
+      "harvest",
+      "practice",
+      "challenge"
+    ]
+  },
+  "2026-02-11": {
+    "themeName": "COLOR WHEEL",
+    "description": "Shades and hues",
+    "wordList": [
+      "coral",
+      "indigo",
+      "crimson",
+      "lavender",
+      "turquoise"
+    ]
+  },
+  "2026-02-12": {
+    "themeName": "TREE HUGGERS",
+    "description": "Types of trees",
+    "wordList": [
+      "maple",
+      "willow",
+      "redwood",
+      "sycamore",
+      "evergreen"
+    ]
+  },
+  "2026-02-13": {
+    "themeName": "GEMSTONE SHUFFLE",
+    "description": "Precious stones and gems",
+    "wordList": [
+      "pearl",
+      "garnet",
+      "diamond",
+      "sapphire",
+      "moonstone"
+    ]
+  },
+  "2026-02-14": {
+    "themeName": "BOOKWORM'S DELIGHT",
+    "description": "Literary and writing terms",
+    "wordList": [
+      "genre",
+      "sequel",
+      "chapter",
+      "metaphor",
+      "narrative"
+    ]
+  },
+  "2026-02-15": {
+    "themeName": "ROYAL TREATMENT",
+    "description": "Monarchy and royalty terms",
+    "wordList": [
+      "crown",
+      "throne",
+      "kingdom",
+      "princess",
+      "sovereign"
+    ]
+  },
+  "2026-02-16": {
+    "themeName": "WEATHER REPORT",
+    "description": "Meteorological phenomena",
+    "wordList": [
+      "sleet",
+      "breeze",
+      "drought",
+      "blizzard",
+      "hurricane"
+    ]
+  },
+  "2026-02-17": {
+    "themeName": "GREEN THUMB",
+    "description": "Gardening terms",
+    "wordList": [
+      "mulch",
+      "sprout",
+      "compost",
+      "seedling",
+      "perennial"
+    ]
+  },
+  "2026-02-18": {
+    "themeName": "SWEET TOOTH",
+    "description": "Desserts and confections",
+    "wordList": [
+      "fudge",
+      "cookie",
+      "brownie",
+      "tiramisu",
+      "cheesecake"
+    ]
+  },
+  "2026-02-19": {
+    "themeName": "WANDERLUST",
+    "description": "Travel and adventure terms",
+    "wordList": [
+      "vista",
+      "voyage",
+      "journey",
+      "passport",
+      "adventure"
+    ]
+  },
+  "2026-02-20": {
+    "themeName": "MUSIC TO MY EARS",
+    "description": "Musical terminology",
+    "wordList": [
+      "tempo",
+      "melody",
+      "harmony",
+      "symphony",
+      "crescendo"
+    ]
+  },
+  "2026-02-21": {
+    "themeName": "TOOLBOX",
+    "description": "Hand and power tools",
+    "wordList": [
+      "drill",
+      "hammer",
+      "scraper",
+      "chainsaw",
+      "screwdriver"
+    ]
+  },
+  "2026-02-22": {
+    "themeName": "MONEY MATTERS",
+    "description": "Financial and investment terms",
+    "wordList": [
+      "stock",
+      "budget",
+      "deposit",
+      "dividend",
+      "portfolio"
+    ]
+  },
+  "2026-02-23": {
+    "themeName": "OCEAN'S DEPTHS",
+    "description": "Marine and nautical terms",
+    "wordList": [
+      "whale",
+      "anchor",
+      "current",
+      "seashell",
+      "submarine"
+    ]
+  },
+  "2026-02-24": {
+    "themeName": "ANCIENT HISTORY",
+    "description": "Historical and archaeological terms",
+    "wordList": [
+      "relic",
+      "empire",
+      "dynasty",
+      "artifact",
+      "gladiator"
+    ]
+  },
+  "2026-02-25": {
+    "themeName": "BODY LANGUAGE",
+    "description": "Human anatomy",
+    "wordList": [
+      "elbow",
+      "muscle",
+      "eyelash",
+      "shoulder",
+      "vertebrae"
+    ]
+  },
+  "2026-02-26": {
+    "themeName": "FABRIC OF LIFE",
+    "description": "Textiles and materials",
+    "wordList": [
+      "denim",
+      "velvet",
+      "leather",
+      "cashmere",
+      "polyester"
+    ]
+  },
+  "2026-02-27": {
+    "themeName": "SPICE RACK",
+    "description": "Culinary spices and seasonings",
+    "wordList": [
+      "cumin",
+      "ginger",
+      "oregano",
+      "cardamom",
+      "coriander"
+    ]
+  },
+  "2026-02-28": {
+    "themeName": "ELEMENT OF SURPRISE",
+    "description": "Chemical elements",
+    "wordList": [
+      "argon",
+      "helium",
+      "mercury",
+      "titanium",
+      "palladium"
+    ]
+  },
+  "2026-03-01": {
+    "themeName": "GAME ON",
+    "description": "General sports terminology",
+    "wordList": [
+      "match",
+      "league",
+      "referee",
+      "overtime",
+      "scoreboard"
+    ]
+  },
+  "2026-03-02": {
+    "themeName": "BUILDING BLOCKS",
+    "description": "Architecture and construction",
+    "wordList": [
+      "brick",
+      "column",
+      "balcony",
+      "stairway",
+      "blueprint"
+    ]
+  },
+  "2026-03-03": {
+    "themeName": "NIGHT OWL",
+    "description": "Nocturnal and nighttime terms",
+    "wordList": [
+      "lunar",
+      "shadow",
+      "starlit",
+      "midnight",
+      "moonlight"
+    ]
+  },
+  "2026-03-04": {
+    "themeName": "DOCTOR'S ORDERS",
+    "description": "Medical terminology",
+    "wordList": [
+      "pulse",
+      "dosage",
+      "symptom",
+      "medicine",
+      "diagnosis"
+    ]
+  },
+  "2026-03-05": {
+    "themeName": "ADVERB AVENUE",
+    "description": "Words ending in -LY",
+    "wordList": [
+      "daily",
+      "slowly",
+      "quickly",
+      "suddenly",
+      "carefully"
+    ]
+  },
+  "2026-03-06": {
+    "themeName": "BREAKFAST CLUB",
+    "description": "Morning meal favorites",
+    "wordList": [
+      "toast",
+      "cereal",
+      "pancake",
+      "omelette",
+      "croissant"
+    ]
+  },
+  "2026-03-07": {
+    "themeName": "GREEK TO ME",
+    "description": "Words of Greek origin",
+    "wordList": [
+      "chaos",
+      "cosmos",
+      "paradox",
+      "euphoria",
+      "democracy"
+    ]
+  },
+  "2026-03-08": {
+    "themeName": "WILD WEST",
+    "description": "Frontier and cowboy terms",
+    "wordList": [
+      "ranch",
+      "outlaw",
+      "sheriff",
+      "stampede",
+      "stagecoach"
+    ]
+  },
+  "2026-03-09": {
+    "themeName": "ISLAND VIBES",
+    "description": "Tropical paradise terms",
+    "wordList": [
+      "beach",
+      "lagoon",
+      "coconut",
+      "paradise",
+      "shipwreck"
+    ]
+  },
+  "2026-03-10": {
+    "themeName": "MOUNTAIN HIGH",
+    "description": "Alpine and climbing terms",
+    "wordList": [
+      "cliff",
+      "summit",
+      "glacier",
+      "altitude",
+      "avalanche"
+    ]
+  },
+  "2026-03-11": {
+    "themeName": "TIME CAPSULE",
+    "description": "Prehistoric and fossil terms",
+    "wordList": [
+      "amber",
+      "fossil",
+      "reptile",
+      "dinosaur",
+      "trilobite"
+    ]
+  },
+  "2026-03-12": {
+    "themeName": "CIRCUS ACT",
+    "description": "Big top entertainment",
+    "wordList": [
+      "clown",
+      "juggle",
+      "trapeze",
+      "carnival",
+      "ringmaster"
+    ]
+  },
+  "2026-03-13": {
+    "themeName": "UNDER THE HOOD",
+    "description": "Automotive terminology",
+    "wordList": [
+      "brake",
+      "engine",
+      "exhaust",
+      "throttle",
+      "carburetor"
+    ]
+  },
+  "2026-03-14": {
+    "themeName": "MAGIC SHOW",
+    "description": "Enchantment and sorcery",
+    "wordList": [
+      "spell",
+      "wizard",
+      "sorcery",
+      "illusion",
+      "enchanted"
+    ]
+  },
+  "2026-03-15": {
+    "themeName": "WINE O'CLOCK",
+    "description": "Viticulture and oenology",
+    "wordList": [
+      "grape",
+      "merlot",
+      "vintage",
+      "vineyard",
+      "sommelier"
+    ]
+  },
+  "2026-03-16": {
+    "themeName": "PICTURE THIS",
+    "description": "Photography terms",
+    "wordList": [
+      "focus",
+      "camera",
+      "shutter",
+      "aperture",
+      "landscape"
+    ]
+  },
+  "2026-03-17": {
+    "themeName": "MYTH MAKERS",
+    "description": "Mythological creatures and places",
+    "wordList": [
+      "titan",
+      "dragon",
+      "centaur",
+      "minotaur",
+      "labyrinth"
+    ]
+  },
+  "2026-03-18": {
+    "themeName": "COFFEE BREAK",
+    "description": "Cafe culture and brewing",
+    "wordList": [
+      "mocha",
+      "brewed",
+      "arabica",
+      "espresso",
+      "cappuccino"
+    ]
+  },
+  "2026-03-19": {
+    "themeName": "TECH TALK",
+    "description": "Computer and digital terms",
+    "wordList": [
+      "pixel",
+      "buffer",
+      "network",
+      "software",
+      "algorithm"
+    ]
+  },
+  "2026-03-20": {
+    "themeName": "IN THE SPOTLIGHT",
+    "description": "Theater and stage terms",
+    "wordList": [
+      "stage",
+      "script",
+      "curtain",
+      "audition",
+      "monologue"
+    ]
+  },
+  "2026-03-21": {
+    "themeName": "BATTER UP",
+    "description": "Baseball terminology",
+    "wordList": [
+      "pitch",
+      "dugout",
+      "infield",
+      "fastball",
+      "strikeout"
+    ]
+  },
+  "2026-03-22": {
+    "themeName": "FLOWER POWER",
+    "description": "Blooms and blossoms",
+    "wordList": [
+      "tulip",
+      "orchid",
+      "jasmine",
+      "marigold",
+      "sunflower"
+    ]
+  },
+  "2026-03-23": {
+    "themeName": "MOOD SWINGS",
+    "description": "Emotions and feelings",
+    "wordList": [
+      "anger",
+      "sorrow",
+      "anxiety",
+      "jealousy",
+      "happiness"
+    ]
+  },
+  "2026-03-24": {
+    "themeName": "FIXER UPPER",
+    "description": "Home renovation terms",
+    "wordList": [
+      "paint",
+      "faucet",
+      "drywall",
+      "flooring",
+      "remodeled"
+    ]
+  },
+  "2026-03-25": {
+    "themeName": "SOUND ALIKES",
+    "description": "Homophones in disguise",
+    "wordList": [
+      "reign",
+      "knight",
+      "whether",
+      "patience",
+      "principal"
+    ]
+  },
+  "2026-03-26": {
+    "themeName": "ANIMAL KINGDOM",
+    "description": "Wildlife from around the world",
+    "wordList": [
+      "tiger",
+      "gopher",
+      "panther",
+      "elephant",
+      "alligator"
+    ]
+  },
+  "2026-03-27": {
+    "themeName": "TIME FLIES",
+    "description": "Temporal terms and timekeeping",
+    "wordList": [
+      "epoch",
+      "minute",
+      "century",
+      "calendar",
+      "hourglass"
+    ]
+  },
+  "2026-03-28": {
+    "themeName": "PUZZLE PIECES",
+    "description": "Games and brain teasers",
+    "wordList": [
+      "chess",
+      "puzzle",
+      "mystery",
+      "charades",
+      "crossword"
+    ]
+  },
+  "2026-03-29": {
+    "themeName": "OPEN WIDE",
+    "description": "Dental terminology",
+    "wordList": [
+      "floss",
+      "cavity",
+      "filling",
+      "dentures",
+      "toothpaste"
+    ]
+  },
+  "2026-03-30": {
+    "themeName": "PEN AND INK",
+    "description": "Poetry and prose terms",
+    "wordList": [
+      "verse",
+      "sonnet",
+      "diction",
+      "epilogue",
+      "hyperbole"
+    ]
+  },
+  "2026-03-31": {
+    "themeName": "LAW AND ORDER",
+    "description": "Legal terminology",
+    "wordList": [
+      "trial",
+      "appeal",
+      "verdict",
+      "evidence",
+      "testimony"
+    ]
+  },
+  "2026-04-01": {
+    "themeName": "GETTING CRAFTY",
+    "description": "Arts and crafts supplies",
+    "wordList": [
+      "quilt",
+      "canvas",
+      "origami",
+      "ceramics",
+      "embroidery"
+    ]
+  },
+  "2026-04-02": {
+    "themeName": "SMOOTH SAILING",
+    "description": "Nautical and sailing terms",
+    "wordList": [
+      "stern",
+      "galley",
+      "rigging",
+      "maritime",
+      "starboard"
+    ]
+  },
+  "2026-04-03": {
+    "themeName": "BUG OUT",
+    "description": "Insects and creepy crawlies",
+    "wordList": [
+      "aphid",
+      "beetle",
+      "firefly",
+      "mosquito",
+      "butterfly"
+    ]
+  },
+  "2026-04-04": {
+    "themeName": "JAZZ HANDS",
+    "description": "Jazz music terminology",
+    "wordList": [
+      "blues",
+      "rhythm",
+      "trumpet",
+      "ensemble",
+      "improvise"
+    ]
+  },
+  "2026-04-05": {
+    "themeName": "STRING THEORY",
+    "description": "Stringed instruments",
+    "wordList": [
+      "viola",
+      "violin",
+      "ukulele",
+      "mandolin",
+      "violoncello"
+    ]
+  },
+  "2026-04-06": {
+    "themeName": "POTLUCK",
+    "description": "Dishes and meal types",
+    "wordList": [
+      "salad",
+      "entree",
+      "dessert",
+      "meatloaf",
+      "casserole"
+    ]
+  },
+  "2026-04-07": {
+    "themeName": "CHECKMATE",
+    "description": "Chess terminology",
+    "wordList": [
+      "queen",
+      "bishop",
+      "endgame",
+      "castling",
+      "checkmate"
+    ]
+  },
+  "2026-04-08": {
+    "themeName": "HAPPY CAMPER",
+    "description": "Outdoor camping gear",
+    "wordList": [
+      "cabin",
+      "cooler",
+      "bonfire",
+      "campfire",
+      "flashlight"
+    ]
+  },
+  "2026-04-09": {
+    "themeName": "POWDER DAY",
+    "description": "Winter sports and skiing",
+    "wordList": [
+      "slope",
+      "powder",
+      "gondola",
+      "snowfall",
+      "frostbite"
+    ]
+  },
+  "2026-04-10": {
+    "themeName": "FRENCH CONNECTION",
+    "description": "French loanwords in English",
+    "wordList": [
+      "naive",
+      "facade",
+      "chateau",
+      "boutique",
+      "entourage"
+    ]
+  },
+  "2026-04-11": {
+    "themeName": "MUSEUM PIECE",
+    "description": "Fine art terminology",
+    "wordList": [
+      "mural",
+      "fresco",
+      "gallery",
+      "portrait",
+      "sculpture"
+    ]
+  },
+  "2026-04-12": {
+    "themeName": "SHAKE IT UP",
+    "description": "Dance styles and forms",
+    "wordList": [
+      "waltz",
+      "ballet",
+      "foxtrot",
+      "flamenco",
+      "breakdance"
+    ]
+  },
+  "2026-04-13": {
+    "themeName": "OFFICE HOURS",
+    "description": "Workplace terminology",
+    "wordList": [
+      "email",
+      "laptop",
+      "meeting",
+      "deadline",
+      "paperwork"
+    ]
+  },
+  "2026-04-14": {
+    "themeName": "AHOY MATEY",
+    "description": "Pirate and seafaring terms",
+    "wordList": [
+      "plank",
+      "pirate",
+      "captain",
+      "treasure",
+      "buccaneer"
+    ]
+  },
+  "2026-04-15": {
+    "themeName": "JUST DESSERTS",
+    "description": "European pastries and sweets",
+    "wordList": [
+      "torte",
+      "gelato",
+      "parfait",
+      "meringue",
+      "profiterole"
+    ]
+  },
+  "2026-04-16": {
+    "themeName": "PASTA PERFECT",
+    "description": "Italian pasta varieties",
+    "wordList": [
+      "penne",
+      "rotini",
+      "ravioli",
+      "linguine",
+      "spaghetti"
+    ]
+  },
+  "2026-04-17": {
+    "themeName": "ROCK SOLID",
+    "description": "Geology and rock types",
+    "wordList": [
+      "shale",
+      "basalt",
+      "granite",
+      "obsidian",
+      "sandstone"
+    ]
+  },
+  "2026-04-18": {
+    "themeName": "SWEET DREAMS",
+    "description": "Sleep and slumber terms",
+    "wordList": [
+      "dream",
+      "pillow",
+      "slumber",
+      "insomnia",
+      "nightmare"
+    ]
+  },
+  "2026-04-19": {
+    "themeName": "HERB GARDEN",
+    "description": "Culinary herbs",
+    "wordList": [
+      "basil",
+      "chives",
+      "parsley",
+      "rosemary",
+      "chamomile"
+    ]
+  },
+  "2026-04-20": {
+    "themeName": "COUNTRY ROADS",
+    "description": "Rural and pastoral scenes",
+    "wordList": [
+      "field",
+      "meadow",
+      "pasture",
+      "farmland",
+      "scarecrow"
+    ]
+  },
+  "2026-04-21": {
+    "themeName": "QUIET LETTERS",
+    "description": "More words with silent letters",
+    "wordList": [
+      "gnome",
+      "wreath",
+      "written",
+      "scissors",
+      "pneumonia"
+    ]
+  },
+  "2026-04-22": {
+    "themeName": "FARM TO TABLE",
+    "description": "Agricultural products",
+    "wordList": [
+      "bacon",
+      "butter",
+      "poultry",
+      "parmesan",
+      "livestock"
+    ]
+  },
+  "2026-04-23": {
+    "themeName": "SPELLING BEE",
+    "description": "Commonly misspelled words",
+    "wordList": [
+      "gauge",
+      "vacuum",
+      "liaison",
+      "occurred",
+      "millennium"
+    ]
+  },
+  "2026-04-24": {
+    "themeName": "ON THE COURT",
+    "description": "Basketball terminology",
+    "wordList": [
+      "layup",
+      "assist",
+      "dribble",
+      "jumpshot",
+      "backboard"
+    ]
+  },
+  "2026-04-25": {
+    "themeName": "NET GAINS",
+    "description": "Tennis terminology",
+    "wordList": [
+      "serve",
+      "volley",
+      "racquet",
+      "backhand",
+      "advantage"
+    ]
+  },
+  "2026-04-26": {
+    "themeName": "CHECKERED FLAG",
+    "description": "Auto racing terms",
+    "wordList": [
+      "draft",
+      "clutch",
+      "pitstop",
+      "speedway",
+      "racetrack"
+    ]
+  },
+  "2026-04-27": {
+    "themeName": "FASHION FORWARD",
+    "description": "Style and couture terms",
+    "wordList": [
+      "trend",
+      "runway",
+      "couture",
+      "wardrobe",
+      "accessory"
+    ]
+  },
+  "2026-04-28": {
+    "themeName": "UP IN THE AIR",
+    "description": "Aviation terminology",
+    "wordList": [
+      "pilot",
+      "flight",
+      "cockpit",
+      "terminal",
+      "turbulence"
+    ]
+  },
+  "2026-04-29": {
+    "themeName": "POKER FACE",
+    "description": "Card game terminology",
+    "wordList": [
+      "bluff",
+      "dealer",
+      "jackpot",
+      "straight",
+      "shuffling"
+    ]
+  },
+  "2026-04-30": {
+    "themeName": "TROPICAL PUNCH",
+    "description": "Exotic fruits",
+    "wordList": [
+      "guava",
+      "papaya",
+      "cherimoya",
+      "tamarind",
+      "pineapple"
+    ]
+  },
+  "2026-05-01": {
+    "themeName": "SILENT TREATMENT",
+    "description": "Words with silent letters",
+    "wordList": [
+      "knife",
+      "castle",
+      "whistle",
+      "knowledge",
+      "psychology"
+    ]
+  },
   "_fallback": {
     "themeName": "GENERAL",
     "description": "A mix of everyday words",
     "wordList": [
-      "python",
-      "rocket",
-      "castle",
-      "garden",
-      "planet"
+      "apple",
+      "market",
+      "bicycle",
+      "absolute",
+      "adventure"
     ]
   }
 }
