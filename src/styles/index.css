@@ -865,14 +865,8 @@ body.light-mode .ambient-glow {
         filter: blur(4px);
     }
 
-    40% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-        filter: blur(0);
-    }
-
     100% {
-        opacity: 0;
+        opacity: 1;
         transform: translateY(0) scale(1);
         filter: blur(0);
     }
@@ -941,6 +935,7 @@ body.light-mode .ambient-glow {
 }
 
 .input-wrapper {
+    position: relative;
     display: flex;
     align-items: center;
     width: 100%;
@@ -1040,6 +1035,56 @@ body.light-mode .ambient-glow {
 
     100% {
         opacity: 0;
+    }
+}
+
+/* Shake animation for invalid words */
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+
+    10%, 30%, 50%, 70%, 90% {
+        transform: translateX(-8px);
+    }
+
+    20%, 40%, 60%, 80% {
+        transform: translateX(8px);
+    }
+}
+
+.input-wrapper.shake {
+    animation: shake 0.5s ease-in-out;
+}
+
+/* Floating error message */
+.floating-error-message {
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--magenta);
+    color: var(--bg-primary);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+    pointer-events: none;
+    animation: floatUp 1.5s ease-out forwards;
+    text-shadow: none;
+}
+
+@keyframes floatUp {
+    0% {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-30px);
     }
 }
 

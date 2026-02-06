@@ -18,6 +18,7 @@ import { useDailyTheme } from './hooks/useDailyTheme';
 import { useTimer } from './hooks/useTimer';
 import { calculateFinalScore } from './utils/scoring';
 import { getTimeUntilNextDay } from './utils/seededRandom';
+import { isValidWord, isDictionaryLoaded } from './utils/dictionary';
 import type { DailyStats, HistoryPercentile } from './types/game';
 
 function GameContent() {
@@ -33,6 +34,7 @@ function GameContent() {
   const [countdown, setCountdown] = useState('--:--:--');
   const [gameCompleteHandled, setGameCompleteHandled] = useState(false);
   const [startCountdown, setStartCountdown] = useState<'ready' | 'set' | 'go' | null>(null);
+  const [wordValidationError, setWordValidationError] = useState<string | null>(null);
   const countdownStartedRef = useRef(false);
 
   // Auto-show instructions for new players
@@ -182,10 +184,17 @@ function GameContent() {
   }, [nextWord]);
 
   const handleSubmit = useCallback((guess: string) => {
-    const wasCorrect = guess.toUpperCase() === state.currentWord;
+    const isCorrectAnswer = guess.toUpperCase() === state.currentWord;
+
+    if (!isCorrectAnswer && isDictionaryLoaded() && !isValidWord(guess)) {
+      setWordValidationError('Not a valid word');
+      playWrongSound();
+      return;
+    }
+
     submitGuess(guess);
 
-    if (wasCorrect) {
+    if (isCorrectAnswer) {
       playCorrectSound();
     } else {
       playWrongSound();
@@ -376,6 +385,8 @@ function GameContent() {
         <InputZone
           onSubmit={handleSubmit}
           disabled={!isPlaying}
+          errorMessage={wordValidationError}
+          onErrorClear={() => setWordValidationError(null)}
         />
       )}
 
