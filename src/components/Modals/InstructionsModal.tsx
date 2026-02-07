@@ -95,9 +95,9 @@ export function InstructionsModal({ isOpen, onClose }: InstructionsModalProps) {
           </section>
 
           <section className="instruction-section">
-            <h3>FEATURES</h3>
+            <h3>GAME MODES</h3>
             <ul className="feature-list">
-              <li><span className="feature-tag">TIMER</span> 30 seconds per word</li>
+              <li><span className="feature-tag">TIMER MODE</span> Optional 20-second timer per word (choose before starting)</li>
               <li><span className="feature-tag">STREAK</span> Bonus for consecutive wins</li>
             </ul>
           </section>

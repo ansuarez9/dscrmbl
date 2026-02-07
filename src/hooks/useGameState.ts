@@ -3,6 +3,7 @@ import type { GameState, GameAction, AttemptResult, SavedGameState } from '../ty
 import { calculateWordScore } from '../utils/scoring';
 
 const STORAGE_KEY = 'dscrmbl-game-state';
+const TIMER_MODE_KEY = 'dscrmbl-timer-mode-preference';
 
 const initialState: GameState = {
   phase: 'idle',
@@ -18,7 +19,7 @@ const initialState: GameState = {
   streakBonus: 0,
   replayCount: 0,
   replayPenalty: 0,
-  timeRemaining: 30,
+  timeRemaining: 20,
   timerModeEnabled: false,
   isDailyChallenge: true,
   showLetters: false,
@@ -60,7 +61,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         attemptResults: ['pending', 'pending', 'pending'],
         replayCount: 0,
         replayPenalty: 0,
-        timeRemaining: 30,
+        timeRemaining: 20,
         showLetters: true,
         animationTrigger: state.animationTrigger + 1
       };
@@ -207,6 +208,23 @@ function gameReducer(state: GameState, action: GameAction): GameState {
   }
 }
 
+function loadTimerModePreference(): boolean {
+  try {
+    const saved = localStorage.getItem(TIMER_MODE_KEY);
+    return saved === 'true';
+  } catch {
+    return false;
+  }
+}
+
+function saveTimerModePreference(enabled: boolean): void {
+  try {
+    localStorage.setItem(TIMER_MODE_KEY, enabled.toString());
+  } catch {
+    // Ignore storage errors
+  }
+}
+
 function loadSavedState(): GameState | null {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
@@ -248,7 +266,10 @@ function saveState(state: GameState): void {
 }
 
 export function useGameState() {
-  const [state, dispatch] = useReducer(gameReducer, initialState);
+  const [state, dispatch] = useReducer(gameReducer, {
+    ...initialState,
+    timerModeEnabled: loadTimerModePreference()
+  });
 
   // Load saved state on mount
   useEffect(() => {
@@ -286,6 +307,11 @@ export function useGameState() {
   const toggleTimerMode = useCallback(() => {
     dispatch({ type: 'TOGGLE_TIMER_MODE' });
   }, []);
+
+  // Persist timer mode preference whenever it changes
+  useEffect(() => {
+    saveTimerModePreference(state.timerModeEnabled);
+  }, [state.timerModeEnabled]);
 
   const setShowLetters = useCallback((show: boolean) => {
     dispatch({ type: 'SET_SHOW_LETTERS', show });
