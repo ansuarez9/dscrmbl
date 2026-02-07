@@ -60,7 +60,7 @@ function GameContent() {
     startTimer,
     stopTimer
   } = useTimer({
-    initialTime: 30,
+    initialTime: 20,
     onWarning: playTimerWarningSound,
     onExpire: handleTimerExpire,
     warningThreshold: 10
@@ -83,12 +83,13 @@ function GameContent() {
 
   // Handle game phase changes
   useEffect(() => {
-    if (state.phase === 'playing' && state.timerModeEnabled) {
+    // Don't auto-start timer for first word (it starts after countdown)
+    if (state.phase === 'playing' && state.timerModeEnabled && state.wordIndex > 0) {
       startTimer();
     } else if (state.phase !== 'playing') {
       stopTimer();
     }
-  }, [state.phase, state.timerModeEnabled, startTimer, stopTimer]);
+  }, [state.phase, state.timerModeEnabled, state.wordIndex, startTimer, stopTimer]);
 
   // Auto-transition to complete after final word is revealed
   useEffect(() => {
@@ -168,11 +169,15 @@ function GameContent() {
         await new Promise(resolve => setTimeout(resolve, 1000));
         setStartCountdown(null);
         setShowLetters(true);
+        // Start timer after countdown completes and letters start showing
+        if (state.timerModeEnabled) {
+          startTimer();
+        }
       };
 
       runCountdown();
     }
-  }, [state.phase, state.wordIndex, setShowLetters]);
+  }, [state.phase, state.wordIndex, state.timerModeEnabled, setShowLetters, startTimer]);
 
   const handleStartGame = useCallback(() => {
     if (!canPlayToday || !theme) return;
@@ -299,7 +304,8 @@ function GameContent() {
     <GameContainer>
       <Header onInstructionsClick={() => setShowInstructions(true)} />
 
-      {!isComplete && !isFinalWordRevealing && (
+      {/* Settings Panel - only show before game starts */}
+      {state.phase === 'idle' && !isComplete && (
         <SettingsPanel
           timerModeEnabled={state.timerModeEnabled}
           onTimerModeToggle={toggleTimerMode}
@@ -332,7 +338,7 @@ function GameContent() {
       {(showGameElements || state.phase === 'idle') && (
         <StatusBar
           timeRemaining={timeRemaining}
-          isTimerVisible={state.timerModeEnabled && isTimerRunning}
+          isTimerVisible={state.timerModeEnabled && (state.phase === 'idle' || isTimerRunning || startCountdown !== null)}
           isTimerWarning={isTimerWarning}
           streak={state.phase === 'idle' ? getCurrentStreak : state.streak}
         />
