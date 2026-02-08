@@ -235,7 +235,6 @@ function GameContent() {
   const isComplete = state.phase === 'complete';
   const isFinalWordRevealing = isRevealing && state.wordIndex === 4 && state.playableWords.length === 0;
   const canStart = (state.phase === 'idle' && !isThemeLoading && !!theme) || (isRevealing && !isFinalWordRevealing);
-  const showGameElements = isPlaying || isRevealing;
 
   // Handler to view past results
   const handleViewResults = useCallback(() => {
