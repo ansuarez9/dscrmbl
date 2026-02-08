@@ -57,7 +57,7 @@ export function InstructionsModal({ isOpen, onClose }: InstructionsModalProps) {
           <section className="instruction-section">
             <h3>REPLAYS</h3>
             <ul>
-              <li>You get <strong>5 replays per word</strong></li>
+              <li>You get <strong>5 replays per word</strong> (3 in Hard Mode)</li>
               <li>Use replays anytime to see the word again</li>
               <li>Click the <strong>REPLAY</strong> button (shows remaining replays)</li>
               <li>Use strategically to maximize your bonus</li>
@@ -88,8 +88,8 @@ export function InstructionsModal({ isOpen, onClose }: InstructionsModalProps) {
               <code>SCORE = (LETTERS x REMAINING_TRIES) + REPLAY_BONUS</code>
             </div>
             <ul>
-              <li><strong>Replay bonus:</strong> 2 points per unused replay (max +10)</li>
-              <li><strong>Timer bonus:</strong> +3 if solved under 10s</li>
+              <li><strong>Replay bonus:</strong> 2 points per unused replay (max +10, or +6 in Hard Mode)</li>
+              <li><strong>Timer bonus:</strong> +3 if solved under 10s (Hard Mode only)</li>
               <li><strong>Streak bonus:</strong> streak x 2 for consecutive first-tries without replays</li>
             </ul>
           </section>
@@ -97,7 +97,7 @@ export function InstructionsModal({ isOpen, onClose }: InstructionsModalProps) {
           <section className="instruction-section">
             <h3>GAME MODES</h3>
             <ul className="feature-list">
-              <li><span className="feature-tag">TIMER MODE</span> Optional 20-second timer per word (choose before starting)</li>
+              <li><span className="feature-tag">HARD MODE</span> 20-second timer + only 3 replays (choose before starting)</li>
               <li><span className="feature-tag">STREAK</span> Bonus for consecutive wins</li>
             </ul>
           </section>
