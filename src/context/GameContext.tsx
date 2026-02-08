@@ -10,6 +10,7 @@ interface GameContextType {
   replayWord: () => void;
   timerExpired: () => void;
   toggleTimerMode: () => void;
+  toggleHardMode: () => void;
   setShowLetters: (show: boolean) => void;
   resetGame: () => void;
   triggerAnimation: () => void;

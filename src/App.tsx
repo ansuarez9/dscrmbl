@@ -22,7 +22,7 @@ import { isValidWord, isDictionaryLoaded } from './utils/dictionary';
 import type { DailyStats, HistoryPercentile } from './types/game';
 
 function GameContent() {
-  const { state, startGame, nextWord, submitGuess, replayWord, timerExpired, toggleTimerMode, resetGame, setShowLetters } = useGameContext();
+  const { state, startGame, nextWord, submitGuess, replayWord, timerExpired, toggleTimerMode, toggleHardMode, resetGame, setShowLetters } = useGameContext();
   const { playCorrectSound, playWrongSound, playVictorySound, playTimerWarningSound } = useAudioContext();
   const { dailyNumber, canPlayToday, todayScore, todayResults, dailyStats, updateDailyStats, getCurrentStreak, updateStreak } = useDailyChallenge();
   const { theme, isLoading: isThemeLoading, error: themeError } = useDailyTheme();
@@ -207,10 +207,11 @@ function GameContent() {
   }, [state.currentWord, submitGuess, playCorrectSound, playWrongSound]);
 
   const handleReplay = useCallback(() => {
-    // Each word has 5 total replays
-    if (state.replayCount >= 5) return;
+    // Each word has 5 total replays in normal mode, 3 in hard mode
+    const maxReplays = state.hardModeEnabled ? 3 : 5;
+    if (state.replayCount >= maxReplays) return;
     replayWord();
-  }, [state.replayCount, replayWord]);
+  }, [state.replayCount, state.hardModeEnabled, replayWord]);
 
   const getStartButtonText = () => {
     if (state.phase === 'idle') {
@@ -308,7 +309,9 @@ function GameContent() {
       {state.phase === 'idle' && !isComplete && (
         <SettingsPanel
           timerModeEnabled={state.timerModeEnabled}
+          hardModeEnabled={state.hardModeEnabled}
           onTimerModeToggle={toggleTimerMode}
+          onHardModeToggle={toggleHardMode}
         />
       )}
 
@@ -378,10 +381,10 @@ function GameContent() {
           <CyberButton
             id="repeat"
             variant="secondary"
-            disabled={!isPlaying || state.replayCount >= 5}
+            disabled={!isPlaying || state.replayCount >= (state.hardModeEnabled ? 3 : 5)}
             onClick={handleReplay}
           >
-            REPLAY ({5 - state.replayCount})
+            REPLAY ({(state.hardModeEnabled ? 3 : 5) - state.replayCount})
           </CyberButton>
         </div>
       )}
