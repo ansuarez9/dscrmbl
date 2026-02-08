@@ -1,13 +1,11 @@
 import { ToggleSwitch } from '../Buttons/ToggleSwitch';
 
 interface SettingsPanelProps {
-  timerModeEnabled: boolean;
   hardModeEnabled: boolean;
-  onTimerModeToggle: () => void;
   onHardModeToggle: () => void;
 }
 
-export function SettingsPanel({ timerModeEnabled, hardModeEnabled, onTimerModeToggle, onHardModeToggle }: SettingsPanelProps) {
+export function SettingsPanel({ hardModeEnabled, onHardModeToggle }: SettingsPanelProps) {
   return (
     <div className="settings-panel">
       <ToggleSwitch
@@ -15,13 +13,6 @@ export function SettingsPanel({ timerModeEnabled, hardModeEnabled, onTimerModeTo
         id="hard-mode-toggle"
         checked={hardModeEnabled}
         onChange={onHardModeToggle}
-      />
-      <ToggleSwitch
-        label="TIMER MODE"
-        id="timer-mode-toggle"
-        checked={timerModeEnabled}
-        onChange={onTimerModeToggle}
-        disabled={hardModeEnabled}
       />
     </div>
   );

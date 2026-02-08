@@ -3,7 +3,6 @@ import type { GameState, GameAction, AttemptResult, SavedGameState } from '../ty
 import { calculateWordScore } from '../utils/scoring';
 
 const STORAGE_KEY = 'dscrmbl-game-state';
-const TIMER_MODE_KEY = 'dscrmbl-timer-mode-preference';
 const HARD_MODE_KEY = 'dscrmbl-hard-mode-preference';
 
 const initialState: GameState = {
@@ -178,22 +177,12 @@ function gameReducer(state: GameState, action: GameAction): GameState {
       };
     }
 
-    case 'TOGGLE_TIMER_MODE': {
-      // Prevent toggling timer mode when hard mode is enabled
-      if (state.hardModeEnabled) return state;
-
-      return {
-        ...state,
-        timerModeEnabled: !state.timerModeEnabled
-      };
-    }
-
     case 'TOGGLE_HARD_MODE': {
       const newHardModeEnabled = !state.hardModeEnabled;
       return {
         ...state,
         hardModeEnabled: newHardModeEnabled,
-        // Auto-enable timer mode when hard mode is enabled, auto-disable when hard mode is disabled
+        // Hard mode controls timer mode
         timerModeEnabled: newHardModeEnabled
       };
     }
@@ -224,23 +213,6 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 
     default:
       return state;
-  }
-}
-
-function loadTimerModePreference(): boolean {
-  try {
-    const saved = localStorage.getItem(TIMER_MODE_KEY);
-    return saved === 'true';
-  } catch {
-    return false;
-  }
-}
-
-function saveTimerModePreference(enabled: boolean): void {
-  try {
-    localStorage.setItem(TIMER_MODE_KEY, enabled.toString());
-  } catch {
-    // Ignore storage errors
   }
 }
 
@@ -305,8 +277,8 @@ export function useGameState() {
   const hardModePreference = loadHardModePreference();
   const [state, dispatch] = useReducer(gameReducer, {
     ...initialState,
-    timerModeEnabled: loadTimerModePreference(),
-    hardModeEnabled: hardModePreference
+    hardModeEnabled: hardModePreference,
+    timerModeEnabled: hardModePreference // Timer mode is controlled by hard mode
   });
 
   // Load saved state on mount
@@ -342,18 +314,9 @@ export function useGameState() {
     dispatch({ type: 'TIMER_EXPIRED' });
   }, []);
 
-  const toggleTimerMode = useCallback(() => {
-    dispatch({ type: 'TOGGLE_TIMER_MODE' });
-  }, []);
-
   const toggleHardMode = useCallback(() => {
     dispatch({ type: 'TOGGLE_HARD_MODE' });
   }, []);
-
-  // Persist timer mode preference whenever it changes
-  useEffect(() => {
-    saveTimerModePreference(state.timerModeEnabled);
-  }, [state.timerModeEnabled]);
 
   // Persist hard mode preference whenever it changes
   useEffect(() => {
@@ -379,7 +342,6 @@ export function useGameState() {
     submitGuess,
     replayWord,
     timerExpired,
-    toggleTimerMode,
     toggleHardMode,
     setShowLetters,
     resetGame,

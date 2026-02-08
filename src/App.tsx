@@ -22,7 +22,7 @@ import { isValidWord, isDictionaryLoaded } from './utils/dictionary';
 import type { DailyStats, HistoryPercentile } from './types/game';
 
 function GameContent() {
-  const { state, startGame, nextWord, submitGuess, replayWord, timerExpired, toggleTimerMode, toggleHardMode, resetGame, setShowLetters } = useGameContext();
+  const { state, startGame, nextWord, submitGuess, replayWord, timerExpired, toggleHardMode, resetGame, setShowLetters } = useGameContext();
   const { playCorrectSound, playWrongSound, playVictorySound, playTimerWarningSound } = useAudioContext();
   const { dailyNumber, canPlayToday, todayScore, todayResults, dailyStats, updateDailyStats, getCurrentStreak, updateStreak } = useDailyChallenge();
   const { theme, isLoading: isThemeLoading, error: themeError } = useDailyTheme();
@@ -308,9 +308,7 @@ function GameContent() {
       {/* Settings Panel - only show before game starts */}
       {state.phase === 'idle' && !isComplete && (
         <SettingsPanel
-          timerModeEnabled={state.timerModeEnabled}
           hardModeEnabled={state.hardModeEnabled}
-          onTimerModeToggle={toggleTimerMode}
           onHardModeToggle={toggleHardMode}
         />
       )}

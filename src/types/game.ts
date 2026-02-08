@@ -38,7 +38,6 @@ export type GameAction =
   | { type: 'TIMER_TICK' }
   | { type: 'TIMER_EXPIRED' }
   | { type: 'REVEAL_WORD'; solved: boolean }
-  | { type: 'TOGGLE_TIMER_MODE' }
   | { type: 'TOGGLE_HARD_MODE' }
   | { type: 'SET_SHOW_LETTERS'; show: boolean }
   | { type: 'RESET_GAME' }
