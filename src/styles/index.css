@@ -935,7 +935,6 @@ body.light-mode .ambient-glow {
     align-items: center;
     gap: var(--spacing-sm);
     padding-top: 1.5rem;
-    padding-bottom: 1.5rem;
 }
 
 .input-wrapper {

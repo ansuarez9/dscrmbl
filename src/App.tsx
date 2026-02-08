@@ -336,33 +336,27 @@ function GameContent() {
       )}
 
       {/* Status Bar */}
-      {(showGameElements || state.phase === 'idle') && (
-        <StatusBar
-          timeRemaining={timeRemaining}
-          isTimerVisible={state.timerModeEnabled && (state.phase === 'idle' || isTimerRunning || startCountdown !== null)}
-          isTimerWarning={isTimerWarning}
-          streak={state.phase === 'idle' ? getCurrentStreak : state.streak}
-        />
-      )}
+      <StatusBar
+        timeRemaining={timeRemaining}
+        isTimerVisible={state.timerModeEnabled && (state.phase === 'idle' || isTimerRunning || startCountdown !== null)}
+        isTimerWarning={isTimerWarning}
+        streak={state.phase === 'idle' ? getCurrentStreak : state.streak}
+      />
 
       {/* Attempts Display */}
-      {showGameElements && (
-        <AttemptsDisplay
-          results={state.attemptResults}
-          currentAttempt={state.attempts}
-        />
-      )}
+      <AttemptsDisplay
+        results={state.attemptResults}
+        currentAttempt={state.attempts}
+      />
 
       {/* Word Output */}
-      {showGameElements && (
-        <WordOutput
-          word={state.currentWord}
-          isRevealed={isRevealing}
-          showLetters={state.showLetters}
-          animationTrigger={state.animationTrigger}
-          startCountdown={startCountdown}
-        />
-      )}
+      <WordOutput
+        word={state.currentWord}
+        isRevealed={isRevealing}
+        showLetters={state.showLetters}
+        animationTrigger={state.animationTrigger}
+        startCountdown={startCountdown}
+      />
 
       {/* Action Buttons - hide when complete or when revealing final word */}
       {!isComplete && !isFinalWordRevealing && (
@@ -388,14 +382,12 @@ function GameContent() {
       )}
 
       {/* Input Zone */}
-      {showGameElements && (
-        <InputZone
-          onSubmit={handleSubmit}
-          disabled={!isPlaying}
-          errorMessage={wordValidationError}
-          onErrorClear={() => setWordValidationError(null)}
-        />
-      )}
+      <InputZone
+        onSubmit={handleSubmit}
+        disabled={!isPlaying}
+        errorMessage={wordValidationError}
+        onErrorClear={() => setWordValidationError(null)}
+      />
 
       {/* Progress Track */}
       <ProgressTrack

@@ -119,7 +119,7 @@ export function WordOutput({ word, isRevealed, showLetters, animationTrigger, on
                 </span>
               ))}
             </div>
-            <div id="letter-count" className="letter-hint">{letterHint}</div>
+            {word && <div id="letter-count" className="letter-hint">{letterHint}</div>}
           </>
         )}
       </div>
