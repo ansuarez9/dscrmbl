@@ -388,7 +388,14 @@ body.light-mode .ambient-glow {
 .settings-panel {
     display: flex;
     justify-content: center;
-    gap: var(--spacing-xl);
+    align-items: center;
+    gap: var(--spacing-lg);
+}
+
+.settings-status {
+    display: flex;
+    gap: var(--spacing-sm);
+    align-items: center;
 }
 
 .setting-item {
@@ -807,8 +814,8 @@ body.light-mode .ambient-glow {
 .game-display {
     display: flex;
     justify-content: center;
-    padding-top: 1.5rem;
-    padding-bottom: 1.5rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
 }
 
 .display-screen {
@@ -1172,6 +1179,14 @@ body.light-mode .ambient-glow {
     animation: solvedPop 0.4s ease;
 }
 
+.word-slot .word.solved-later {
+    background: linear-gradient(135deg, var(--amber), var(--amber-dim));
+    border: none;
+    color: var(--bg-primary);
+    box-shadow: var(--glow-amber);
+    animation: solvedPop 0.4s ease;
+}
+
 .word-slot .word.not-solved {
     background: linear-gradient(135deg, var(--magenta), var(--magenta-dim));
     border: none;
@@ -1426,6 +1441,14 @@ body.light-mode .ambient-glow {
     color: var(--cyan);
     text-shadow: var(--glow-cyan);
     animation: scoreReveal 1s ease;
+}
+
+.score-high {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    letter-spacing: 0.15em;
+    margin-top: var(--spacing-sm);
 }
 
 @keyframes scoreReveal {

@@ -309,6 +309,10 @@ function GameContent() {
         <SettingsPanel
           hardModeEnabled={state.hardModeEnabled}
           onHardModeToggle={toggleHardMode}
+          timeRemaining={timeRemaining}
+          isTimerVisible={state.timerModeEnabled}
+          isTimerWarning={isTimerWarning}
+          streak={getCurrentStreak}
         />
       )}
 
@@ -334,13 +338,15 @@ function GameContent() {
         </div>
       )}
 
-      {/* Status Bar */}
-      <StatusBar
-        timeRemaining={timeRemaining}
-        isTimerVisible={state.timerModeEnabled && (state.phase === 'idle' || isTimerRunning || startCountdown !== null)}
-        isTimerWarning={isTimerWarning}
-        streak={state.phase === 'idle' ? getCurrentStreak : state.streak}
-      />
+      {/* Status Bar - only show during gameplay */}
+      {state.phase !== 'idle' && (
+        <StatusBar
+          timeRemaining={timeRemaining}
+          isTimerVisible={state.timerModeEnabled && (isTimerRunning || startCountdown !== null)}
+          isTimerWarning={isTimerWarning}
+          streak={state.streak}
+        />
+      )}
 
       {/* Attempts Display */}
       <AttemptsDisplay

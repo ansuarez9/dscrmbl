@@ -55,7 +55,8 @@ export function FinalScoreModal({
   }, [isOpen, isVisible]);
 
   const handleShare = useCallback(async () => {
-    const text = generateShareText(dailyNumber, score, wordResults, streakBonus, themeName, includeLink);
+    const highScore = stats?.highScore ?? score;
+    const text = generateShareText(dailyNumber, score, wordResults, streakBonus, themeName, includeLink, highScore);
     // const title = `DSCRMBL Daily #${dailyNumber}`;
 
     // Check if Web Share API is available (mobile devices)
@@ -73,7 +74,7 @@ export function FinalScoreModal({
       setShareText('COPIED!');
       setTimeout(() => setShareText('SHARE RESULTS'), 2000);
     }
-  }, [score, wordResults, streakBonus, themeName, dailyNumber, includeLink]);
+  }, [score, wordResults, streakBonus, themeName, dailyNumber, includeLink, stats]);
 
   if (!isVisible) return null;
 

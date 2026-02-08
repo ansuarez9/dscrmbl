@@ -83,6 +83,15 @@ export function InstructionsModal({ isOpen, onClose }: InstructionsModalProps) {
           </section>
 
           <section className="instruction-section">
+            <h3>PROGRESS INDICATORS</h3>
+            <ul>
+              <li><span className="text-success">GREEN</span> square - Solved on first attempt</li>
+              <li><span style={{color: 'var(--amber)'}}>YELLOW</span> square - Solved in 2 or 3 attempts</li>
+              <li><span className="text-danger">RED</span> square - Not solved</li>
+            </ul>
+          </section>
+
+          <section className="instruction-section">
             <h3>SCORING</h3>
             <div className="score-formula">
               <code>SCORE = (LETTERS x REMAINING_TRIES) + REPLAY_BONUS</code>
