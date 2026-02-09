@@ -864,7 +864,7 @@ body.light-mode .ambient-glow {
 }
 
 .word-output span.fade-in-output {
-    animation: letterMaterialize 0.5s ease;
+    animation: letterMaterialize 0.3s ease;
 }
 
 @keyframes letterMaterialize {

@@ -15,7 +15,7 @@ interface LetterState {
 }
 
 function randomTimeout(): number {
-  return Math.floor(Math.random() * 1500);
+  return Math.floor(Math.random() * 800);
 }
 
 export function WordOutput({ word, isRevealed, showLetters, animationTrigger, onAnimationComplete, startCountdown }: WordOutputProps) {
@@ -70,8 +70,8 @@ export function WordOutput({ word, isRevealed, showLetters, animationTrigger, on
           // Check if all letters have been animated
           if (completedAnimations.size === newLetters.length && !animationCompleteRef.current) {
             animationCompleteRef.current = true;
-            // Wait for the last animation to complete (500ms) before callback
-            setTimeout(() => onAnimationComplete?.(), 600);
+            // Wait for the last animation to complete (300ms) before callback
+            setTimeout(() => onAnimationComplete?.(), 400);
           }
         }, randomTimeout());
         timeoutsRef.current.push(timeout);
