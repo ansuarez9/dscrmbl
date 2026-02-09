@@ -6,7 +6,8 @@ export function generateShareText(
   wordResults: WordResult[],
   streakBonus: number,
   themeName?: string,
-  includeLink: boolean = true
+  includeLink: boolean = true,
+  highScore?: number
 ): string {
   let shareText = `DSCRMBL Daily #${dailyNumber}\n`;
 
@@ -15,16 +16,27 @@ export function generateShareText(
     shareText += `${themeName}\n`;
   }
 
-  shareText += `Score: ${score}\n`;
+  shareText += `Score: ${score}`;
+
+  // Add high score if provided
+  if (highScore !== undefined) {
+    shareText += ` / High: ${highScore}`;
+  }
+
+  shareText += `\n`;
 
   // Generate emoji row for word results
   let emojiRow = '';
   for (let i = 0; i < 5; i++) {
     const result = wordResults[i];
     if (result?.solved) {
-      emojiRow += String.fromCodePoint(0x1F7E9); // green square
+      if (result.attempts === 1) {
+        emojiRow += String.fromCodePoint(0x1F7E9); // green square - first attempt
+      } else {
+        emojiRow += String.fromCodePoint(0x1F7E8); // yellow square - solved but not first attempt
+      }
     } else {
-      emojiRow += String.fromCodePoint(0x1F7E5); // red square
+      emojiRow += String.fromCodePoint(0x1F7E5); // red square - not solved
     }
   }
   shareText += emojiRow + '\n';

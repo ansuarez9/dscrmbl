@@ -165,11 +165,11 @@ body.light-mode .ambient-glow {
 .game-container {
     max-width: var(--container-width);
     margin: 0 auto;
-    padding: var(--spacing-lg);
+    padding: 0 var(--spacing-md) var(--spacing-md);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-lg);
+    gap: var(--spacing-sm);
 }
 
 /* ================================
@@ -179,7 +179,7 @@ body.light-mode .ambient-glow {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-sm);
     border-bottom: 1px solid var(--bg-tertiary);
 }
 
@@ -388,7 +388,14 @@ body.light-mode .ambient-glow {
 .settings-panel {
     display: flex;
     justify-content: center;
-    gap: var(--spacing-xl);
+    align-items: center;
+    gap: var(--spacing-lg);
+}
+
+.settings-status {
+    display: flex;
+    gap: var(--spacing-sm);
+    align-items: center;
 }
 
 .setting-item {
@@ -476,7 +483,7 @@ body.light-mode .ambient-glow {
     background: var(--bg-secondary);
     border: 1px solid var(--lime);
     border-radius: 8px;
-    padding: var(--spacing-lg);
+    padding: var(--spacing-md);
     text-align: center;
     box-shadow: var(--glow-lime);
 }
@@ -525,7 +532,7 @@ body.light-mode .ambient-glow {
    ================================ */
 .theme-display {
     text-align: center;
-    padding: var(--spacing-md);
+    padding: var(--spacing-sm);
     background: var(--bg-secondary);
     border: 1px solid var(--bg-tertiary);
     border-radius: 8px;
@@ -682,8 +689,8 @@ body.light-mode .ambient-glow {
 .status-bar {
     display: flex;
     justify-content: center;
-    gap: var(--spacing-lg);
-    min-height: 32px;
+    gap: var(--spacing-md);
+    min-height: 28px;
 }
 
 .status-item {
@@ -734,13 +741,13 @@ body.light-mode .ambient-glow {
 .attempts-display {
     display: flex;
     justify-content: center;
-    gap: var(--spacing-lg);
+    gap: var(--spacing-md);
 }
 
 .attempt-orb {
     position: relative;
-    width: 56px;
-    height: 56px;
+    width: 48px;
+    height: 48px;
     perspective: 1000px;
 }
 
@@ -807,17 +814,19 @@ body.light-mode .ambient-glow {
 .game-display {
     display: flex;
     justify-content: center;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
 }
 
 .display-screen {
     position: relative;
     width: 100%;
     max-width: 400px;
-    min-height: 120px;
+    min-height: 100px;
     background: var(--bg-secondary);
     border: 2px solid var(--bg-tertiary);
     border-radius: 8px;
-    padding: var(--spacing-lg);
+    padding: var(--spacing-md);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -855,7 +864,7 @@ body.light-mode .ambient-glow {
 }
 
 .word-output span.fade-in-output {
-    animation: letterMaterialize 0.5s ease;
+    animation: letterMaterialize 0.3s ease;
 }
 
 @keyframes letterMaterialize {
@@ -865,14 +874,8 @@ body.light-mode .ambient-glow {
         filter: blur(4px);
     }
 
-    40% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-        filter: blur(0);
-    }
-
     100% {
-        opacity: 0;
+        opacity: 1;
         transform: translateY(0) scale(1);
         filter: blur(0);
     }
@@ -938,9 +941,11 @@ body.light-mode .ambient-glow {
     flex-direction: column;
     align-items: center;
     gap: var(--spacing-sm);
+    padding-top: 1.5rem;
 }
 
 .input-wrapper {
+    position: relative;
     display: flex;
     align-items: center;
     width: 100%;
@@ -1043,6 +1048,56 @@ body.light-mode .ambient-glow {
     }
 }
 
+/* Shake animation for invalid words */
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+
+    10%, 30%, 50%, 70%, 90% {
+        transform: translateX(-8px);
+    }
+
+    20%, 40%, 60%, 80% {
+        transform: translateX(8px);
+    }
+}
+
+.input-wrapper.shake {
+    animation: shake 0.5s ease-in-out;
+}
+
+/* Floating error message */
+.floating-error-message {
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--magenta);
+    color: var(--bg-primary);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+    pointer-events: none;
+    animation: floatUp 1.5s ease-out forwards;
+    text-shadow: none;
+}
+
+@keyframes floatUp {
+    0% {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-30px);
+    }
+}
+
 /* ================================
    Progress Track
    ================================ */
@@ -1050,7 +1105,7 @@ body.light-mode .ambient-glow {
     background: var(--bg-secondary);
     border: 1px solid var(--bg-tertiary);
     border-radius: 8px;
-    padding: var(--spacing-md);
+    padding: var(--spacing-sm);
 }
 
 .track-label {
@@ -1058,7 +1113,7 @@ body.light-mode .ambient-glow {
     color: var(--text-muted);
     letter-spacing: 0.2em;
     text-align: center;
-    margin-bottom: var(--spacing-sm);
+    margin-bottom: var(--spacing-xs);
 }
 
 .word-slots {
@@ -1121,6 +1176,14 @@ body.light-mode .ambient-glow {
     border: none;
     color: var(--bg-primary);
     box-shadow: var(--glow-lime);
+    animation: solvedPop 0.4s ease;
+}
+
+.word-slot .word.solved-later {
+    background: linear-gradient(135deg, var(--amber), var(--amber-dim));
+    border: none;
+    color: var(--bg-primary);
+    box-shadow: var(--glow-amber);
     animation: solvedPop 0.4s ease;
 }
 
@@ -1380,6 +1443,14 @@ body.light-mode .ambient-glow {
     animation: scoreReveal 1s ease;
 }
 
+.score-high {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    letter-spacing: 0.15em;
+    margin-top: var(--spacing-sm);
+}
+
 @keyframes scoreReveal {
     0% {
         opacity: 0;
@@ -1598,7 +1669,7 @@ body.light-mode .ambient-glow {
 /* Mobile */
 @media (max-width: 576px) {
     .game-container {
-        padding: var(--spacing-sm);
+        padding: 0 var(--spacing-sm) var(--spacing-sm);
         gap: var(--spacing-sm);
     }
 

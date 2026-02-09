@@ -4,18 +4,36 @@ interface InputZoneProps {
   onSubmit: (guess: string) => void;
   disabled: boolean;
   buttonText?: string;
+  errorMessage?: string | null;
+  onErrorClear?: () => void;
 }
 
-export function InputZone({ onSubmit, disabled, buttonText = 'SUBMIT' }: InputZoneProps) {
+export function InputZone({ onSubmit, disabled, buttonText = 'SUBMIT', errorMessage, onErrorClear }: InputZoneProps) {
   const [value, setValue] = useState('');
   const [showError, setShowError] = useState(false);
+  const [showShake, setShowShake] = useState(false);
+  const [showFloatingMessage, setShowFloatingMessage] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!disabled && inputRef.current) {
       setTimeout(() => inputRef.current?.focus(), 100);
     }
   }, [disabled]);
+
+  useEffect(() => {
+    if (errorMessage) {
+      setShowShake(true);
+      setShowFloatingMessage(true);
+      const timeout = setTimeout(() => {
+        onErrorClear?.();
+        setShowShake(false);
+        setShowFloatingMessage(false);
+      }, 1500);
+      return () => clearTimeout(timeout);
+    }
+  }, [errorMessage, onErrorClear]);
 
   const handleSubmit = (e?: FormEvent) => {
     e?.preventDefault();
@@ -41,7 +59,12 @@ export function InputZone({ onSubmit, disabled, buttonText = 'SUBMIT' }: InputZo
 
   return (
     <div className="input-zone">
-      <div className="input-wrapper">
+      <div ref={wrapperRef} className={`input-wrapper ${showShake ? 'shake' : ''}`}>
+        {showFloatingMessage && errorMessage && (
+          <div className="floating-error-message">
+            {errorMessage}
+          </div>
+        )}
         <span className="input-prefix">&gt;</span>
         <input
           ref={inputRef}
@@ -69,8 +92,8 @@ export function InputZone({ onSubmit, disabled, buttonText = 'SUBMIT' }: InputZo
           <span className="submit-arrow">{String.fromCharCode(0x2192)}</span>
         </button>
       </div>
-      <p className={`error-message ${showError ? 'fade-out' : ''}`}>
-        Press <strong id="button-text">{buttonText}</strong> or enter a guess!
+      <p className={`error-message ${showError || errorMessage ? 'fade-out' : ''}`}>
+        {errorMessage ?? <>Press <strong id="button-text">{buttonText}</strong> or enter a guess!</>}
       </p>
     </div>
   );

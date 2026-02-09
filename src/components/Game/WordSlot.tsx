@@ -2,16 +2,22 @@ interface WordSlotProps {
   index: number;
   score: number | null;
   status: 'pending' | 'active' | 'solved' | 'failed';
+  attempts?: number;
 }
 
-export function WordSlot({ index, score, status }: WordSlotProps) {
+export function WordSlot({ index, score, status, attempts }: WordSlotProps) {
   let wordClass = 'word';
   let displayText = 'Word';
 
   if (status === 'active') {
     wordClass = 'word at-play';
   } else if (status === 'solved') {
-    wordClass = 'word solved';
+    // Yellow if solved but not on first try, green if first try
+    if (attempts && attempts > 1) {
+      wordClass = 'word solved-later';
+    } else {
+      wordClass = 'word solved';
+    }
     displayText = score !== null ? String(score) : 'Word';
   } else if (status === 'failed') {
     wordClass = 'word not-solved';

@@ -16,10 +16,12 @@ export function ProgressTrack({ currentWordIndex, wordResults, cumulativeScores 
           const result = wordResults[index];
           let status: 'pending' | 'active' | 'solved' | 'failed' = 'pending';
           let score: number | null = null;
+          let attempts: number | undefined = undefined;
 
           if (index < wordResults.length) {
             status = result.solved ? 'solved' : 'failed';
             score = cumulativeScores[index] ?? null;
+            attempts = result.attempts;
           } else if (index === currentWordIndex) {
             status = 'active';
           }
@@ -30,6 +32,7 @@ export function ProgressTrack({ currentWordIndex, wordResults, cumulativeScores 
               index={index}
               score={score}
               status={status}
+              attempts={attempts}
             />
           );
         })}

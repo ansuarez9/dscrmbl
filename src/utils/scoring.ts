@@ -7,11 +7,12 @@ export interface ScoreParams {
   timeRemaining: number;
   streak: number;
   replayCount: number;
+  hardModeEnabled: boolean;
   solved: boolean;
 }
 
 export function calculateWordScore(params: ScoreParams): { wordScore: number; newStreak: number; streakBonusAdded: number } {
-  const { wordLength, attempts, timerModeEnabled, timeRemaining, streak, replayCount, solved } = params;
+  const { wordLength, attempts, timerModeEnabled, timeRemaining, streak, replayCount, hardModeEnabled, solved } = params;
 
   if (!solved) {
     return { wordScore: 0, newStreak: 0, streakBonusAdded: 0 };
@@ -20,7 +21,8 @@ export function calculateWordScore(params: ScoreParams): { wordScore: number; ne
   let wordScore = wordLength * (4 - attempts);
 
   // Apply replay bonus (2 points per unused replay)
-  const replaysRemaining = 5 - replayCount;
+  const maxReplays = hardModeEnabled ? 3 : 5;
+  const replaysRemaining = maxReplays - replayCount;
   const replayBonus = replaysRemaining * 2;
   wordScore += replayBonus;
 
