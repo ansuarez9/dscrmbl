@@ -8,6 +8,8 @@ interface AudioContextType {
   playWrongSound: () => void;
   playVictorySound: () => void;
   playTimerWarningSound: () => void;
+  playHighScoreJingle: () => void;
+  playTickSound: () => void;
 }
 
 const AudioContext = createContext<AudioContextType | null>(null);
