@@ -121,6 +121,60 @@ export function useAudio() {
     playTone(880, 0.1);
   }, [muted, playTone]);
 
+  const playHighScoreJingle = useCallback(() => {
+    if (muted) return;
+
+    try {
+      const context = getAudioContext();
+      if (context.state === 'suspended') {
+        context.resume();
+      }
+
+      const now = context.currentTime;
+
+      // Ascending 6-note arpeggio: C5→E5→G5→C6→E6→G6
+      const notes = [523.25, 659.25, 783.99, 1046.5, 1318.5, 1567.98];
+      const noteSpacing = 0.12;
+
+      notes.forEach((freq, i) => {
+        const osc = context.createOscillator();
+        const gain = context.createGain();
+        osc.connect(gain);
+        gain.connect(context.destination);
+        osc.frequency.value = freq;
+        osc.type = 'square';
+        const t = now + i * noteSpacing;
+        gain.gain.setValueAtTime(0.3, t);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.15);
+        osc.start(t);
+        osc.stop(t + 0.15);
+      });
+
+      // Sustained C-major chord after arpeggio
+      const chordStart = now + notes.length * noteSpacing + 0.05;
+      const chordFreqs = [523.25, 659.25, 783.99];
+      chordFreqs.forEach((freq) => {
+        const osc = context.createOscillator();
+        const gain = context.createGain();
+        osc.connect(gain);
+        gain.connect(context.destination);
+        osc.frequency.value = freq;
+        osc.type = 'square';
+        gain.gain.setValueAtTime(0.2, chordStart);
+        gain.gain.exponentialRampToValueAtTime(0.001, chordStart + 0.6);
+        osc.start(chordStart);
+        osc.stop(chordStart + 0.6);
+      });
+    } catch (error) {
+      console.error('Error playing high score jingle:', error);
+    }
+  }, [muted, getAudioContext]);
+
+  const playTickSound = useCallback(() => {
+    if (muted) return;
+    playTone(1200, 0.03, 'square');
+  }, [muted, playTone]);
+
   const toggleMute = useCallback(() => {
     setMuted(prev => !prev);
   }, [setMuted]);
@@ -131,6 +185,8 @@ export function useAudio() {
     playCorrectSound,
     playWrongSound,
     playVictorySound,
-    playTimerWarningSound
+    playTimerWarningSound,
+    playHighScoreJingle,
+    playTickSound
   };
 }

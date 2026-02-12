@@ -5,6 +5,18 @@ import type { DailyStats } from '../types/game';
 
 const STORAGE_KEY = 'dscrmbl-daily';
 
+// Helper to check if two dates are consecutive days
+function isConsecutiveDay(lastPlayedStr: string, todayStr: string): boolean {
+  const lastPlayed = new Date(lastPlayedStr);
+  const today = new Date(todayStr);
+
+  // Get yesterday's date string
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+
+  return lastPlayed.toDateString() === yesterday.toDateString();
+}
+
 export function useDailyChallenge() {
   const [dailyStats, setDailyStats] = useLocalStorage<DailyStats | null>(STORAGE_KEY, null);
 
@@ -16,6 +28,29 @@ export function useDailyChallenge() {
         currentStreak: 0
       };
       setDailyStats(migratedStats);
+    }
+  }, [dailyStats, setDailyStats]);
+
+  // Reset streak if player missed a day
+  useEffect(() => {
+    if (!dailyStats?.lastPlayed) return;
+
+    const today = new Date().toDateString();
+    const lastPlayed = dailyStats.lastPlayed;
+
+    // If last played was today, do nothing
+    if (lastPlayed === today) return;
+
+    // If last played was yesterday, streak continues
+    if (isConsecutiveDay(lastPlayed, today)) return;
+
+    // Player missed a day - reset streak
+    if (dailyStats.currentStreak > 0) {
+      const resetStats: DailyStats = {
+        ...dailyStats,
+        currentStreak: 0
+      };
+      setDailyStats(resetStats);
     }
   }, [dailyStats, setDailyStats]);
 

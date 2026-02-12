@@ -107,7 +107,20 @@ export function InstructionsModal({ isOpen, onClose }: InstructionsModalProps) {
             <h3>GAME MODES</h3>
             <ul className="feature-list">
               <li><span className="feature-tag">HARD MODE</span> 20-second timer + only 3 replays (choose before starting)</li>
-              <li><span className="feature-tag">STREAK</span> Bonus for consecutive wins</li>
+              <li><span className="feature-tag">STREAK</span> Bonus for consecutive first-try wins — resets if you miss a day or fail a word</li>
+            </ul>
+          </section>
+
+          <section className="instruction-section">
+            <h3>HIGH SCORE CELEBRATION</h3>
+            <p>Beat your all-time high score to unlock:</p>
+            <ul>
+              <li>Triumphant jingle and CRT glitch effect</li>
+              <li>Confetti rain with neon pixel particles</li>
+              <li>Animated rainbow border on results modal</li>
+              <li>Score counter roll-up with pulsing neon glow</li>
+              <li>"BEST EVER" ranking badge</li>
+              <li>Trophy icon in share text</li>
             </ul>
           </section>
         </div>

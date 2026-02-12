@@ -13,6 +13,7 @@ import { InputZone } from './components/Game/InputZone';
 import { ProgressTrack } from './components/Game/ProgressTrack';
 import { InstructionsModal } from './components/Modals/InstructionsModal';
 import { FinalScoreModal } from './components/Modals/FinalScoreModal';
+import { HighScoreCelebration } from './components/Effects/HighScoreCelebration';
 import { useDailyChallenge } from './hooks/useDailyChallenge';
 import { useDailyTheme } from './hooks/useDailyTheme';
 import { useTimer } from './hooks/useTimer';
@@ -23,7 +24,7 @@ import type { DailyStats, HistoryPercentile } from './types/game';
 
 function GameContent() {
   const { state, startGame, nextWord, submitGuess, replayWord, timerExpired, toggleHardMode, resetGame, setShowLetters } = useGameContext();
-  const { playCorrectSound, playWrongSound, playVictorySound, playTimerWarningSound } = useAudioContext();
+  const { playCorrectSound, playWrongSound, playVictorySound, playTimerWarningSound, playHighScoreJingle } = useAudioContext();
   const { dailyNumber, canPlayToday, todayScore, todayResults, dailyStats, updateDailyStats, getCurrentStreak, updateStreak } = useDailyChallenge();
   const { theme, isLoading: isThemeLoading, error: themeError } = useDailyTheme();
 
@@ -35,6 +36,7 @@ function GameContent() {
   const [gameCompleteHandled, setGameCompleteHandled] = useState(false);
   const [startCountdown, setStartCountdown] = useState<'ready' | 'set' | 'go' | null>(null);
   const [wordValidationError, setWordValidationError] = useState<string | null>(null);
+  const [isNewHighScore, setIsNewHighScore] = useState(false);
   const countdownStartedRef = useRef(false);
 
   // Auto-show instructions for new players
@@ -115,15 +117,31 @@ function GameContent() {
   useEffect(() => {
     if (state.phase === 'complete' && !gameCompleteHandled) {
       setGameCompleteHandled(true);
-      playVictorySound();
-      const { stats, percentile } = calculateFinalScore(state.score, true, dailyStats, state.streak);
+      const { stats, percentile, isNewHighScore: newHigh } = calculateFinalScore(state.score, true, dailyStats, state.streak);
+      setIsNewHighScore(newHigh);
+
+      if (newHigh) {
+        playHighScoreJingle();
+        // CRT glitch fires before modal opens
+        const root = document.getElementById('root');
+        if (root) {
+          setTimeout(() => {
+            root.classList.add('crt-glitch');
+            setTimeout(() => root.classList.remove('crt-glitch'), 300);
+          }, 1100);
+        }
+      } else {
+        playVictorySound();
+      }
+
       // Store game results for viewing later
       const statsWithResults = {
         ...stats,
         lastGameResults: {
           wordResults: state.wordResults,
           streakBonus: state.streakBonus,
-          wordScores: state.wordScores
+          wordScores: state.wordScores,
+          isNewHighScore: newHigh
         }
       };
       setFinalStats(statsWithResults);
@@ -131,12 +149,13 @@ function GameContent() {
       updateDailyStats(statsWithResults);
       setTimeout(() => setShowFinalScore(true), 1500);
     }
-  }, [state.phase, gameCompleteHandled, state.score, state.streak, state.wordResults, state.streakBonus, state.wordScores, dailyStats, updateDailyStats, playVictorySound]);
+  }, [state.phase, gameCompleteHandled, state.score, state.streak, state.wordResults, state.streakBonus, state.wordScores, dailyStats, updateDailyStats, playVictorySound, playHighScoreJingle]);
 
   // Reset gameCompleteHandled when game restarts
   useEffect(() => {
     if (state.phase === 'idle') {
       setGameCompleteHandled(false);
+      setIsNewHighScore(false);
       countdownStartedRef.current = false;
     }
   }, [state.phase]);
@@ -242,6 +261,8 @@ function GameContent() {
       const { stats, percentile } = calculateFinalScore(todayScore ?? 0, true, dailyStats, dailyStats.currentStreak);
       setFinalStats(stats);
       setFinalPercentile(percentile);
+      // Use stored isNewHighScore from last game results (static only — no confetti/jingle)
+      setIsNewHighScore(dailyStats.lastGameResults?.isNewHighScore ?? false);
       setShowFinalScore(true);
     }
   }, [todayScore, dailyStats]);
@@ -295,6 +316,7 @@ function GameContent() {
           wordResults={todayResults?.wordResults ?? []}
           streakBonus={todayResults?.streakBonus ?? 0}
           themeName={theme?.themeName}
+          isNewHighScore={isNewHighScore}
         />
       </GameContainer>
     );
@@ -313,6 +335,7 @@ function GameContent() {
           isTimerVisible={state.timerModeEnabled}
           isTimerWarning={isTimerWarning}
           streak={getCurrentStreak}
+          highScore={dailyStats?.highScore ?? 0}
         />
       )}
 
@@ -414,7 +437,11 @@ function GameContent() {
         wordResults={state.wordResults}
         streakBonus={state.streakBonus}
         themeName={theme?.themeName}
+        isNewHighScore={isNewHighScore}
+        animateCelebration={gameCompleteHandled}
       />
+
+      {showFinalScore && isNewHighScore && <HighScoreCelebration />}
     </GameContainer>
   );
 }
