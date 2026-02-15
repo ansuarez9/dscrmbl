@@ -61,6 +61,7 @@ export interface DailyStats {
     wordResults: WordResult[];
     streakBonus: number;
     wordScores: number[];
+    isNewHighScore: boolean;
   };
 }
 

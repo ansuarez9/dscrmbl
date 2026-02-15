@@ -7,7 +7,8 @@ export function generateShareText(
   streakBonus: number,
   themeName?: string,
   includeLink: boolean = true,
-  highScore?: number
+  highScore?: number,
+  isNewHighScore: boolean = false
 ): string {
   let shareText = `DSCRMBL Daily #${dailyNumber}\n`;
 
@@ -24,6 +25,11 @@ export function generateShareText(
   }
 
   shareText += `\n`;
+
+  // Add new high score trophy line
+  if (isNewHighScore) {
+    shareText += `${String.fromCodePoint(0x1F3C6)} NEW HIGH SCORE!\n`;
+  }
 
   // Generate emoji row for word results
   let emojiRow = '';

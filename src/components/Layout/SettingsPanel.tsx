@@ -7,6 +7,7 @@ interface SettingsPanelProps {
   isTimerVisible?: boolean;
   isTimerWarning?: boolean;
   streak?: number;
+  highScore?: number;
 }
 
 export function SettingsPanel({
@@ -15,7 +16,8 @@ export function SettingsPanel({
   timeRemaining = 0,
   isTimerVisible = false,
   isTimerWarning = false,
-  streak = 0
+  streak = 0,
+  highScore = 0
 }: SettingsPanelProps) {
   const timerClass = isTimerWarning
     ? 'status-item status-item--timer timer-warning'
@@ -39,6 +41,10 @@ export function SettingsPanel({
         <div className="status-item status-item--streak">
           <span className="status-icon">{String.fromCodePoint(0x1F525)}</span>
           <span className="status-value">{streak}</span>
+        </div>
+        <div className="status-item status-item--highscore">
+          <span className="status-icon">{String.fromCodePoint(0x1F3C6)}</span>
+          <span className="status-value">{highScore}</span>
         </div>
       </div>
     </div>
