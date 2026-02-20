@@ -11,11 +11,11 @@ export interface ScoreParams {
   solved: boolean;
 }
 
-export function calculateWordScore(params: ScoreParams): { wordScore: number; newStreak: number; streakBonusAdded: number } {
+export function calculateWordScore(params: ScoreParams): { wordScore: number; newStreak: number; streakBonusAdded: number; timeBonus: number } {
   const { wordLength, attempts, timerModeEnabled, timeRemaining, streak, replayCount, hardModeEnabled, solved } = params;
 
   if (!solved) {
-    return { wordScore: 0, newStreak: 0, streakBonusAdded: 0 };
+    return { wordScore: 0, newStreak: 0, streakBonusAdded: 0, timeBonus: 0 };
   }
 
   let wordScore = wordLength * (4 - attempts);
@@ -26,9 +26,11 @@ export function calculateWordScore(params: ScoreParams): { wordScore: number; ne
   const replayBonus = replaysRemaining * 2;
   wordScore += replayBonus;
 
-  // Apply timer bonus (if solved in under 10 seconds)
-  if (timerModeEnabled && timeRemaining > 20) {
-    wordScore += 3;
+  // Apply timer bonus: remaining seconds as bonus points in hard mode
+  let timeBonus = 0;
+  if (hardModeEnabled && timerModeEnabled && timeRemaining > 0) {
+    timeBonus = timeRemaining;
+    wordScore += timeBonus;
   }
 
   // Calculate streak bonus
@@ -45,7 +47,7 @@ export function calculateWordScore(params: ScoreParams): { wordScore: number; ne
     newStreak = 0;
   }
 
-  return { wordScore, newStreak, streakBonusAdded };
+  return { wordScore, newStreak, streakBonusAdded, timeBonus };
 }
 
 export function calculateScoreAverage(average: number | undefined, gamesPlayed: number | undefined, score: number): number {
