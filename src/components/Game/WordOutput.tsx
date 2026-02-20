@@ -7,6 +7,7 @@ interface WordOutputProps {
   animationTrigger: number;
   onAnimationComplete?: () => void;
   startCountdown?: 'ready' | 'set' | 'go' | null;
+  timeBonus?: number;
 }
 
 interface LetterState {
@@ -18,7 +19,7 @@ function randomTimeout(): number {
   return Math.floor(Math.random() * 800);
 }
 
-export function WordOutput({ word, isRevealed, showLetters, animationTrigger, onAnimationComplete, startCountdown }: WordOutputProps) {
+export function WordOutput({ word, isRevealed, showLetters, animationTrigger, onAnimationComplete, startCountdown, timeBonus = 0 }: WordOutputProps) {
   const [letters, setLetters] = useState<LetterState[]>([]);
   const [animatedIndices, setAnimatedIndices] = useState<Set<number>>(new Set());
   const animationCompleteRef = useRef(false);
@@ -94,6 +95,9 @@ export function WordOutput({ word, isRevealed, showLetters, animationTrigger, on
             {word}
           </div>
           <div id="letter-count" className="letter-hint">({word.length} letters)</div>
+          {timeBonus > 0 && (
+            <div className="time-bonus-indicator">+{timeBonus}s TIME BONUS</div>
+          )}
         </div>
       </div>
     );
