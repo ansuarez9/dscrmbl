@@ -216,14 +216,14 @@ function GameContent() {
       return;
     }
 
-    submitGuess(guess);
+    submitGuess(guess, timeRemaining);
 
     if (isCorrectAnswer) {
       playCorrectSound();
     } else {
       playWrongSound();
     }
-  }, [state.currentWord, submitGuess, playCorrectSound, playWrongSound]);
+  }, [state.currentWord, submitGuess, playCorrectSound, playWrongSound, timeRemaining]);
 
   const handleReplay = useCallback(() => {
     // Each word has 5 total replays in normal mode, 3 in hard mode
@@ -384,6 +384,7 @@ function GameContent() {
         showLetters={state.showLetters}
         animationTrigger={state.animationTrigger}
         startCountdown={startCountdown}
+        timeBonus={isRevealing ? state.lastTimeBonus : 0}
       />
 
       {/* Action Buttons - hide when complete or when revealing final word */}

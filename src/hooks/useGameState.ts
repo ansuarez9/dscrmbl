@@ -19,6 +19,7 @@ const initialState: GameState = {
   streakBonus: 0,
   replayCount: 0,
   replayPenalty: 0,
+  lastTimeBonus: 0,
   timeRemaining: 20,
   timerModeEnabled: false,
   hardModeEnabled: false,
@@ -63,6 +64,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         attemptResults: ['pending', 'pending', 'pending'],
         replayCount: 0,
         replayPenalty: 0,
+        lastTimeBonus: 0,
         timeRemaining: 20,
         showLetters: true,
         animationTrigger: state.animationTrigger + 1
@@ -73,16 +75,17 @@ function gameReducer(state: GameState, action: GameAction): GameState {
       const guess = action.guess.toUpperCase();
       const isCorrect = guess === state.currentWord;
       const attemptIndex = state.attempts - 1;
+      const effectiveTimeRemaining = action.timeRemaining ?? state.timeRemaining;
 
       const newAttemptResults: [AttemptResult, AttemptResult, AttemptResult] = [...state.attemptResults];
       newAttemptResults[attemptIndex] = isCorrect ? 'correct' : 'wrong';
 
       if (isCorrect) {
-        const { wordScore, newStreak, streakBonusAdded } = calculateWordScore({
+        const { wordScore, newStreak, streakBonusAdded, timeBonus } = calculateWordScore({
           wordLength: state.currentWord.length,
           attempts: state.attempts,
           timerModeEnabled: state.timerModeEnabled,
-          timeRemaining: state.timeRemaining,
+          timeRemaining: effectiveTimeRemaining,
           streak: state.streak,
           replayCount: state.replayCount,
           hardModeEnabled: state.hardModeEnabled,
@@ -96,6 +99,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
           score: state.score + wordScore,
           streak: newStreak,
           streakBonus: state.streakBonus + streakBonusAdded,
+          lastTimeBonus: timeBonus,
           wordResults: [...state.wordResults, { attempts: state.attempts, solved: true }],
           wordScores: [...state.wordScores, wordScore],
           showLetters: false
@@ -302,8 +306,8 @@ export function useGameState() {
     dispatch({ type: 'NEXT_WORD' });
   }, []);
 
-  const submitGuess = useCallback((guess: string) => {
-    dispatch({ type: 'SUBMIT_GUESS', guess });
+  const submitGuess = useCallback((guess: string, timeRemaining?: number) => {
+    dispatch({ type: 'SUBMIT_GUESS', guess, timeRemaining });
   }, []);
 
   const replayWord = useCallback(() => {

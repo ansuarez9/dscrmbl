@@ -6,7 +6,7 @@ interface GameContextType {
   state: GameState;
   startGame: (words: string[], initialStreak?: number) => void;
   nextWord: () => void;
-  submitGuess: (guess: string) => void;
+  submitGuess: (guess: string, timeRemaining?: number) => void;
   replayWord: () => void;
   timerExpired: () => void;
   toggleHardMode: () => void;

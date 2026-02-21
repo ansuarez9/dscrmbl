@@ -94,11 +94,11 @@ export function InstructionsModal({ isOpen, onClose }: InstructionsModalProps) {
           <section className="instruction-section">
             <h3>SCORING</h3>
             <div className="score-formula">
-              <code>SCORE = (LETTERS x REMAINING_TRIES) + REPLAY_BONUS</code>
+              <code>SCORE = (LETTERS x REMAINING_TRIES) + REPLAY_BONUS + TIME_BONUS</code>
             </div>
             <ul>
               <li><strong>Replay bonus:</strong> 2 points per unused replay (max +10, or +6 in Hard Mode)</li>
-              <li><strong>Timer bonus:</strong> +3 if solved under 10s (Hard Mode only)</li>
+              <li><strong>Timer bonus:</strong> remaining seconds on the timer as bonus points (Hard Mode only)</li>
               <li><strong>Streak bonus:</strong> streak x 2 for consecutive first-tries without replays</li>
             </ul>
           </section>

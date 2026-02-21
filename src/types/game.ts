@@ -21,6 +21,7 @@ export interface GameState {
   streakBonus: number;
   replayCount: number;
   replayPenalty: number;
+  lastTimeBonus: number;
   timeRemaining: number;
   timerModeEnabled: boolean;
   hardModeEnabled: boolean;
@@ -32,7 +33,7 @@ export interface GameState {
 export type GameAction =
   | { type: 'START_GAME'; words: string[]; initialStreak?: number }
   | { type: 'NEXT_WORD' }
-  | { type: 'SUBMIT_GUESS'; guess: string }
+  | { type: 'SUBMIT_GUESS'; guess: string; timeRemaining?: number }
   | { type: 'REPLAY_WORD' }
   | { type: 'TRIGGER_ANIMATION' } // Re-trigger letter animation without replay penalty
   | { type: 'TIMER_TICK' }
