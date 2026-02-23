@@ -60,7 +60,7 @@ export function InstructionsModal({ isOpen, onClose }: InstructionsModalProps) {
               <li>You get <strong>5 replays per word</strong> (3 in Hard Mode)</li>
               <li>Use replays anytime to see the word again</li>
               <li>Click the <strong>REPLAY</strong> button (shows remaining replays)</li>
-              <li>Use strategically to maximize your bonus</li>
+              <li>Using a replay <span className="text-danger">breaks your streak</span> and shows a <span style={{color: 'var(--amber)'}}>YELLOW</span> result</li>
             </ul>
           </section>
 
@@ -85,8 +85,8 @@ export function InstructionsModal({ isOpen, onClose }: InstructionsModalProps) {
           <section className="instruction-section">
             <h3>PROGRESS INDICATORS</h3>
             <ul>
-              <li><span className="text-success">GREEN</span> square - Solved on first attempt</li>
-              <li><span style={{color: 'var(--amber)'}}>YELLOW</span> square - Solved in 2 or 3 attempts</li>
+              <li><span className="text-success">GREEN</span> square - Solved on first attempt with no replay used</li>
+              <li><span style={{color: 'var(--amber)'}}>YELLOW</span> square - Solved but used a replay or needed more than one attempt</li>
               <li><span className="text-danger">RED</span> square - Not solved</li>
             </ul>
           </section>
@@ -107,7 +107,7 @@ export function InstructionsModal({ isOpen, onClose }: InstructionsModalProps) {
             <h3>GAME MODES</h3>
             <ul className="feature-list">
               <li><span className="feature-tag">HARD MODE</span> 20-second timer + only 3 replays (choose before starting)</li>
-              <li><span className="feature-tag">STREAK</span> Bonus for consecutive first-try wins — resets if you miss a day or fail a word</li>
+              <li><span className="feature-tag">STREAK</span> Bonus for consecutive first-try wins — resets if you miss a day, fail a word, or use a replay</li>
             </ul>
           </section>
 
