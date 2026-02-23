@@ -2169,6 +2169,106 @@ body.light-mode .ambient-glow {
 }
 
 /* ================================
+   Word Results (Final Score Modal)
+   ================================ */
+.word-results-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-lg);
+}
+
+.word-results-label {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    letter-spacing: 0.15em;
+    display: block;
+}
+
+.word-results-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.word-result-row {
+    display: grid;
+    grid-template-columns: 1.4rem 1.2rem 1fr auto;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    background: var(--bg-tertiary);
+    border-radius: 4px;
+    border-left: 3px solid transparent;
+}
+
+.word-result-row--green {
+    border-left-color: var(--lime);
+}
+
+.word-result-row--yellow {
+    border-left-color: var(--amber);
+}
+
+.word-result-row--red {
+    border-left-color: var(--magenta);
+}
+
+.word-result-row--pending {
+    border-left-color: var(--text-muted);
+}
+
+.word-result-index {
+    font-size: 0.6rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+}
+
+.word-result-indicator {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-align: center;
+}
+
+.word-result-row--green .word-result-indicator {
+    color: var(--lime);
+}
+
+.word-result-row--yellow .word-result-indicator {
+    color: var(--amber);
+}
+
+.word-result-row--red .word-result-indicator {
+    color: var(--magenta);
+}
+
+.word-result-word {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: 0.1em;
+    text-align: left;
+}
+
+.word-result-score {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+}
+
+.word-result-row--green .word-result-score {
+    color: var(--lime);
+}
+
+.word-result-row--yellow .word-result-score {
+    color: var(--amber);
+}
+
+/* ================================
    Contact Form
    ================================ */
 .contact-form {

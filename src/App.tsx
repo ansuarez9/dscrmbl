@@ -317,6 +317,8 @@ function GameContent() {
           stats={finalStats}
           percentile={finalPercentile}
           wordResults={todayResults?.wordResults ?? []}
+          wordScores={todayResults?.wordScores ?? []}
+          words={theme?.wordList}
           streakBonus={todayResults?.streakBonus ?? 0}
           themeName={theme?.themeName}
           isNewHighScore={isNewHighScore}
@@ -440,6 +442,8 @@ function GameContent() {
         stats={finalStats}
         percentile={finalPercentile}
         wordResults={state.wordResults}
+        wordScores={state.wordScores}
+        words={theme?.wordList}
         streakBonus={state.streakBonus}
         themeName={theme?.themeName}
         isNewHighScore={isNewHighScore}
