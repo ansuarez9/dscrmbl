@@ -5,6 +5,7 @@ export type AttemptResult = 'pending' | 'correct' | 'wrong';
 export interface WordResult {
   attempts: number;
   solved: boolean;
+  usedReplay: boolean;
 }
 
 export interface GameState {
