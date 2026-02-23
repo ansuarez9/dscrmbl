@@ -12,6 +12,8 @@ interface FinalScoreModalProps {
   stats: DailyStats | null;
   percentile: HistoryPercentile;
   wordResults: WordResult[];
+  wordScores?: number[];
+  words?: string[];
   streakBonus: number;
   themeName?: string;
   isNewHighScore: boolean;
@@ -26,6 +28,8 @@ export function FinalScoreModal({
   stats,
   percentile,
   wordResults,
+  wordScores,
+  words,
   streakBonus,
   themeName,
   isNewHighScore,
@@ -157,6 +161,44 @@ export function FinalScoreModal({
             <span className="stat-value" id="averageScore">{Math.round(stats?.average ?? score)}</span>
           </div>
         </div>
+
+        {words && words.length > 0 && (
+          <div className="word-results-section">
+            <span className="word-results-label">TODAY'S WORDS</span>
+            <div className="word-results-list">
+              {words.map((word, i) => {
+                const result = wordResults[i];
+                const pts = wordScores?.[i] ?? null;
+
+                let statusClass = 'word-result-row--pending';
+                let statusChar = '—';
+                if (result) {
+                  if (result.solved && !result.usedReplay && result.attempts === 1) {
+                    statusClass = 'word-result-row--green';
+                    statusChar = String.fromCodePoint(0x2713);
+                  } else if (result.solved) {
+                    statusClass = 'word-result-row--yellow';
+                    statusChar = String.fromCodePoint(0x2713);
+                  } else {
+                    statusClass = 'word-result-row--red';
+                    statusChar = String.fromCodePoint(0x2717);
+                  }
+                }
+
+                return (
+                  <div key={i} className={`word-result-row ${statusClass}`}>
+                    <span className="word-result-index">{String(i + 1).padStart(2, '0')}</span>
+                    <span className="word-result-indicator">{statusChar}</span>
+                    <span className="word-result-word">{word.toUpperCase()}</span>
+                    {pts !== null && (
+                      <span className="word-result-score">+{pts}</span>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         <div className="percentile-section">
           <span className="percentile-label">HISTORICAL RANKING</span>

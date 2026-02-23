@@ -2,9 +2,10 @@ import { useThemeContext } from '../../context/ThemeContext';
 
 interface HeaderProps {
   onInstructionsClick: () => void;
+  onContactClick: () => void;
 }
 
-export function Header({ onInstructionsClick }: HeaderProps) {
+export function Header({ onInstructionsClick, onContactClick }: HeaderProps) {
   const { lightMode, toggleTheme } = useThemeContext();
 
   return (
@@ -16,6 +17,15 @@ export function Header({ onInstructionsClick }: HeaderProps) {
           <span className="version-tag">v2.0</span>
         </div>
         <div className="header-actions">
+          <button
+            className="icon-btn"
+            title="Contact / Suggestions"
+            aria-label="Contact"
+            onClick={onContactClick}
+          >
+            <span className="icon-glow"></span>
+            <span className="icon-text">{String.fromCodePoint(0x2709, 0xFE0F)}</span>
+          </button>
           <button
             id="dark-mode-toggle"
             className="icon-btn"

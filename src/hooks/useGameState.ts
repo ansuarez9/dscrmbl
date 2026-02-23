@@ -100,7 +100,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
           streak: newStreak,
           streakBonus: state.streakBonus + streakBonusAdded,
           lastTimeBonus: timeBonus,
-          wordResults: [...state.wordResults, { attempts: state.attempts, solved: true }],
+          wordResults: [...state.wordResults, { attempts: state.attempts, solved: true, usedReplay: state.replayCount > 0 }],
           wordScores: [...state.wordScores, wordScore],
           showLetters: false
         };
@@ -114,7 +114,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
           phase: 'revealing',
           attemptResults: newAttemptResults,
           streak: 0,
-          wordResults: [...state.wordResults, { attempts: 4, solved: false }],
+          wordResults: [...state.wordResults, { attempts: 4, solved: false, usedReplay: state.replayCount > 0 }],
           wordScores: [...state.wordScores, 0],
           showLetters: false
         };
@@ -167,7 +167,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         phase: 'revealing',
         attemptResults: newAttemptResults,
         streak: 0,
-        wordResults: [...state.wordResults, { attempts: 4, solved: false }],
+        wordResults: [...state.wordResults, { attempts: 4, solved: false, usedReplay: state.replayCount > 0 }],
         wordScores: [...state.wordScores, 0],
         showLetters: false
       };
