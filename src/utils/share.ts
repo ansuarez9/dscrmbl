@@ -32,17 +32,20 @@ export function generateShareText(
   }
 
   // Generate emoji row for word results
+  // 🟩 green  = solved on first attempt with no replay used (streak preserved)
+  // 🟨 yellow = solved but used a replay or took more than one attempt (streak broken)
+  // 🟥 red    = not solved
   let emojiRow = '';
   for (let i = 0; i < 5; i++) {
     const result = wordResults[i];
     if (result?.solved) {
-      if (result.attempts === 1) {
-        emojiRow += String.fromCodePoint(0x1F7E9); // green square - first attempt
+      if (result.usedReplay || result.attempts > 1) {
+        emojiRow += String.fromCodePoint(0x1F7E8); // yellow square
       } else {
-        emojiRow += String.fromCodePoint(0x1F7E8); // yellow square - solved but not first attempt
+        emojiRow += String.fromCodePoint(0x1F7E9); // green square
       }
     } else {
-      emojiRow += String.fromCodePoint(0x1F7E5); // red square - not solved
+      emojiRow += String.fromCodePoint(0x1F7E5); // red square
     }
   }
   shareText += emojiRow + '\n';

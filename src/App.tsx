@@ -13,6 +13,7 @@ import { InputZone } from './components/Game/InputZone';
 import { ProgressTrack } from './components/Game/ProgressTrack';
 import { InstructionsModal } from './components/Modals/InstructionsModal';
 import { FinalScoreModal } from './components/Modals/FinalScoreModal';
+import { ContactModal } from './components/Modals/ContactModal';
 import { HighScoreCelebration } from './components/Effects/HighScoreCelebration';
 import { useDailyChallenge } from './hooks/useDailyChallenge';
 import { useDailyTheme } from './hooks/useDailyTheme';
@@ -30,6 +31,7 @@ function GameContent() {
 
   const [showInstructions, setShowInstructions] = useState(false);
   const [showFinalScore, setShowFinalScore] = useState(false);
+  const [showContact, setShowContact] = useState(false);
   const [finalStats, setFinalStats] = useState<DailyStats | null>(null);
   const [finalPercentile, setFinalPercentile] = useState<HistoryPercentile>({ history: [], percentile: 100 });
   const [countdown, setCountdown] = useState('--:--:--');
@@ -280,7 +282,7 @@ function GameContent() {
   if (!canPlayToday && state.phase === 'idle') {
     return (
       <GameContainer>
-        <Header onInstructionsClick={() => setShowInstructions(true)} />
+        <Header onInstructionsClick={() => setShowInstructions(true)} onContactClick={() => setShowContact(true)} />
 
         <div id="already-played" className="already-played">
           <div className="already-played-content">
@@ -305,6 +307,7 @@ function GameContent() {
         />
 
         <InstructionsModal isOpen={showInstructions} onClose={() => setShowInstructions(false)} />
+        <ContactModal isOpen={showContact} onClose={() => setShowContact(false)} />
 
         <FinalScoreModal
           isOpen={showFinalScore}
@@ -314,6 +317,8 @@ function GameContent() {
           stats={finalStats}
           percentile={finalPercentile}
           wordResults={todayResults?.wordResults ?? []}
+          wordScores={todayResults?.wordScores ?? []}
+          words={theme?.wordList}
           streakBonus={todayResults?.streakBonus ?? 0}
           themeName={theme?.themeName}
           isNewHighScore={isNewHighScore}
@@ -324,7 +329,7 @@ function GameContent() {
 
   return (
     <GameContainer>
-      <Header onInstructionsClick={() => setShowInstructions(true)} />
+      <Header onInstructionsClick={() => setShowInstructions(true)} onContactClick={() => setShowContact(true)} />
 
       {/* Settings Panel - only show before game starts */}
       {state.phase === 'idle' && !isComplete && (
@@ -427,6 +432,7 @@ function GameContent() {
 
       {/* Modals */}
       <InstructionsModal isOpen={showInstructions} onClose={() => setShowInstructions(false)} />
+      <ContactModal isOpen={showContact} onClose={() => setShowContact(false)} />
 
       <FinalScoreModal
         isOpen={showFinalScore}
@@ -436,6 +442,8 @@ function GameContent() {
         stats={finalStats}
         percentile={finalPercentile}
         wordResults={state.wordResults}
+        wordScores={state.wordScores}
+        words={theme?.wordList}
         streakBonus={state.streakBonus}
         themeName={theme?.themeName}
         isNewHighScore={isNewHighScore}
