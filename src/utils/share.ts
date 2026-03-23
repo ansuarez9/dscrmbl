@@ -8,7 +8,8 @@ export function generateShareText(
   themeName?: string,
   includeLink: boolean = true,
   highScore?: number,
-  isNewHighScore: boolean = false
+  isNewHighScore: boolean = false,
+  currentStreak?: number
 ): string {
   let shareText = `DSCRMBL Daily #${dailyNumber}\n`;
 
@@ -52,12 +53,15 @@ export function generateShareText(
 
   // Add streak bonus if applicable
   if (streakBonus > 0) {
-    shareText += `${String.fromCodePoint(0x1F525)} Best Streak Bonus: +${streakBonus}\n`;
+    const streakSuffix = currentStreak !== undefined && currentStreak > 0
+      ? ` (${String.fromCodePoint(0x1F525)} ${currentStreak})`
+      : '';
+    shareText += `Streak Bonus: +${streakBonus}${streakSuffix}\n`;
   }
 
   // Add link if requested
   if (includeLink) {
-    shareText += '\nhttps://dscrmbl.com';
+    shareText += `\n${window.location.origin}`;
   }
 
   return shareText;

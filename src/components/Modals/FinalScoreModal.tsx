@@ -106,7 +106,7 @@ export function FinalScoreModal({
 
   const handleShare = useCallback(async () => {
     const highScore = stats?.highScore ?? score;
-    const text = generateShareText(dailyNumber, score, wordResults, streakBonus, themeName, includeLink, highScore, isNewHighScore);
+    const text = generateShareText(dailyNumber, score, wordResults, streakBonus, themeName, includeLink, highScore, isNewHighScore, stats?.currentStreak);
 
     // Check if Web Share API is available (mobile devices)
     if (canUseWebShare()) {

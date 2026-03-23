@@ -96,7 +96,7 @@ export function calculateFinalScore(score: number, isDailyChallenge: boolean, ca
   const highScore = getHighScore(cached?.highScore, validScore);
   const historyPercentile = getHistory(cached?.history, validScore);
 
-  const isNewHighScore = validScore > (cached?.highScore ?? 0);
+  const isNewHighScore = cached !== null && validScore > (cached?.highScore ?? 0);
 
   const stats: DailyStats = {
     score: validScore,
