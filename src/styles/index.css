@@ -325,6 +325,21 @@ body.light-mode .ambient-glow {
     transform: scale(0.95);
 }
 
+/* Anchor reset when .icon-btn is applied to <a> (e.g. tip jar) */
+a.icon-btn {
+    text-decoration: none;
+    color: inherit;
+}
+
+.icon-btn--tip:hover {
+    border-color: var(--amber-dim);
+    box-shadow: var(--glow-amber);
+}
+
+.icon-btn--tip .icon-glow {
+    background: radial-gradient(circle at center, var(--amber), transparent 70%);
+}
+
 .icon-glow {
     position: absolute;
     inset: 0;
@@ -568,6 +583,56 @@ body.light-mode .ambient-glow {
     color: var(--magenta);
 }
 
+/* Sponsor chip - appears when a daily theme has a sponsor attached */
+.sponsor-chip {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: center;
+    gap: 0.4em;
+    margin-top: var(--spacing-sm);
+    padding: 4px 10px;
+    border: 1px solid var(--amber-dim);
+    border-radius: 999px;
+    background: rgba(255, 184, 0, 0.05);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--amber-dim);
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    transition: all var(--transition-fast);
+}
+
+.sponsor-chip:hover,
+.sponsor-chip:focus-visible {
+    border-color: var(--amber);
+    color: var(--amber);
+    text-shadow: var(--glow-amber);
+    background: rgba(255, 184, 0, 0.1);
+    outline: none;
+}
+
+.sponsor-chip--static {
+    cursor: default;
+}
+
+.sponsor-chip-label {
+    text-transform: uppercase;
+    opacity: 0.75;
+}
+
+.sponsor-chip-name {
+    font-family: var(--font-display);
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    color: var(--amber);
+}
+
+.sponsor-chip-tagline {
+    font-style: italic;
+    opacity: 0.8;
+}
+
 /* Mobile adjustments */
 @media (max-width: 576px) {
     .theme-display {
@@ -580,6 +645,15 @@ body.light-mode .ambient-glow {
 
     .theme-description {
         font-size: 0.7rem;
+    }
+
+    .sponsor-chip {
+        font-size: 0.6rem;
+        padding: 3px 8px;
+    }
+
+    .sponsor-chip-name {
+        font-size: 0.55rem;
     }
 }
 
@@ -1649,6 +1723,35 @@ body.light-mode .ambient-glow {
     letter-spacing: 0.05em;
 }
 
+.tip-jar-link {
+    display: block;
+    margin-top: var(--spacing-md);
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    letter-spacing: 0.05em;
+    transition: color var(--transition-fast);
+}
+
+.tip-jar-link:hover,
+.tip-jar-link:focus-visible {
+    color: var(--amber);
+    text-shadow: var(--glow-amber);
+    outline: none;
+}
+
+.tip-jar-link-cta {
+    color: var(--amber-dim);
+    font-weight: 600;
+    margin-left: 0.25em;
+}
+
+.tip-jar-link:hover .tip-jar-link-cta {
+    color: var(--amber);
+}
+
 /* ================================
    Utility Classes
    ================================ */
@@ -2483,5 +2586,168 @@ body.light-mode .contact-input--date {
     .scanlines,
     .ambient-glow {
         display: none;
+    }
+}
+
+/* ================================
+   Merch button + modal
+   ================================ */
+.icon-btn--merch:hover {
+    border-color: var(--magenta-dim);
+    box-shadow: var(--glow-magenta);
+}
+
+.icon-btn--merch .icon-glow {
+    background: radial-gradient(circle at center, var(--magenta), transparent 70%);
+}
+
+.modal-container--merch {
+    max-width: 720px;
+}
+
+.merch-intro {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin: 0;
+}
+
+.merch-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md);
+}
+
+.merch-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-primary);
+    border: 1px solid var(--bg-tertiary);
+    border-radius: 8px;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    transition: all var(--transition-fast);
+    cursor: pointer;
+}
+
+.merch-card:hover {
+    border-color: var(--magenta-dim);
+    box-shadow: var(--glow-magenta);
+    transform: translateY(-2px);
+}
+
+.merch-card-image {
+    aspect-ratio: 1 / 1;
+    background: var(--bg-tertiary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.merch-card-image::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+        45deg,
+        transparent 0 8px,
+        rgba(255, 255, 255, 0.02) 8px 9px
+    );
+    pointer-events: none;
+}
+
+.merch-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    image-rendering: pixelated;
+}
+
+.merch-card-body {
+    padding: var(--spacing-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.merch-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--spacing-sm);
+}
+
+.merch-card-name {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--text-primary);
+}
+
+.merch-card-price {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--amber);
+}
+
+.merch-card-tagline {
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin: 0;
+}
+
+.merch-card-buy {
+    margin-top: var(--spacing-xs);
+    align-self: flex-start;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--magenta);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    padding: 0.4em 0.7em;
+    border: 1px solid var(--magenta-dim);
+    border-radius: 4px;
+    transition: all var(--transition-fast);
+}
+
+.merch-card:hover .merch-card-buy {
+    background: var(--magenta);
+    color: var(--bg-primary);
+    border-color: var(--magenta);
+}
+
+.merch-card-arrow {
+    transition: transform var(--transition-fast);
+}
+
+.merch-card:hover .merch-card-arrow {
+    transform: translateX(3px);
+}
+
+@media (max-width: 600px) {
+    .merch-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-sm);
+    }
+
+    .merch-card-name {
+        font-size: 0.75rem;
+    }
+
+    .merch-card-price {
+        font-size: 0.8rem;
+    }
+
+    .merch-card-tagline {
+        font-size: 0.7rem;
     }
 }

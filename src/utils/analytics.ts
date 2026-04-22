@@ -81,4 +81,20 @@ export const trackGameEvent = {
   shareScore: (platform?: string) => {
     trackEvent('share_score', { platform });
   },
+
+  sponsorClick: (sponsorName: string) => {
+    trackEvent('sponsor_click', { sponsor_name: sponsorName });
+  },
+
+  tipJarClick: (source: 'header' | 'final_score') => {
+    trackEvent('tip_jar_click', { source });
+  },
+
+  merchModalOpen: () => {
+    trackEvent('merch_modal_open');
+  },
+
+  merchProductClick: (productId: string) => {
+    trackEvent('merch_product_click', { product_id: productId });
+  },
 };
