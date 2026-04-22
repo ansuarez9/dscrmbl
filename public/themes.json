@@ -954,7 +954,12 @@
       "poultry",
       "parmesan",
       "livestock"
-    ]
+    ],
+    "sponsor": {
+      "name": "Farm Bus DC",
+      "url": "https://thefarmbus.com",
+      "tagline": "Farm To Family Market - CSA"
+    }
   },
   "2026-04-23": {
     "themeName": "SPELLING BEE",
@@ -1053,7 +1058,12 @@
       "whistle",
       "knowledge",
       "psychology"
-    ]
+    ],
+    "sponsor": {
+      "name": "EXAMPLE CO",
+      "url": "https://example.com",
+      "tagline": "placeholder sponsor"
+    }
   },
   "_fallback": {
     "themeName": "GENERAL",
