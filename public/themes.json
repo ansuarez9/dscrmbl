@@ -1065,6 +1065,1352 @@
       "tagline": "placeholder sponsor"
     }
   },
+  "2026-05-03": {
+    "themeName": "TOY BOX",
+    "description": "Childhood playthings",
+    "wordList": [
+      "marbles",
+      "bubbles",
+      "frisbee",
+      "jumprope",
+      "rollerskate"
+    ]
+  },
+  "2026-05-04": {
+    "themeName": "GALACTIC GREETINGS",
+    "description": "From a galaxy far, far away",
+    "wordList": [
+      "laser",
+      "droid",
+      "galaxy",
+      "starship",
+      "lightsaber"
+    ],
+    "specialEvent": "Star Wars Day"
+  },
+  "2026-05-05": {
+    "themeName": "VIVA MEXICO",
+    "description": "Mexican cuisine and culture",
+    "wordList": [
+      "salsa",
+      "fiesta",
+      "mariachi",
+      "enchilada",
+      "guacamole"
+    ],
+    "specialEvent": "Cinco de Mayo"
+  },
+  "2026-05-06": {
+    "themeName": "INNER PEACE",
+    "description": "Mindfulness and meditation",
+    "wordList": [
+      "mantra",
+      "breathe",
+      "balance",
+      "serenity",
+      "mindfulness"
+    ]
+  },
+  "2026-05-07": {
+    "themeName": "HEAD IN THE CLOUDS",
+    "description": "Types of clouds",
+    "wordList": [
+      "nimbus",
+      "cirrus",
+      "cumulus",
+      "stratus",
+      "thunderhead"
+    ]
+  },
+  "2026-05-08": {
+    "themeName": "SCREEN TIME",
+    "description": "At the movies",
+    "wordList": [
+      "movie",
+      "cinema",
+      "comedy",
+      "trailer",
+      "blockbuster"
+    ]
+  },
+  "2026-05-09": {
+    "themeName": "BLUE PLATE",
+    "description": "Diner classics",
+    "wordList": [
+      "waffle",
+      "burger",
+      "meatball",
+      "milkshake",
+      "cheeseburger"
+    ]
+  },
+  "2026-05-10": {
+    "themeName": "MAMA BEAR",
+    "description": "A tribute to nurturing love",
+    "wordList": [
+      "caring",
+      "loving",
+      "nurture",
+      "devoted",
+      "motherhood"
+    ],
+    "specialEvent": "Mother's Day"
+  },
+  "2026-05-11": {
+    "themeName": "NEON DREAMS",
+    "description": "Eighties nostalgia",
+    "wordList": [
+      "arcade",
+      "boombox",
+      "cassette",
+      "aerobics",
+      "synthesizer"
+    ]
+  },
+  "2026-05-12": {
+    "themeName": "SCRIBBLE BOOK",
+    "description": "Drawing and sketching",
+    "wordList": [
+      "sketch",
+      "pencil",
+      "eraser",
+      "doodle",
+      "illustrate"
+    ]
+  },
+  "2026-05-13": {
+    "themeName": "SECRET SAUCE",
+    "description": "Condiments and toppings",
+    "wordList": [
+      "syrup",
+      "mustard",
+      "ketchup",
+      "vinegar",
+      "mayonnaise"
+    ]
+  },
+  "2026-05-14": {
+    "themeName": "SQUARE ONE",
+    "description": "Geometry basics",
+    "wordList": [
+      "angle",
+      "prism",
+      "hexagon",
+      "polygon",
+      "triangle"
+    ]
+  },
+  "2026-05-15": {
+    "themeName": "HORN OF PLENTY",
+    "description": "Brass instruments",
+    "wordList": [
+      "bugle",
+      "cornet",
+      "trumpet",
+      "trombone",
+      "saxophone"
+    ]
+  },
+  "2026-05-16": {
+    "themeName": "HOPS AND BARLEY",
+    "description": "Beer styles and brewing",
+    "wordList": [
+      "lager",
+      "stout",
+      "porter",
+      "brewery",
+      "pilsner"
+    ]
+  },
+  "2026-05-17": {
+    "themeName": "STREET SMART",
+    "description": "City and urban terms",
+    "wordList": [
+      "avenue",
+      "traffic",
+      "skyline",
+      "highway",
+      "metropolis"
+    ]
+  },
+  "2026-05-18": {
+    "themeName": "BARDIC BANTER",
+    "description": "Words coined by Shakespeare",
+    "wordList": [
+      "elbow",
+      "gloomy",
+      "lonely",
+      "critic",
+      "generous"
+    ]
+  },
+  "2026-05-19": {
+    "themeName": "ET CETERA",
+    "description": "Latin phrases used in English",
+    "wordList": [
+      "alibi",
+      "bonus",
+      "versus",
+      "agenda",
+      "curriculum"
+    ]
+  },
+  "2026-05-20": {
+    "themeName": "CLOSE ENCOUNTERS",
+    "description": "UFOs and the unknown",
+    "wordList": [
+      "alien",
+      "cosmic",
+      "saucer",
+      "invasion",
+      "abduction"
+    ]
+  },
+  "2026-05-21": {
+    "themeName": "CIVIC DUTY",
+    "description": "Government and civics",
+    "wordList": [
+      "ballot",
+      "senator",
+      "election",
+      "governor",
+      "legislature"
+    ]
+  },
+  "2026-05-22": {
+    "themeName": "GOOD VIBRATIONS",
+    "description": "Seismic activity",
+    "wordList": [
+      "fault",
+      "magma",
+      "tremor",
+      "seismic",
+      "earthquake"
+    ]
+  },
+  "2026-05-23": {
+    "themeName": "CASTLE GROUNDS",
+    "description": "Medieval fortifications",
+    "wordList": [
+      "tower",
+      "armor",
+      "turret",
+      "gauntlet",
+      "drawbridge"
+    ]
+  },
+  "2026-05-24": {
+    "themeName": "BARK PARK",
+    "description": "Dog breeds",
+    "wordList": [
+      "husky",
+      "beagle",
+      "poodle",
+      "bulldog",
+      "retriever"
+    ]
+  },
+  "2026-05-25": {
+    "themeName": "FALLEN HEROES",
+    "description": "Honoring sacrifice and remembrance",
+    "wordList": [
+      "valor",
+      "salute",
+      "bravery",
+      "tribute",
+      "remembrance"
+    ],
+    "specialEvent": "Memorial Day"
+  },
+  "2026-05-26": {
+    "themeName": "BACKYARD GRILL",
+    "description": "Barbecue essentials",
+    "wordList": [
+      "grill",
+      "brisket",
+      "charcoal",
+      "marinade",
+      "barbecue"
+    ]
+  },
+  "2026-05-27": {
+    "themeName": "EUREKA MOMENT",
+    "description": "Scientific discovery",
+    "wordList": [
+      "theory",
+      "beaker",
+      "invention",
+      "microscope",
+      "hypothesis"
+    ]
+  },
+  "2026-05-28": {
+    "themeName": "ZIP CODE",
+    "description": "Postal and mail terms",
+    "wordList": [
+      "letter",
+      "parcel",
+      "postage",
+      "envelope",
+      "delivery"
+    ]
+  },
+  "2026-05-29": {
+    "themeName": "PALINDROME PARADE",
+    "description": "Words that read the same backward and forward",
+    "wordList": [
+      "level",
+      "rotor",
+      "kayak",
+      "madam",
+      "racecar"
+    ]
+  },
+  "2026-05-30": {
+    "themeName": "POPCORN AND...",
+    "description": "Movie theater snacks",
+    "wordList": [
+      "snacks",
+      "nachos",
+      "pretzel",
+      "licorice",
+      "chocolate"
+    ]
+  },
+  "2026-05-31": {
+    "themeName": "LAST CHAPTER",
+    "description": "Endings and finales",
+    "wordList": [
+      "finale",
+      "climax",
+      "sunset",
+      "ending",
+      "conclusion"
+    ]
+  },
+  "2026-06-01": {
+    "themeName": "DEEP DIVE",
+    "description": "Scuba and underwater exploration",
+    "wordList": [
+      "oxygen",
+      "snorkel",
+      "aquatic",
+      "buoyancy",
+      "regulator"
+    ]
+  },
+  "2026-06-02": {
+    "themeName": "BIRDS OF A FEATHER",
+    "description": "More feathered friends",
+    "wordList": [
+      "eagle",
+      "sparrow",
+      "penguin",
+      "albatross",
+      "woodpecker"
+    ]
+  },
+  "2026-06-03": {
+    "themeName": "STREET FOOD",
+    "description": "Bites from city carts around the world",
+    "wordList": [
+      "tacos",
+      "crepe",
+      "kebab",
+      "dumpling",
+      "bratwurst"
+    ]
+  },
+  "2026-06-04": {
+    "themeName": "GETTING SHARP",
+    "description": "Knives and blades",
+    "wordList": [
+      "blade",
+      "paring",
+      "cleaver",
+      "serrated",
+      "sharpener"
+    ]
+  },
+  "2026-06-05": {
+    "themeName": "WORD NERDS",
+    "description": "Linguistic terminology",
+    "wordList": [
+      "syntax",
+      "prefix",
+      "suffix",
+      "grammar",
+      "etymology"
+    ]
+  },
+  "2026-06-06": {
+    "themeName": "BEACH HEAD",
+    "description": "Honoring D-Day and the Allied invasion",
+    "wordList": [
+      "battle",
+      "allies",
+      "soldier",
+      "liberty",
+      "victorious"
+    ],
+    "specialEvent": "D-Day Anniversary"
+  },
+  "2026-06-07": {
+    "themeName": "OPEN ROAD",
+    "description": "American road trip essentials",
+    "wordList": [
+      "atlas",
+      "picnic",
+      "scenery",
+      "suitcase",
+      "interstate"
+    ]
+  },
+  "2026-06-08": {
+    "themeName": "WORDPLAY",
+    "description": "Tricks of the language",
+    "wordList": [
+      "riddle",
+      "anagram",
+      "charade",
+      "homonym",
+      "oxymoron"
+    ]
+  },
+  "2026-06-09": {
+    "themeName": "EYE SPY",
+    "description": "Vision and optics",
+    "wordList": [
+      "pupil",
+      "retina",
+      "goggles",
+      "eyesight",
+      "spectacles"
+    ]
+  },
+  "2026-06-10": {
+    "themeName": "DOUGH BOY",
+    "description": "Bread and the art of baking",
+    "wordList": [
+      "dough",
+      "yeast",
+      "knead",
+      "baguette",
+      "sourdough"
+    ]
+  },
+  "2026-06-11": {
+    "themeName": "GLOBAL GOALS",
+    "description": "Soccer's biggest stage",
+    "wordList": [
+      "header",
+      "tackle",
+      "penalty",
+      "defender",
+      "tournament"
+    ],
+    "specialEvent": "FIFA World Cup 2026 Opens"
+  },
+  "2026-06-12": {
+    "themeName": "SUMMER VIBES",
+    "description": "Lazy hot days",
+    "wordList": [
+      "sunny",
+      "summer",
+      "poolside",
+      "vacation",
+      "lemonade"
+    ]
+  },
+  "2026-06-13": {
+    "themeName": "CITRUS BURST",
+    "description": "Tart and tangy fruits",
+    "wordList": [
+      "lemon",
+      "orange",
+      "kumquat",
+      "tangerine",
+      "grapefruit"
+    ]
+  },
+  "2026-06-14": {
+    "themeName": "OLD GLORY",
+    "description": "Stars, stripes, and patriotism",
+    "wordList": [
+      "stars",
+      "banner",
+      "stripes",
+      "freedom",
+      "patriotic"
+    ],
+    "specialEvent": "Flag Day"
+  },
+  "2026-06-15": {
+    "themeName": "HORSEPOWER",
+    "description": "Equestrian world",
+    "wordList": [
+      "horse",
+      "saddle",
+      "gallop",
+      "mustang",
+      "thoroughbred"
+    ]
+  },
+  "2026-06-16": {
+    "themeName": "DEAL ME IN",
+    "description": "Card games and play",
+    "wordList": [
+      "trump",
+      "spade",
+      "poker",
+      "bridge",
+      "solitaire"
+    ]
+  },
+  "2026-06-17": {
+    "themeName": "AT THE BAR",
+    "description": "Cocktails and mixology",
+    "wordList": [
+      "olive",
+      "shaker",
+      "whiskey",
+      "martini",
+      "aperitif"
+    ]
+  },
+  "2026-06-18": {
+    "themeName": "DESERT NIGHTS",
+    "description": "Sand, sun, and dunes",
+    "wordList": [
+      "oasis",
+      "camel",
+      "cactus",
+      "nomadic",
+      "dromedary"
+    ]
+  },
+  "2026-06-19": {
+    "themeName": "DAY OF JUBILEE",
+    "description": "Honoring emancipation and freedom",
+    "wordList": [
+      "unity",
+      "legacy",
+      "justice",
+      "heritage",
+      "emancipated"
+    ],
+    "specialEvent": "Juneteenth"
+  },
+  "2026-06-20": {
+    "themeName": "GROOVY THREADS",
+    "description": "Sixties and seventies fashion",
+    "wordList": [
+      "groovy",
+      "tiedye",
+      "paisley",
+      "platform",
+      "psychedelic"
+    ]
+  },
+  "2026-06-21": {
+    "themeName": "PROUD POPS",
+    "description": "A toast to dads",
+    "wordList": [
+      "proud",
+      "wisdom",
+      "advice",
+      "fishing",
+      "fatherhood"
+    ],
+    "specialEvent": "Father's Day"
+  },
+  "2026-06-22": {
+    "themeName": "ZOO CREW",
+    "description": "Faces at the zoo",
+    "wordList": [
+      "panda",
+      "lemur",
+      "gorilla",
+      "giraffe",
+      "rhinoceros"
+    ]
+  },
+  "2026-06-23": {
+    "themeName": "STRIKE IT RICH",
+    "description": "Mining and precious metals",
+    "wordList": [
+      "silver",
+      "copper",
+      "nugget",
+      "platinum",
+      "prospector"
+    ]
+  },
+  "2026-06-24": {
+    "themeName": "SCHOOL'S OUT",
+    "description": "Last day of class",
+    "wordList": [
+      "recess",
+      "pencil",
+      "diploma",
+      "homework",
+      "classroom"
+    ]
+  },
+  "2026-06-25": {
+    "themeName": "MOSAIC ART",
+    "description": "Tile and pattern work",
+    "wordList": [
+      "grout",
+      "mosaic",
+      "ceramic",
+      "pattern",
+      "terracotta"
+    ]
+  },
+  "2026-06-26": {
+    "themeName": "PANTRY RAID",
+    "description": "Kitchen staples",
+    "wordList": [
+      "flour",
+      "beans",
+      "baking",
+      "staples",
+      "sundries"
+    ]
+  },
+  "2026-06-27": {
+    "themeName": "PAINT BY NUMBERS",
+    "description": "Art tools and techniques",
+    "wordList": [
+      "brushes",
+      "palette",
+      "acrylic",
+      "pigment",
+      "watercolor"
+    ]
+  },
+  "2026-06-28": {
+    "themeName": "WAY DOWN SOUTH",
+    "description": "Southern cooking",
+    "wordList": [
+      "grits",
+      "gumbo",
+      "praline",
+      "beignet",
+      "jambalaya"
+    ]
+  },
+  "2026-06-29": {
+    "themeName": "PAGE ONE",
+    "description": "News and journalism",
+    "wordList": [
+      "press",
+      "media",
+      "editor",
+      "reporter",
+      "newspaper"
+    ]
+  },
+  "2026-06-30": {
+    "themeName": "MIDPOINT",
+    "description": "Halfway markers",
+    "wordList": [
+      "pivot",
+      "median",
+      "middle",
+      "halfway",
+      "midpoint"
+    ]
+  },
+  "2026-07-01": {
+    "themeName": "OH CANADA",
+    "description": "All things Canadian",
+    "wordList": [
+      "maple",
+      "igloo",
+      "beaver",
+      "hockey",
+      "poutine"
+    ],
+    "specialEvent": "Canada Day"
+  },
+  "2026-07-02": {
+    "themeName": "DOG DAYS",
+    "description": "Peak summer heat",
+    "wordList": [
+      "sweat",
+      "humid",
+      "sticky",
+      "heatwave",
+      "sweltering"
+    ]
+  },
+  "2026-07-03": {
+    "themeName": "SUMMER READING",
+    "description": "Books on the beach",
+    "wordList": [
+      "novel",
+      "memoir",
+      "fiction",
+      "paperback",
+      "bestseller"
+    ]
+  },
+  "2026-07-04": {
+    "themeName": "STAR-SPANGLED",
+    "description": "American Independence Day",
+    "wordList": [
+      "parade",
+      "grilled",
+      "sparkler",
+      "fireworks",
+      "independence"
+    ],
+    "specialEvent": "Independence Day"
+  },
+  "2026-07-05": {
+    "themeName": "BRAIN FREEZE",
+    "description": "Frozen treats",
+    "wordList": [
+      "cones",
+      "sorbet",
+      "sundae",
+      "popsicle",
+      "milkshake"
+    ]
+  },
+  "2026-07-06": {
+    "themeName": "PORTICO LIFE",
+    "description": "Welcoming home features",
+    "wordList": [
+      "porch",
+      "foyer",
+      "gables",
+      "pantry",
+      "pergola"
+    ]
+  },
+  "2026-07-07": {
+    "themeName": "GOOGLY EYES",
+    "description": "Cricket terminology",
+    "wordList": [
+      "wicket",
+      "bowler",
+      "batsman",
+      "cricket",
+      "boundary"
+    ]
+  },
+  "2026-07-08": {
+    "themeName": "BEACH DAYS",
+    "description": "Sand between your toes",
+    "wordList": [
+      "sandy",
+      "beach",
+      "shells",
+      "umbrella",
+      "oceanside"
+    ]
+  },
+  "2026-07-09": {
+    "themeName": "TIE THE KNOT",
+    "description": "Wedding traditions",
+    "wordList": [
+      "bridal",
+      "bouquet",
+      "nuptial",
+      "reception",
+      "groomsmen"
+    ]
+  },
+  "2026-07-10": {
+    "themeName": "ROLLING THUNDER",
+    "description": "Summer storms",
+    "wordList": [
+      "thunder",
+      "tempest",
+      "monsoon",
+      "downpour",
+      "lightning"
+    ]
+  },
+  "2026-07-11": {
+    "themeName": "QUIRKY QUEUE",
+    "description": "Words that start with Q",
+    "wordList": [
+      "quart",
+      "quaint",
+      "quench",
+      "quizzes",
+      "quotient"
+    ]
+  },
+  "2026-07-12": {
+    "themeName": "ZIGZAG",
+    "description": "Words that start with Z",
+    "wordList": [
+      "zebra",
+      "zenith",
+      "zephyr",
+      "zealous",
+      "zucchini"
+    ]
+  },
+  "2026-07-13": {
+    "themeName": "FUR REAL",
+    "description": "Furry critters of the woods",
+    "wordList": [
+      "otter",
+      "bunny",
+      "badger",
+      "weasel",
+      "porcupine"
+    ]
+  },
+  "2026-07-14": {
+    "themeName": "BASTILLE BEAT",
+    "description": "Honoring French liberty",
+    "wordList": [
+      "revolt",
+      "republic",
+      "parisian",
+      "fraternity",
+      "revolution"
+    ],
+    "specialEvent": "Bastille Day"
+  },
+  "2026-07-15": {
+    "themeName": "PHARMACY SHELF",
+    "description": "Over-the-counter remedies",
+    "wordList": [
+      "vitamin",
+      "aspirin",
+      "bandage",
+      "ibuprofen",
+      "antibiotic"
+    ]
+  },
+  "2026-07-16": {
+    "themeName": "MARTIAL MOVES",
+    "description": "Martial arts disciplines",
+    "wordList": [
+      "aikido",
+      "karate",
+      "boxing",
+      "wrestler",
+      "taekwondo"
+    ]
+  },
+  "2026-07-17": {
+    "themeName": "RHYME TIME",
+    "description": "Words from nursery rhymes",
+    "wordList": [
+      "rhymes",
+      "mother",
+      "nursery",
+      "lullaby",
+      "twinkle"
+    ]
+  },
+  "2026-07-18": {
+    "themeName": "STITCH BY STITCH",
+    "description": "The art of sewing",
+    "wordList": [
+      "stitch",
+      "thread",
+      "button",
+      "fabric",
+      "seamstress"
+    ]
+  },
+  "2026-07-19": {
+    "themeName": "GOLDEN BOOT",
+    "description": "Crowning a champion",
+    "wordList": [
+      "final",
+      "trophy",
+      "winner",
+      "victory",
+      "champion"
+    ],
+    "specialEvent": "FIFA World Cup Final"
+  },
+  "2026-07-20": {
+    "themeName": "ONE GIANT LEAP",
+    "description": "Honoring the moon landing",
+    "wordList": [
+      "module",
+      "apollo",
+      "lander",
+      "mission",
+      "astronaut"
+    ],
+    "specialEvent": "Apollo 11 Anniversary"
+  },
+  "2026-07-21": {
+    "themeName": "VERTICAL VIEW",
+    "description": "Looking up at skyscrapers",
+    "wordList": [
+      "tower",
+      "floors",
+      "elevator",
+      "penthouse",
+      "skyscraper"
+    ]
+  },
+  "2026-07-22": {
+    "themeName": "TRAIL MIX",
+    "description": "On the hiking trail",
+    "wordList": [
+      "trail",
+      "boots",
+      "compass",
+      "trekking",
+      "wilderness"
+    ]
+  },
+  "2026-07-23": {
+    "themeName": "OFF TO THE RACES",
+    "description": "Horse racing day",
+    "wordList": [
+      "derby",
+      "track",
+      "jockey",
+      "trifecta",
+      "racehorse"
+    ]
+  },
+  "2026-07-24": {
+    "themeName": "PAY DAY",
+    "description": "Income and earnings",
+    "wordList": [
+      "wages",
+      "salary",
+      "payroll",
+      "paycheck",
+      "commission"
+    ]
+  },
+  "2026-07-25": {
+    "themeName": "JUNGLE BOOK",
+    "description": "Wildlife of the rainforest",
+    "wordList": [
+      "monkey",
+      "jaguar",
+      "python",
+      "leopard",
+      "orangutan"
+    ]
+  },
+  "2026-07-26": {
+    "themeName": "WAVELENGTH",
+    "description": "Radio and broadcast",
+    "wordList": [
+      "radio",
+      "signal",
+      "antenna",
+      "broadcast",
+      "frequency"
+    ]
+  },
+  "2026-07-27": {
+    "themeName": "STADIUM ROCK",
+    "description": "Rock concerts",
+    "wordList": [
+      "guitar",
+      "encore",
+      "groupie",
+      "backstage",
+      "pyrotechnics"
+    ]
+  },
+  "2026-07-28": {
+    "themeName": "POP TOPS",
+    "description": "Pop music charts",
+    "wordList": [
+      "album",
+      "single",
+      "record",
+      "playlist",
+      "billboard"
+    ]
+  },
+  "2026-07-29": {
+    "themeName": "NIGHT MARKET",
+    "description": "Bustling open-air bazaars",
+    "wordList": [
+      "stall",
+      "bazaar",
+      "haggle",
+      "vendor",
+      "lanterns"
+    ]
+  },
+  "2026-07-30": {
+    "themeName": "BUDDY SYSTEM",
+    "description": "Friendship and bonds",
+    "wordList": [
+      "buddy",
+      "allies",
+      "comrade",
+      "partner",
+      "companion"
+    ]
+  },
+  "2026-07-31": {
+    "themeName": "FAMILY TREE",
+    "description": "Generations and kin",
+    "wordList": [
+      "family",
+      "cousins",
+      "siblings",
+      "grandkids",
+      "generations"
+    ]
+  },
+  "2026-08-01": {
+    "themeName": "BARN RAISING",
+    "description": "Life on the farm",
+    "wordList": [
+      "wheat",
+      "tractor",
+      "barnyard",
+      "haystack",
+      "cornfield"
+    ]
+  },
+  "2026-08-02": {
+    "themeName": "ICE AGE",
+    "description": "Prehistoric and frozen",
+    "wordList": [
+      "wooly",
+      "frozen",
+      "glacial",
+      "mammoth",
+      "prehistoric"
+    ]
+  },
+  "2026-08-03": {
+    "themeName": "PRIME TIME",
+    "description": "Television land",
+    "wordList": [
+      "drama",
+      "prime",
+      "sitcom",
+      "reruns",
+      "miniseries"
+    ]
+  },
+  "2026-08-04": {
+    "themeName": "PURPLE HUES",
+    "description": "Shades of purple",
+    "wordList": [
+      "mauve",
+      "lilac",
+      "violet",
+      "magenta",
+      "lavender"
+    ]
+  },
+  "2026-08-05": {
+    "themeName": "BIG BANG",
+    "description": "Particle physics",
+    "wordList": [
+      "proton",
+      "neutron",
+      "nucleus",
+      "quantum",
+      "particle"
+    ]
+  },
+  "2026-08-06": {
+    "themeName": "BOOM BOX",
+    "description": "Stereo systems",
+    "wordList": [
+      "drums",
+      "stereo",
+      "speaker",
+      "subwoofer",
+      "amplifier"
+    ]
+  },
+  "2026-08-07": {
+    "themeName": "PUZZLE BOX",
+    "description": "Codes and brain teasers",
+    "wordList": [
+      "cipher",
+      "enigma",
+      "jigsaw",
+      "sudoku",
+      "brainteaser"
+    ]
+  },
+  "2026-08-08": {
+    "themeName": "INFINITY POOL",
+    "description": "Swimming and diving",
+    "wordList": [
+      "diving",
+      "goggles",
+      "swimming",
+      "freestyle",
+      "backstroke"
+    ]
+  },
+  "2026-08-09": {
+    "themeName": "EAST OF EDEN",
+    "description": "Words from scripture",
+    "wordList": [
+      "faith",
+      "psalm",
+      "prayer",
+      "gospel",
+      "miracle"
+    ]
+  },
+  "2026-08-10": {
+    "themeName": "IT TAKES TWO",
+    "description": "Pairs and duos",
+    "wordList": [
+      "pairs",
+      "duets",
+      "couple",
+      "twosome",
+      "partners"
+    ]
+  },
+  "2026-08-11": {
+    "themeName": "WHALE OF A TIME",
+    "description": "Cetaceans of the deep",
+    "wordList": [
+      "whale",
+      "beluga",
+      "narwhal",
+      "dolphin",
+      "humpback"
+    ]
+  },
+  "2026-08-12": {
+    "themeName": "TYPE CAST",
+    "description": "Typography and fonts",
+    "wordList": [
+      "serif",
+      "italic",
+      "kerning",
+      "graphic",
+      "typeface"
+    ]
+  },
+  "2026-08-13": {
+    "themeName": "GOOD LUCK",
+    "description": "Superstitions and fortune",
+    "wordList": [
+      "charm",
+      "lucky",
+      "magic",
+      "fortune",
+      "talisman"
+    ]
+  },
+  "2026-08-14": {
+    "themeName": "MIDNIGHT MUNCHIES",
+    "description": "Late-night snacks",
+    "wordList": [
+      "chips",
+      "cookies",
+      "pickles",
+      "sandwich",
+      "leftovers"
+    ]
+  },
+  "2026-08-15": {
+    "themeName": "ROMAN HOLIDAY",
+    "description": "Empire of the ancients",
+    "wordList": [
+      "forum",
+      "arena",
+      "legion",
+      "centurion",
+      "gladiator"
+    ]
+  },
+  "2026-08-16": {
+    "themeName": "PADDLE OUT",
+    "description": "Water sports",
+    "wordList": [
+      "canoe",
+      "kayaks",
+      "paddle",
+      "rafting",
+      "windsurfing"
+    ]
+  },
+  "2026-08-17": {
+    "themeName": "BROADWAY BOUND",
+    "description": "Musical theater",
+    "wordList": [
+      "chorus",
+      "dancer",
+      "musical",
+      "playbill",
+      "intermission"
+    ]
+  },
+  "2026-08-18": {
+    "themeName": "PYRAMID SCHEME",
+    "description": "Ancient Egypt",
+    "wordList": [
+      "mummy",
+      "sphinx",
+      "pyramid",
+      "pharaoh",
+      "hieroglyph"
+    ]
+  },
+  "2026-08-19": {
+    "themeName": "ALWAYS-ON",
+    "description": "Pocket-sized tech",
+    "wordList": [
+      "tablet",
+      "charger",
+      "digital",
+      "downloads",
+      "smartphone"
+    ]
+  },
+  "2026-08-20": {
+    "themeName": "SLITHER ZONE",
+    "description": "Reptiles",
+    "wordList": [
+      "snake",
+      "gecko",
+      "lizard",
+      "iguana",
+      "anaconda"
+    ]
+  },
+  "2026-08-21": {
+    "themeName": "GRAND OPENING",
+    "description": "Launching a business",
+    "wordList": [
+      "grand",
+      "launch",
+      "opening",
+      "business",
+      "enterprise"
+    ]
+  },
+  "2026-08-22": {
+    "themeName": "LIGHT WAVES",
+    "description": "Optics and reflection",
+    "wordList": [
+      "prism",
+      "mirror",
+      "lasers",
+      "spectrum",
+      "reflection"
+    ]
+  },
+  "2026-08-23": {
+    "themeName": "SKETCH COMEDY",
+    "description": "Funny business",
+    "wordList": [
+      "comic",
+      "satire",
+      "parody",
+      "banter",
+      "comedian"
+    ]
+  },
+  "2026-08-24": {
+    "themeName": "LOCKER ROOM",
+    "description": "Pre-game prep",
+    "wordList": [
+      "towel",
+      "jersey",
+      "helmet",
+      "workout",
+      "stadium"
+    ]
+  },
+  "2026-08-25": {
+    "themeName": "OPEN HOUSE",
+    "description": "Real estate hunt",
+    "wordList": [
+      "house",
+      "listing",
+      "realtor",
+      "staging",
+      "mortgage"
+    ]
+  },
+  "2026-08-26": {
+    "themeName": "WOMEN'S WORK",
+    "description": "Honoring the suffrage movement",
+    "wordList": [
+      "women",
+      "voting",
+      "pioneer",
+      "equality",
+      "trailblazer"
+    ],
+    "specialEvent": "Women's Equality Day"
+  },
+  "2026-08-27": {
+    "themeName": "PEPPER MILL",
+    "description": "Heat from the kitchen",
+    "wordList": [
+      "chili",
+      "pepper",
+      "paprika",
+      "habanero",
+      "jalapeno"
+    ]
+  },
+  "2026-08-28": {
+    "themeName": "CHEESE BOARD",
+    "description": "Fromage favorites",
+    "wordList": [
+      "gouda",
+      "swiss",
+      "cheddar",
+      "gruyere",
+      "mozzarella"
+    ]
+  },
+  "2026-08-29": {
+    "themeName": "GHOST TOWN",
+    "description": "Empty and forgotten places",
+    "wordList": [
+      "empty",
+      "eerie",
+      "haunted",
+      "desolate",
+      "abandoned"
+    ]
+  },
+  "2026-08-30": {
+    "themeName": "GREAT ESCAPE",
+    "description": "Getaways and respite",
+    "wordList": [
+      "escape",
+      "retreat",
+      "getaway",
+      "respite",
+      "excursion"
+    ]
+  },
+  "2026-08-31": {
+    "themeName": "GOODBYE SUMMER",
+    "description": "Closing out the season",
+    "wordList": [
+      "ending",
+      "endless",
+      "goodbye",
+      "fleeting",
+      "twilight"
+    ]
+  },
   "_fallback": {
     "themeName": "GENERAL",
     "description": "A mix of everyday words",
