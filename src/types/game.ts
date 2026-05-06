@@ -79,11 +79,18 @@ export interface HistoryPercentile {
 }
 
 // Daily Theme types
+export interface Sponsor {
+  name: string;
+  url?: string;
+  tagline?: string;
+}
+
 export interface DailyTheme {
   themeName: string;
   description: string;
   wordList: string[];
   specialEvent?: string;
+  sponsor?: Sponsor;
 }
 
 export interface ThemesData {

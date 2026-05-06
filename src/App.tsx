@@ -14,6 +14,7 @@ import { ProgressTrack } from './components/Game/ProgressTrack';
 import { InstructionsModal } from './components/Modals/InstructionsModal';
 import { FinalScoreModal } from './components/Modals/FinalScoreModal';
 import { ContactModal } from './components/Modals/ContactModal';
+import { MerchModal } from './components/Modals/MerchModal';
 import { HighScoreCelebration } from './components/Effects/HighScoreCelebration';
 import { useDailyChallenge } from './hooks/useDailyChallenge';
 import { useDailyTheme } from './hooks/useDailyTheme';
@@ -22,6 +23,7 @@ import { calculateFinalScore } from './utils/scoring';
 import { getTimeUntilNextDay } from './utils/seededRandom';
 import { isValidWord, isDictionaryLoaded } from './utils/dictionary';
 import { getSpecialEventEmoji } from './utils/specialEvent';
+import { trackGameEvent } from './utils/analytics';
 import type { DailyStats, HistoryPercentile } from './types/game';
 
 function GameContent() {
@@ -33,6 +35,7 @@ function GameContent() {
   const [showInstructions, setShowInstructions] = useState(false);
   const [showFinalScore, setShowFinalScore] = useState(false);
   const [showContact, setShowContact] = useState(false);
+  const [showMerch, setShowMerch] = useState(false);
   const [finalStats, setFinalStats] = useState<DailyStats | null>(null);
   const [finalPercentile, setFinalPercentile] = useState<HistoryPercentile>({ history: [], percentile: 100 });
   const [countdown, setCountdown] = useState('--:--:--');
@@ -279,11 +282,16 @@ function GameContent() {
     }
   }, [state.phase, resetGame]);
 
+  const handleMerchOpen = useCallback(() => {
+    trackGameEvent.merchModalOpen();
+    setShowMerch(true);
+  }, []);
+
   // Already played today
   if (!canPlayToday && state.phase === 'idle') {
     return (
       <GameContainer>
-        <Header onInstructionsClick={() => setShowInstructions(true)} onContactClick={() => setShowContact(true)} />
+        <Header onInstructionsClick={() => setShowInstructions(true)} onContactClick={() => setShowContact(true)} onMerchClick={handleMerchOpen} />
 
         <div id="already-played" className="already-played">
           <div className="already-played-content">
@@ -309,6 +317,7 @@ function GameContent() {
 
         <InstructionsModal isOpen={showInstructions} onClose={() => setShowInstructions(false)} />
         <ContactModal isOpen={showContact} onClose={() => setShowContact(false)} />
+        <MerchModal isOpen={showMerch} onClose={() => setShowMerch(false)} />
 
         <FinalScoreModal
           isOpen={showFinalScore}
@@ -330,7 +339,7 @@ function GameContent() {
 
   return (
     <GameContainer>
-      <Header onInstructionsClick={() => setShowInstructions(true)} onContactClick={() => setShowContact(true)} />
+      <Header onInstructionsClick={() => setShowInstructions(true)} onContactClick={() => setShowContact(true)} onMerchClick={handleMerchOpen} />
 
       {/* Settings Panel - only show before game starts */}
       {state.phase === 'idle' && !isComplete && (
@@ -355,6 +364,31 @@ function GameContent() {
           )}
           <div className="theme-name">{theme.themeName}</div>
           <div className="theme-description">{theme.description}</div>
+          {theme.sponsor && (
+            theme.sponsor.url ? (
+              <a
+                className="sponsor-chip"
+                href={theme.sponsor.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => trackGameEvent.sponsorClick(theme.sponsor!.name)}
+              >
+                <span className="sponsor-chip-label">Brought to you by</span>
+                <span className="sponsor-chip-name">{theme.sponsor.name}</span>
+                {theme.sponsor.tagline && (
+                  <span className="sponsor-chip-tagline">{theme.sponsor.tagline}</span>
+                )}
+              </a>
+            ) : (
+              <div className="sponsor-chip sponsor-chip--static">
+                <span className="sponsor-chip-label">Brought to you by</span>
+                <span className="sponsor-chip-name">{theme.sponsor.name}</span>
+                {theme.sponsor.tagline && (
+                  <span className="sponsor-chip-tagline">{theme.sponsor.tagline}</span>
+                )}
+              </div>
+            )
+          )}
         </div>
       )}
 
@@ -439,6 +473,7 @@ function GameContent() {
       {/* Modals */}
       <InstructionsModal isOpen={showInstructions} onClose={() => setShowInstructions(false)} />
       <ContactModal isOpen={showContact} onClose={() => setShowContact(false)} />
+      <MerchModal isOpen={showMerch} onClose={() => setShowMerch(false)} />
 
       <FinalScoreModal
         isOpen={showFinalScore}
