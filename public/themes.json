@@ -3779,6 +3779,1377 @@
     ],
     "specialEvent": "New Year's Eve"
   },
+  "2027-01-01": {
+    "themeName": "DAY ONE",
+    "description": "Beginnings and openings",
+    "wordList": [
+      "start",
+      "begin",
+      "debut",
+      "opening",
+      "beginning"
+    ],
+    "specialEvent": "New Year's Day"
+  },
+  "2027-01-02": {
+    "themeName": "DRY JANUARY",
+    "description": "A clean break",
+    "wordList": [
+      "sober",
+      "reset",
+      "detox",
+      "abstain",
+      "willpower"
+    ]
+  },
+  "2027-01-03": {
+    "themeName": "HIBERNATION",
+    "description": "Sleeping through winter",
+    "wordList": [
+      "bears",
+      "sleep",
+      "winter",
+      "dormant",
+      "hibernate"
+    ]
+  },
+  "2027-01-04": {
+    "themeName": "BINGE WATCH",
+    "description": "Streaming TV",
+    "wordList": [
+      "binge",
+      "series",
+      "stream",
+      "episode",
+      "watching"
+    ]
+  },
+  "2027-01-05": {
+    "themeName": "BLAH BLAH BLAH",
+    "description": "Words for chitchat",
+    "wordList": [
+      "gossip",
+      "banter",
+      "chatter",
+      "talking",
+      "conversation"
+    ]
+  },
+  "2027-01-06": {
+    "themeName": "THREE KINGS",
+    "description": "Epiphany and the wise men",
+    "wordList": [
+      "myrrh",
+      "kings",
+      "camels",
+      "wisemen",
+      "procession"
+    ],
+    "specialEvent": "Three Kings Day"
+  },
+  "2027-01-07": {
+    "themeName": "WINTRY MIX",
+    "description": "Winter precipitation",
+    "wordList": [
+      "slush",
+      "sleet",
+      "drizzle",
+      "flurries",
+      "snowflake"
+    ]
+  },
+  "2027-01-08": {
+    "themeName": "OLDIES BUT GOODIES",
+    "description": "Vintage vibes",
+    "wordList": [
+      "retro",
+      "oldies",
+      "classic",
+      "nostalgia",
+      "throwback"
+    ]
+  },
+  "2027-01-09": {
+    "themeName": "CHESS MASTER",
+    "description": "Strategy on the board",
+    "wordList": [
+      "knight",
+      "gambit",
+      "bishop",
+      "strategy",
+      "checkers"
+    ]
+  },
+  "2027-01-10": {
+    "themeName": "STEW POT",
+    "description": "Soups and stews",
+    "wordList": [
+      "broth",
+      "bisque",
+      "chowder",
+      "goulash",
+      "casserole"
+    ]
+  },
+  "2027-01-11": {
+    "themeName": "MONDAY BLUES",
+    "description": "Back to the grind",
+    "wordList": [
+      "blues",
+      "grumpy",
+      "monday",
+      "weekday",
+      "commute"
+    ]
+  },
+  "2027-01-12": {
+    "themeName": "BOWL GAMES",
+    "description": "Football on the gridiron",
+    "wordList": [
+      "fumble",
+      "kickoff",
+      "football",
+      "touchdown",
+      "quarterback"
+    ]
+  },
+  "2027-01-13": {
+    "themeName": "POOL HALL",
+    "description": "Billiards night",
+    "wordList": [
+      "chalk",
+      "break",
+      "pocket",
+      "cuestick",
+      "billiards"
+    ]
+  },
+  "2027-01-14": {
+    "themeName": "CHINESE TAKEOUT",
+    "description": "Order up",
+    "wordList": [
+      "noodle",
+      "wonton",
+      "dimsum",
+      "eggrolls",
+      "chopsticks"
+    ]
+  },
+  "2027-01-15": {
+    "themeName": "EYE EXAM",
+    "description": "Visit to the optometrist",
+    "wordList": [
+      "vision",
+      "glasses",
+      "contacts",
+      "optician",
+      "prescription"
+    ]
+  },
+  "2027-01-16": {
+    "themeName": "SPECIAL DELIVERY",
+    "description": "Babies and the nursery",
+    "wordList": [
+      "cradle",
+      "infant",
+      "nursery",
+      "newborn",
+      "bassinet"
+    ]
+  },
+  "2027-01-17": {
+    "themeName": "ONE OF A KIND",
+    "description": "Unique and unusual",
+    "wordList": [
+      "unique",
+      "special",
+      "unusual",
+      "distinctive",
+      "exceptional"
+    ]
+  },
+  "2027-01-18": {
+    "themeName": "DREAM DEEP",
+    "description": "Honoring Dr. King's vision",
+    "wordList": [
+      "march",
+      "peace",
+      "dream",
+      "justice",
+      "nonviolence"
+    ],
+    "specialEvent": "Martin Luther King Jr. Day"
+  },
+  "2027-01-19": {
+    "themeName": "BIO LAB",
+    "description": "Cellular biology",
+    "wordList": [
+      "virus",
+      "cells",
+      "enzyme",
+      "genome",
+      "bacteria"
+    ]
+  },
+  "2027-01-20": {
+    "themeName": "WALK IN THE PARK",
+    "description": "City green spaces",
+    "wordList": [
+      "picnic",
+      "grassy",
+      "trails",
+      "benches",
+      "playground"
+    ]
+  },
+  "2027-01-21": {
+    "themeName": "BEAR HUG",
+    "description": "Warmth and affection",
+    "wordList": [
+      "warmth",
+      "embrace",
+      "snuggle",
+      "squeeze",
+      "affection"
+    ]
+  },
+  "2027-01-22": {
+    "themeName": "ROARING TWENTIES",
+    "description": "Speakeasies and flappers",
+    "wordList": [
+      "flapper",
+      "gangster",
+      "charleston",
+      "bootlegger",
+      "prohibition"
+    ]
+  },
+  "2027-01-23": {
+    "themeName": "OM NAMASTE",
+    "description": "Yoga poses and practice",
+    "wordList": [
+      "asana",
+      "namaste",
+      "vinyasa",
+      "downdog",
+      "savasana"
+    ]
+  },
+  "2027-01-24": {
+    "themeName": "GET A GRIP",
+    "description": "Parts of the hand",
+    "wordList": [
+      "wrist",
+      "pinky",
+      "thumbs",
+      "fingers",
+      "knuckle"
+    ]
+  },
+  "2027-01-25": {
+    "themeName": "FULL CIRCLE",
+    "description": "One year of DSCRMBL",
+    "wordList": [
+      "cycle",
+      "circle",
+      "return",
+      "revolve",
+      "recurring"
+    ]
+  },
+  "2027-01-26": {
+    "themeName": "DOWN UNDER",
+    "description": "Australian wildlife",
+    "wordList": [
+      "koala",
+      "wombat",
+      "kangaroo",
+      "platypus",
+      "kookaburra"
+    ],
+    "specialEvent": "Australia Day"
+  },
+  "2027-01-27": {
+    "themeName": "BOWLING ALLEY",
+    "description": "Knock 'em down",
+    "wordList": [
+      "lanes",
+      "strike",
+      "gutter",
+      "bowling",
+      "tenpins"
+    ]
+  },
+  "2027-01-28": {
+    "themeName": "INFOMERCIAL",
+    "description": "Late-night sales pitch",
+    "wordList": [
+      "pitch",
+      "product",
+      "gimmick",
+      "salesman",
+      "endorsement"
+    ]
+  },
+  "2027-01-29": {
+    "themeName": "POLITE TALK",
+    "description": "Manners and etiquette",
+    "wordList": [
+      "thanks",
+      "please",
+      "manners",
+      "gratitude",
+      "etiquette"
+    ]
+  },
+  "2027-01-30": {
+    "themeName": "MAIN COURSE",
+    "description": "What's for dinner",
+    "wordList": [
+      "supper",
+      "dinner",
+      "entree",
+      "dessert",
+      "appetizer"
+    ]
+  },
+  "2027-01-31": {
+    "themeName": "GRIN AND BEAR IT",
+    "description": "Grit and perseverance",
+    "wordList": [
+      "endure",
+      "gritty",
+      "persist",
+      "patience",
+      "perseverance"
+    ]
+  },
+  "2027-02-01": {
+    "themeName": "BLACK EXCELLENCE",
+    "description": "Honoring Black history and trailblazers",
+    "wordList": [
+      "legacy",
+      "leaders",
+      "inventor",
+      "excellence",
+      "trailblazer"
+    ],
+    "specialEvent": "Black History Month"
+  },
+  "2027-02-02": {
+    "themeName": "PUNXSUTAWNEY",
+    "description": "Will the groundhog see his shadow?",
+    "wordList": [
+      "spring",
+      "shadow",
+      "burrow",
+      "prediction",
+      "hibernation"
+    ],
+    "specialEvent": "Groundhog Day"
+  },
+  "2027-02-03": {
+    "themeName": "WHIPPED CREAM",
+    "description": "Creamy and sweet",
+    "wordList": [
+      "creamy",
+      "churned",
+      "whipped",
+      "buttery",
+      "frosting"
+    ]
+  },
+  "2027-02-04": {
+    "themeName": "FREE SPIRIT",
+    "description": "The wandering soul",
+    "wordList": [
+      "freedom",
+      "nomadic",
+      "unbound",
+      "bohemian",
+      "wandering"
+    ]
+  },
+  "2027-02-05": {
+    "themeName": "DUMPSTER FIRE",
+    "description": "When chaos takes over",
+    "wordList": [
+      "chaos",
+      "fiasco",
+      "turmoil",
+      "trouble",
+      "disaster"
+    ]
+  },
+  "2027-02-06": {
+    "themeName": "YEAR OF THE SHEEP",
+    "description": "Lunar New Year traditions",
+    "wordList": [
+      "pagoda",
+      "dragon",
+      "zodiac",
+      "lantern",
+      "firecracker"
+    ],
+    "specialEvent": "Lunar New Year"
+  },
+  "2027-02-07": {
+    "themeName": "PASSPORT STAMP",
+    "description": "International travel",
+    "wordList": [
+      "border",
+      "tourist",
+      "customs",
+      "passport",
+      "immigration"
+    ]
+  },
+  "2027-02-08": {
+    "themeName": "LEAP OF FAITH",
+    "description": "Taking a chance",
+    "wordList": [
+      "brave",
+      "risky",
+      "daring",
+      "courage",
+      "boldness"
+    ]
+  },
+  "2027-02-09": {
+    "themeName": "FAT TUESDAY",
+    "description": "Mardi Gras revelry",
+    "wordList": [
+      "beads",
+      "float",
+      "parade",
+      "revelry",
+      "beignet"
+    ],
+    "specialEvent": "Mardi Gras"
+  },
+  "2027-02-10": {
+    "themeName": "DAYS OF LENT",
+    "description": "Reflection and sacrifice",
+    "wordList": [
+      "ashes",
+      "prayer",
+      "fasting",
+      "sacrifice",
+      "penitence"
+    ],
+    "specialEvent": "Ash Wednesday"
+  },
+  "2027-02-11": {
+    "themeName": "LIGHTBULB MOMENT",
+    "description": "Inventions and ingenuity",
+    "wordList": [
+      "invent",
+      "patents",
+      "filament",
+      "invention",
+      "ingenuity"
+    ]
+  },
+  "2027-02-12": {
+    "themeName": "HONEST ABE",
+    "description": "Lincoln's legacy",
+    "wordList": [
+      "liberty",
+      "address",
+      "president",
+      "sixteenth",
+      "emancipated"
+    ],
+    "specialEvent": "Lincoln's Birthday"
+  },
+  "2027-02-13": {
+    "themeName": "SECRET ADMIRER",
+    "description": "Quiet crushes",
+    "wordList": [
+      "crush",
+      "admire",
+      "secret",
+      "longing",
+      "mysterious"
+    ]
+  },
+  "2027-02-14": {
+    "themeName": "BE MINE",
+    "description": "Hearts and Cupid's arrows",
+    "wordList": [
+      "heart",
+      "cupid",
+      "kisses",
+      "romance",
+      "valentine"
+    ],
+    "specialEvent": "Valentine's Day"
+  },
+  "2027-02-15": {
+    "themeName": "CHIEF EXECUTIVE",
+    "description": "Honoring American presidents",
+    "wordList": [
+      "cabinet",
+      "congress",
+      "inaugural",
+      "executive",
+      "presidency"
+    ],
+    "specialEvent": "Presidents Day"
+  },
+  "2027-02-16": {
+    "themeName": "GET WELL SOON",
+    "description": "Sick day essentials",
+    "wordList": [
+      "cough",
+      "fever",
+      "sniffle",
+      "lozenges",
+      "recovery"
+    ]
+  },
+  "2027-02-17": {
+    "themeName": "POCKET CHANGE",
+    "description": "Coins and currency",
+    "wordList": [
+      "penny",
+      "nickel",
+      "dollar",
+      "currency",
+      "banknote"
+    ]
+  },
+  "2027-02-18": {
+    "themeName": "FOLDED PAPER",
+    "description": "Origami art",
+    "wordList": [
+      "paper",
+      "crane",
+      "folded",
+      "origami",
+      "creases"
+    ]
+  },
+  "2027-02-19": {
+    "themeName": "ODDITIES",
+    "description": "Strange and unusual",
+    "wordList": [
+      "weird",
+      "oddity",
+      "quirky",
+      "strange",
+      "peculiar"
+    ]
+  },
+  "2027-02-20": {
+    "themeName": "WORLD ON FIRE",
+    "description": "Climate concerns",
+    "wordList": [
+      "climate",
+      "warming",
+      "drought",
+      "wildfire",
+      "hurricane"
+    ]
+  },
+  "2027-02-21": {
+    "themeName": "GLAM SQUAD",
+    "description": "Makeup essentials",
+    "wordList": [
+      "blush",
+      "makeup",
+      "mascara",
+      "lipstick",
+      "eyeshadow"
+    ]
+  },
+  "2027-02-22": {
+    "themeName": "TIGHT BUDGET",
+    "description": "Saving every penny",
+    "wordList": [
+      "pinch",
+      "frugal",
+      "savings",
+      "thrifty",
+      "economical"
+    ]
+  },
+  "2027-02-23": {
+    "themeName": "OUT OF AFRICA",
+    "description": "Safari and savanna",
+    "wordList": [
+      "safari",
+      "savanna",
+      "giraffe",
+      "antelope",
+      "elephant"
+    ]
+  },
+  "2027-02-24": {
+    "themeName": "GIVE AND TAKE",
+    "description": "Trade and exchange",
+    "wordList": [
+      "trade",
+      "barter",
+      "donate",
+      "exchange",
+      "generous"
+    ]
+  },
+  "2027-02-25": {
+    "themeName": "TROPICAL FISH",
+    "description": "Aquarium dwellers",
+    "wordList": [
+      "guppy",
+      "tetra",
+      "goldfish",
+      "aquarium",
+      "angelfish"
+    ]
+  },
+  "2027-02-26": {
+    "themeName": "LIFE OF THE PARTY",
+    "description": "Social butterflies",
+    "wordList": [
+      "chatty",
+      "social",
+      "mingle",
+      "friendly",
+      "gregarious"
+    ]
+  },
+  "2027-02-27": {
+    "themeName": "FIVE STAR",
+    "description": "Top reviews",
+    "wordList": [
+      "stars",
+      "points",
+      "grading",
+      "critics",
+      "excellent"
+    ]
+  },
+  "2027-02-28": {
+    "themeName": "MOON PHASES",
+    "description": "Waxing and waning",
+    "wordList": [
+      "phases",
+      "waxing",
+      "waning",
+      "gibbous",
+      "crescent"
+    ]
+  },
+  "2027-03-01": {
+    "themeName": "LION AND LAMB",
+    "description": "March's blustery winds",
+    "wordList": [
+      "gusty",
+      "breezy",
+      "weather",
+      "squally",
+      "tempestuous"
+    ]
+  },
+  "2027-03-02": {
+    "themeName": "LET'S DANCE",
+    "description": "Move to the music",
+    "wordList": [
+      "strut",
+      "groove",
+      "shimmy",
+      "boogie",
+      "choreography"
+    ]
+  },
+  "2027-03-03": {
+    "themeName": "ROOM SPINNING",
+    "description": "Dizzy and unsteady",
+    "wordList": [
+      "dizzy",
+      "tipsy",
+      "spinning",
+      "unsteady",
+      "dizziness"
+    ]
+  },
+  "2027-03-04": {
+    "themeName": "FRESH SQUEEZED",
+    "description": "Juice it up",
+    "wordList": [
+      "fresh",
+      "juicy",
+      "citrus",
+      "nectar",
+      "squeezed"
+    ]
+  },
+  "2027-03-05": {
+    "themeName": "ON THE GREEN",
+    "description": "Hit the links",
+    "wordList": [
+      "green",
+      "bogey",
+      "eagle",
+      "birdie",
+      "fairway"
+    ]
+  },
+  "2027-03-06": {
+    "themeName": "FACE PLANT",
+    "description": "Trips and stumbles",
+    "wordList": [
+      "tumble",
+      "awkward",
+      "blunder",
+      "stumble",
+      "embarrass"
+    ]
+  },
+  "2027-03-07": {
+    "themeName": "PASS THE PEAS",
+    "description": "Side dish vegetables",
+    "wordList": [
+      "onion",
+      "carrot",
+      "spinach",
+      "broccoli",
+      "cauliflower"
+    ]
+  },
+  "2027-03-08": {
+    "themeName": "SHE ROSE",
+    "description": "Honoring women's strength",
+    "wordList": [
+      "sisters",
+      "suffrage",
+      "strength",
+      "feminine",
+      "empowered"
+    ],
+    "specialEvent": "International Women's Day"
+  },
+  "2027-03-09": {
+    "themeName": "LIFE GUARD",
+    "description": "Watching over swimmers",
+    "wordList": [
+      "rescue",
+      "signal",
+      "trained",
+      "guarded",
+      "lifesaver"
+    ]
+  },
+  "2027-03-10": {
+    "themeName": "BOUNCE BACK",
+    "description": "Resilience and recovery",
+    "wordList": [
+      "revive",
+      "recover",
+      "rebound",
+      "restore",
+      "tenacity"
+    ]
+  },
+  "2027-03-11": {
+    "themeName": "REMOTE CONTROL",
+    "description": "Couch potato essentials",
+    "wordList": [
+      "remote",
+      "volume",
+      "channel",
+      "clicker",
+      "television"
+    ]
+  },
+  "2027-03-12": {
+    "themeName": "MAKE A WISH",
+    "description": "Birthday celebrations",
+    "wordList": [
+      "party",
+      "wishes",
+      "presents",
+      "birthday",
+      "festivities"
+    ]
+  },
+  "2027-03-13": {
+    "themeName": "TIDY UP",
+    "description": "Cleaning and organizing",
+    "wordList": [
+      "swept",
+      "tidying",
+      "polished",
+      "spotless",
+      "declutter"
+    ]
+  },
+  "2027-03-14": {
+    "themeName": "INFINITE PI",
+    "description": "Math and digits",
+    "wordList": [
+      "digits",
+      "numbers",
+      "formula",
+      "decimals",
+      "infinite"
+    ],
+    "specialEvent": "Pi Day"
+  },
+  "2027-03-15": {
+    "themeName": "BEWARE THE IDES",
+    "description": "Caesar's downfall",
+    "wordList": [
+      "beware",
+      "senate",
+      "warning",
+      "prophecy",
+      "foreboding"
+    ],
+    "specialEvent": "Ides of March"
+  },
+  "2027-03-16": {
+    "themeName": "LOST IN TRANSLATION",
+    "description": "Languages and dialects",
+    "wordList": [
+      "accent",
+      "dialect",
+      "language",
+      "translate",
+      "bilingual"
+    ]
+  },
+  "2027-03-17": {
+    "themeName": "WEARING GREEN",
+    "description": "Irish blessings and luck",
+    "wordList": [
+      "gaelic",
+      "clover",
+      "emerald",
+      "shamrock",
+      "leprechaun"
+    ],
+    "specialEvent": "St. Patrick's Day"
+  },
+  "2027-03-18": {
+    "themeName": "RAINBOW BRIGHT",
+    "description": "Light through a prism",
+    "wordList": [
+      "prism",
+      "rainbow",
+      "spectrum",
+      "refracted",
+      "kaleidoscope"
+    ]
+  },
+  "2027-03-19": {
+    "themeName": "OPEN DOORS",
+    "description": "Opportunities and pathways",
+    "wordList": [
+      "chance",
+      "portal",
+      "avenue",
+      "gateway",
+      "opening"
+    ]
+  },
+  "2027-03-20": {
+    "themeName": "VERNAL VIBES",
+    "description": "Spring arrives",
+    "wordList": [
+      "vernal",
+      "thawing",
+      "blossom",
+      "equinox",
+      "springtime"
+    ],
+    "specialEvent": "Spring Equinox"
+  },
+  "2027-03-21": {
+    "themeName": "TINY WINGS",
+    "description": "Bugs of the garden",
+    "wordList": [
+      "ladybug",
+      "insects",
+      "antennae",
+      "butterfly",
+      "caterpillar"
+    ]
+  },
+  "2027-03-22": {
+    "themeName": "RAW DEAL",
+    "description": "Japanese cuisine",
+    "wordList": [
+      "sushi",
+      "ramen",
+      "wasabi",
+      "seaweed",
+      "tempura"
+    ]
+  },
+  "2027-03-23": {
+    "themeName": "COLOR PLAY",
+    "description": "A festival of colors",
+    "wordList": [
+      "color",
+      "powder",
+      "vibrant",
+      "fragrance",
+      "celebration"
+    ],
+    "specialEvent": "Holi"
+  },
+  "2027-03-24": {
+    "themeName": "ARCADE FIRE",
+    "description": "Video game classics",
+    "wordList": [
+      "pixel",
+      "gaming",
+      "console",
+      "joystick",
+      "highscore"
+    ]
+  },
+  "2027-03-25": {
+    "themeName": "POND LIFE",
+    "description": "Amphibians",
+    "wordList": [
+      "toads",
+      "newts",
+      "tadpole",
+      "amphibian",
+      "salamander"
+    ]
+  },
+  "2027-03-26": {
+    "themeName": "SAVE THE DATE",
+    "description": "Event invitations",
+    "wordList": [
+      "event",
+      "invite",
+      "occasion",
+      "invitation",
+      "reservation"
+    ]
+  },
+  "2027-03-27": {
+    "themeName": "HOLY WEEK",
+    "description": "Sacred days of devotion",
+    "wordList": [
+      "palms",
+      "passion",
+      "worship",
+      "liturgy",
+      "cathedral"
+    ]
+  },
+  "2027-03-28": {
+    "themeName": "EGG HUNT",
+    "description": "Easter morning",
+    "wordList": [
+      "chicks",
+      "pastel",
+      "bonnet",
+      "easter",
+      "jellybean"
+    ],
+    "specialEvent": "Easter"
+  },
+  "2027-03-29": {
+    "themeName": "PLAY BALL",
+    "description": "Baseball is back",
+    "wordList": [
+      "inning",
+      "bullpen",
+      "homerun",
+      "baseball",
+      "shortstop"
+    ],
+    "specialEvent": "MLB Opening Day"
+  },
+  "2027-03-30": {
+    "themeName": "EVERY ANGLE",
+    "description": "Shapes and curves",
+    "wordList": [
+      "curve",
+      "sphere",
+      "parabola",
+      "cylinder",
+      "trajectory"
+    ]
+  },
+  "2027-03-31": {
+    "themeName": "MARCH MADNESS",
+    "description": "College basketball brackets",
+    "wordList": [
+      "upset",
+      "tipoff",
+      "buzzer",
+      "bracket",
+      "seeding"
+    ],
+    "specialEvent": "March Madness"
+  },
+  "2027-04-01": {
+    "themeName": "PRANK CALL",
+    "description": "Pulling a fast one",
+    "wordList": [
+      "trick",
+      "prank",
+      "gotcha",
+      "foolery",
+      "shenanigans"
+    ],
+    "specialEvent": "April Fools' Day"
+  },
+  "2027-04-02": {
+    "themeName": "STORYTELLING",
+    "description": "Tales worth telling",
+    "wordList": [
+      "tales",
+      "legend",
+      "narrate",
+      "anecdote",
+      "narration"
+    ]
+  },
+  "2027-04-03": {
+    "themeName": "RAIN OR SHINE",
+    "description": "April showers",
+    "wordList": [
+      "poncho",
+      "shower",
+      "raincoat",
+      "galoshes",
+      "umbrella"
+    ]
+  },
+  "2027-04-04": {
+    "themeName": "VINEYARD VIEW",
+    "description": "Wine country",
+    "wordList": [
+      "crush",
+      "grapes",
+      "winery",
+      "vintage",
+      "pressing"
+    ]
+  },
+  "2027-04-05": {
+    "themeName": "FACE FIRST",
+    "description": "Facial features",
+    "wordList": [
+      "cheek",
+      "mouth",
+      "eyebrow",
+      "nostril",
+      "forehead"
+    ]
+  },
+  "2027-04-06": {
+    "themeName": "WEEKEND PLANS",
+    "description": "Days of the week",
+    "wordList": [
+      "monday",
+      "sunday",
+      "tuesday",
+      "weekend",
+      "saturday"
+    ]
+  },
+  "2027-04-07": {
+    "themeName": "BREAKFAST OF CHAMPIONS",
+    "description": "Cereal bowls and morning fuel",
+    "wordList": [
+      "yogurt",
+      "oatmeal",
+      "granola",
+      "smoothie",
+      "breakfast"
+    ]
+  },
+  "2027-04-08": {
+    "themeName": "TWO WHEELS",
+    "description": "Bicycles and biking",
+    "wordList": [
+      "pedal",
+      "wheels",
+      "helmet",
+      "tandem",
+      "handlebars"
+    ]
+  },
+  "2027-04-09": {
+    "themeName": "JUNK DRAWER",
+    "description": "Random odds and ends",
+    "wordList": [
+      "drawer",
+      "random",
+      "oddball",
+      "assorted",
+      "mismatched"
+    ]
+  },
+  "2027-04-10": {
+    "themeName": "ENTRANCE EXAM",
+    "description": "Tests and grading",
+    "wordList": [
+      "score",
+      "grades",
+      "tested",
+      "passing",
+      "placement"
+    ]
+  },
+  "2027-04-11": {
+    "themeName": "INSPIRATION POINT",
+    "description": "Sparks of creativity",
+    "wordList": [
+      "muses",
+      "sparks",
+      "inspire",
+      "creative",
+      "imagination"
+    ]
+  },
+  "2027-04-12": {
+    "themeName": "SOLAR SYSTEM",
+    "description": "Planets in orbit",
+    "wordList": [
+      "planet",
+      "saturn",
+      "mercury",
+      "jupiter",
+      "neptune"
+    ]
+  },
+  "2027-04-13": {
+    "themeName": "ADRENALINE",
+    "description": "Thrill seekers",
+    "wordList": [
+      "bungee",
+      "thrill",
+      "extreme",
+      "daredevil",
+      "adrenaline"
+    ]
+  },
+  "2027-04-14": {
+    "themeName": "BAKED GOODS",
+    "description": "From the bakery",
+    "wordList": [
+      "baker",
+      "donut",
+      "bakery",
+      "pastry",
+      "cupcake"
+    ]
+  },
+  "2027-04-15": {
+    "themeName": "TAX RETURN",
+    "description": "Filing season",
+    "wordList": [
+      "audit",
+      "taxes",
+      "filing",
+      "deduction",
+      "withholding"
+    ],
+    "specialEvent": "Tax Day"
+  },
+  "2027-04-16": {
+    "themeName": "GRAPHIC NOVEL",
+    "description": "Comic book worlds",
+    "wordList": [
+      "panel",
+      "comic",
+      "villain",
+      "graphic",
+      "illustration"
+    ]
+  },
+  "2027-04-17": {
+    "themeName": "GOOD KARMA",
+    "description": "Eastern philosophy",
+    "wordList": [
+      "karma",
+      "faith",
+      "dharma",
+      "nirvana",
+      "mindfulness"
+    ]
+  },
+  "2027-04-18": {
+    "themeName": "PASSWORD",
+    "description": "Digital security",
+    "wordList": [
+      "login",
+      "secret",
+      "passcode",
+      "security",
+      "encryption"
+    ]
+  },
+  "2027-04-19": {
+    "themeName": "TECTONIC SHIFT",
+    "description": "Volcanoes and plates",
+    "wordList": [
+      "magma",
+      "crater",
+      "volcano",
+      "tectonic",
+      "eruption"
+    ]
+  },
+  "2027-04-20": {
+    "themeName": "ON THE FENCE",
+    "description": "Undecided",
+    "wordList": [
+      "maybe",
+      "waver",
+      "unsure",
+      "hesitate",
+      "conflicted"
+    ]
+  },
+  "2027-04-21": {
+    "themeName": "PASSOVER FEAST",
+    "description": "Seder traditions",
+    "wordList": [
+      "matzo",
+      "seder",
+      "exodus",
+      "haggadah",
+      "passover"
+    ],
+    "specialEvent": "Passover"
+  },
+  "2027-04-22": {
+    "themeName": "GREEN PLANET",
+    "description": "Caring for our home",
+    "wordList": [
+      "earth",
+      "forest",
+      "nature",
+      "recycle",
+      "conservation"
+    ],
+    "specialEvent": "Earth Day"
+  },
+  "2027-04-23": {
+    "themeName": "BARD'S BIRTHDAY",
+    "description": "Celebrating Shakespeare",
+    "wordList": [
+      "sonnet",
+      "comedy",
+      "iambic",
+      "tragedy",
+      "playwright"
+    ],
+    "specialEvent": "Shakespeare's Birthday"
+  },
+  "2027-04-24": {
+    "themeName": "BANDS OF GOLD",
+    "description": "Fine jewelry",
+    "wordList": [
+      "bands",
+      "pendant",
+      "bracelet",
+      "necklace",
+      "engagement"
+    ]
+  },
+  "2027-04-25": {
+    "themeName": "SPILLED INK",
+    "description": "Oops moments",
+    "wordList": [
+      "error",
+      "mishap",
+      "mistake",
+      "blunder",
+      "accident"
+    ]
+  },
+  "2027-04-26": {
+    "themeName": "TAKE TWO",
+    "description": "On the movie set",
+    "wordList": [
+      "takes",
+      "retake",
+      "filming",
+      "reshoot",
+      "director"
+    ]
+  },
+  "2027-04-27": {
+    "themeName": "WIND FARM",
+    "description": "Renewable energy",
+    "wordList": [
+      "energy",
+      "turbine",
+      "kinetic",
+      "windmill",
+      "renewable"
+    ]
+  },
+  "2027-04-28": {
+    "themeName": "MASTERPIECE",
+    "description": "Fine art on canvas",
+    "wordList": [
+      "canvas",
+      "gallery",
+      "portrait",
+      "abstract",
+      "masterpiece"
+    ]
+  },
+  "2027-04-29": {
+    "themeName": "GET LOUD",
+    "description": "Turn it up",
+    "wordList": [
+      "decibel",
+      "shouting",
+      "loudness",
+      "thunderous",
+      "boisterous"
+    ]
+  },
+  "2027-04-30": {
+    "themeName": "PLANT A TREE",
+    "description": "Honoring trees and forests",
+    "wordList": [
+      "arbor",
+      "nurture",
+      "sapling",
+      "branches",
+      "seedling"
+    ],
+    "specialEvent": "Arbor Day"
+  },
+  "2027-05-01": {
+    "themeName": "MAYPOLE DANCE",
+    "description": "May Day springtime traditions",
+    "wordList": [
+      "ribbons",
+      "maypole",
+      "flowers",
+      "garland",
+      "springtime"
+    ],
+    "specialEvent": "May Day"
+  },
+  "2027-05-02": {
+    "themeName": "RUN FOR THE ROSES",
+    "description": "The Kentucky Derby",
+    "wordList": [
+      "roses",
+      "juleps",
+      "jockey",
+      "bourbon",
+      "thoroughbred"
+    ],
+    "specialEvent": "Kentucky Derby"
+  },
   "_fallback": {
     "themeName": "GENERAL",
     "description": "A mix of everyday words",
