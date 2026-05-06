@@ -89,6 +89,7 @@ export interface DailyTheme {
   themeName: string;
   description: string;
   wordList: string[];
+  specialEvent?: string;
   sponsor?: Sponsor;
 }
 

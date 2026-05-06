@@ -2411,6 +2411,1374 @@
       "twilight"
     ]
   },
+  "2026-09-01": {
+    "themeName": "BACK TO SCHOOL",
+    "description": "First day of class",
+    "wordList": [
+      "folder",
+      "lockers",
+      "syllabus",
+      "textbook",
+      "notebook"
+    ]
+  },
+  "2026-09-02": {
+    "themeName": "AUTUMN AIR",
+    "description": "Early fall arrives",
+    "wordList": [
+      "crisp",
+      "autumn",
+      "leaves",
+      "harvest",
+      "fireside"
+    ]
+  },
+  "2026-09-03": {
+    "themeName": "HARVEST HAUL",
+    "description": "Garden bounty of fall",
+    "wordList": [
+      "gourd",
+      "beets",
+      "squash",
+      "pumpkin",
+      "butternut"
+    ]
+  },
+  "2026-09-04": {
+    "themeName": "ZIP IT UP",
+    "description": "Fasteners that hold things together",
+    "wordList": [
+      "velcro",
+      "button",
+      "zippers",
+      "buckles",
+      "shoelace"
+    ]
+  },
+  "2026-09-05": {
+    "themeName": "STAR STRUCK",
+    "description": "Celebrity and fame",
+    "wordList": [
+      "famous",
+      "tabloid",
+      "glamour",
+      "paparazzi",
+      "celebrity"
+    ]
+  },
+  "2026-09-06": {
+    "themeName": "PINS AND NEEDLES",
+    "description": "Anxious anticipation",
+    "wordList": [
+      "shaky",
+      "nervous",
+      "anxious",
+      "tension",
+      "suspense"
+    ]
+  },
+  "2026-09-07": {
+    "themeName": "WORKING CLASS",
+    "description": "Honoring the workforce",
+    "wordList": [
+      "labor",
+      "worker",
+      "shifts",
+      "employee",
+      "craftsmen"
+    ],
+    "specialEvent": "Labor Day"
+  },
+  "2026-09-08": {
+    "themeName": "POETRY SLAM",
+    "description": "Forms of verse",
+    "wordList": [
+      "haiku",
+      "verse",
+      "stanza",
+      "couplet",
+      "limerick"
+    ]
+  },
+  "2026-09-09": {
+    "themeName": "TRAFFIC JAM",
+    "description": "Stuck on the road",
+    "wordList": [
+      "bumper",
+      "commute",
+      "gridlock",
+      "headlight",
+      "congestion"
+    ]
+  },
+  "2026-09-10": {
+    "themeName": "DOMESTIC GOD",
+    "description": "Household chores",
+    "wordList": [
+      "broom",
+      "dishes",
+      "vacuum",
+      "laundry",
+      "tidying"
+    ]
+  },
+  "2026-09-11": {
+    "themeName": "NEVER FORGET",
+    "description": "Honor and remembrance",
+    "wordList": [
+      "honor",
+      "heroic",
+      "courage",
+      "remember",
+      "responder"
+    ],
+    "specialEvent": "Patriot Day"
+  },
+  "2026-09-12": {
+    "themeName": "FALL FASHION",
+    "description": "Layers for cooler days",
+    "wordList": [
+      "scarf",
+      "trench",
+      "beanie",
+      "sweater",
+      "cardigan"
+    ]
+  },
+  "2026-09-13": {
+    "themeName": "WISE ELDERS",
+    "description": "Honoring grandparents",
+    "wordList": [
+      "elders",
+      "wisdom",
+      "legacy",
+      "grandma",
+      "grandparents"
+    ],
+    "specialEvent": "Grandparents Day"
+  },
+  "2026-09-14": {
+    "themeName": "NORTHERN LIGHTS",
+    "description": "Aurora and the arctic",
+    "wordList": [
+      "aurora",
+      "arctic",
+      "boreal",
+      "iceberg",
+      "shimmer"
+    ]
+  },
+  "2026-09-15": {
+    "themeName": "TWIN PEAKS",
+    "description": "Up in the alpine",
+    "wordList": [
+      "ridge",
+      "peaks",
+      "alpine",
+      "summit",
+      "majestic"
+    ]
+  },
+  "2026-09-16": {
+    "themeName": "GRITO DE INDEPENDENCIA",
+    "description": "Mexican independence",
+    "wordList": [
+      "pride",
+      "liberty",
+      "heritage",
+      "sovereignty",
+      "independence"
+    ],
+    "specialEvent": "Mexican Independence Day"
+  },
+  "2026-09-17": {
+    "themeName": "WE THE PEOPLE",
+    "description": "Founding documents and rights",
+    "wordList": [
+      "rights",
+      "federal",
+      "framers",
+      "citizen",
+      "constitution"
+    ],
+    "specialEvent": "Constitution Day"
+  },
+  "2026-09-18": {
+    "themeName": "RUSTIC CHARM",
+    "description": "Country home decor",
+    "wordList": [
+      "rustic",
+      "wooden",
+      "vintage",
+      "antique",
+      "weathered"
+    ]
+  },
+  "2026-09-19": {
+    "themeName": "ARRR MATEY",
+    "description": "Pirate parlance",
+    "wordList": [
+      "matey",
+      "shanty",
+      "parrot",
+      "scallywag",
+      "hornswoggle"
+    ],
+    "specialEvent": "Talk Like a Pirate Day"
+  },
+  "2026-09-20": {
+    "themeName": "TENDER TENDERS",
+    "description": "Chicken for dinner",
+    "wordList": [
+      "chicken",
+      "tenders",
+      "nuggets",
+      "drumstick",
+      "rotisserie"
+    ]
+  },
+  "2026-09-21": {
+    "themeName": "BAILA BAILA",
+    "description": "Latin dance rhythms",
+    "wordList": [
+      "tango",
+      "rumba",
+      "mambo",
+      "cumbia",
+      "merengue"
+    ]
+  },
+  "2026-09-22": {
+    "themeName": "BALANCED LIGHT",
+    "description": "Day equals night",
+    "wordList": [
+      "shadow",
+      "season",
+      "equinox",
+      "daylight",
+      "hemisphere"
+    ],
+    "specialEvent": "Autumn Equinox"
+  },
+  "2026-09-23": {
+    "themeName": "WHAT'S YOUR SIGN",
+    "description": "Zodiac signs",
+    "wordList": [
+      "libra",
+      "virgo",
+      "aries",
+      "zodiac",
+      "horoscope"
+    ]
+  },
+  "2026-09-24": {
+    "themeName": "BULL MARKET",
+    "description": "Wall Street ways",
+    "wordList": [
+      "profit",
+      "trader",
+      "shares",
+      "broker",
+      "investing"
+    ]
+  },
+  "2026-09-25": {
+    "themeName": "WHODUNIT",
+    "description": "Mystery and detective work",
+    "wordList": [
+      "sleuth",
+      "suspect",
+      "mystery",
+      "whodunit",
+      "detective"
+    ]
+  },
+  "2026-09-26": {
+    "themeName": "FIRE IT UP",
+    "description": "Flames and embers",
+    "wordList": [
+      "spark",
+      "flame",
+      "ember",
+      "inferno",
+      "kindling"
+    ]
+  },
+  "2026-09-27": {
+    "themeName": "VENN DIAGRAM",
+    "description": "Logic and proofs",
+    "wordList": [
+      "logic",
+      "graph",
+      "proof",
+      "theorem",
+      "equation"
+    ]
+  },
+  "2026-09-28": {
+    "themeName": "CLOCKWORK",
+    "description": "Timekeeping mechanisms",
+    "wordList": [
+      "gears",
+      "winding",
+      "pendulum",
+      "mechanism",
+      "grandfather"
+    ]
+  },
+  "2026-09-29": {
+    "themeName": "GAME NIGHT",
+    "description": "Around the board",
+    "wordList": [
+      "board",
+      "tiles",
+      "tokens",
+      "playing",
+      "gameplay"
+    ]
+  },
+  "2026-09-30": {
+    "themeName": "CALL TO ARMS",
+    "description": "Military formations",
+    "wordList": [
+      "squad",
+      "brigade",
+      "platoon",
+      "division",
+      "regiment"
+    ]
+  },
+  "2026-10-01": {
+    "themeName": "WALNUT GROVE",
+    "description": "Tree nuts",
+    "wordList": [
+      "pecan",
+      "almond",
+      "cashew",
+      "walnut",
+      "hazelnut"
+    ]
+  },
+  "2026-10-02": {
+    "themeName": "WORD OF THE DAY",
+    "description": "Vocabulary builders",
+    "wordList": [
+      "jargon",
+      "lexicon",
+      "thesaurus",
+      "dictionary",
+      "vocabulary"
+    ]
+  },
+  "2026-10-03": {
+    "themeName": "SECRET RECIPE",
+    "description": "Cooking techniques",
+    "wordList": [
+      "saute",
+      "simmer",
+      "recipe",
+      "garnish",
+      "technique"
+    ]
+  },
+  "2026-10-04": {
+    "themeName": "EARLY RISER",
+    "description": "Morning routines",
+    "wordList": [
+      "alarm",
+      "awake",
+      "morning",
+      "sunrise",
+      "routine"
+    ]
+  },
+  "2026-10-05": {
+    "themeName": "OPEN MIC",
+    "description": "Stand-up and karaoke",
+    "wordList": [
+      "standup",
+      "karaoke",
+      "audience",
+      "spotlight",
+      "microphone"
+    ]
+  },
+  "2026-10-06": {
+    "themeName": "CRACK THE CODE",
+    "description": "Programming and hacking",
+    "wordList": [
+      "coder",
+      "hacker",
+      "binary",
+      "software",
+      "encryption"
+    ]
+  },
+  "2026-10-07": {
+    "themeName": "AUTUMN ORCHARD",
+    "description": "Fall fruit picking",
+    "wordList": [
+      "apple",
+      "pears",
+      "cranberry",
+      "persimmon",
+      "pomegranate"
+    ]
+  },
+  "2026-10-08": {
+    "themeName": "BOILER ROOM",
+    "description": "Home heating",
+    "wordList": [
+      "heater",
+      "boiler",
+      "furnace",
+      "radiator",
+      "thermostat"
+    ]
+  },
+  "2026-10-09": {
+    "themeName": "ROUND OF APPLAUSE",
+    "description": "Cheers from the crowd",
+    "wordList": [
+      "bravo",
+      "cheer",
+      "ovation",
+      "applause",
+      "standing"
+    ]
+  },
+  "2026-10-10": {
+    "themeName": "NO PLACE LIKE HOME",
+    "description": "Comfort and coziness",
+    "wordList": [
+      "comfy",
+      "couch",
+      "nestle",
+      "comfort",
+      "homestead"
+    ]
+  },
+  "2026-10-11": {
+    "themeName": "GLITTER AND GOLD",
+    "description": "Things that sparkle",
+    "wordList": [
+      "shine",
+      "bling",
+      "sequin",
+      "glitter",
+      "sparkle"
+    ]
+  },
+  "2026-10-12": {
+    "themeName": "FIRST PEOPLES",
+    "description": "Indigenous heritage",
+    "wordList": [
+      "native",
+      "tribal",
+      "ancient",
+      "tradition",
+      "indigenous"
+    ],
+    "specialEvent": "Indigenous Peoples' Day"
+  },
+  "2026-10-13": {
+    "themeName": "OLD SAYINGS",
+    "description": "Proverbs and adages",
+    "wordList": [
+      "adage",
+      "maxim",
+      "saying",
+      "proverb",
+      "aphorism"
+    ]
+  },
+  "2026-10-14": {
+    "themeName": "INK BLOT",
+    "description": "On the therapist's couch",
+    "wordList": [
+      "psyche",
+      "mental",
+      "therapy",
+      "mindset",
+      "psychology"
+    ]
+  },
+  "2026-10-15": {
+    "themeName": "AT THE OPERA",
+    "description": "Operatic terms",
+    "wordList": [
+      "opera",
+      "tenor",
+      "soprano",
+      "orchestra",
+      "conductor"
+    ]
+  },
+  "2026-10-16": {
+    "themeName": "PLANT POWER",
+    "description": "Plant-based eating",
+    "wordList": [
+      "veggie",
+      "seitan",
+      "legume",
+      "produce",
+      "nutrition"
+    ],
+    "specialEvent": "World Food Day"
+  },
+  "2026-10-17": {
+    "themeName": "WHITE NOISE",
+    "description": "Hush and silence",
+    "wordList": [
+      "quiet",
+      "hushed",
+      "murmur",
+      "whisper",
+      "silence"
+    ]
+  },
+  "2026-10-18": {
+    "themeName": "INTERIOR DESIGN",
+    "description": "Decor and styling",
+    "wordList": [
+      "decor",
+      "accent",
+      "modern",
+      "styling",
+      "furniture"
+    ]
+  },
+  "2026-10-19": {
+    "themeName": "BIG TICKET",
+    "description": "Shopping smart",
+    "wordList": [
+      "price",
+      "receipt",
+      "bargain",
+      "discount",
+      "purchase"
+    ]
+  },
+  "2026-10-20": {
+    "themeName": "FANTASY LEAGUE",
+    "description": "Sports drafts and stats",
+    "wordList": [
+      "rookie",
+      "fantasy",
+      "playoffs",
+      "standings",
+      "benchwarmer"
+    ]
+  },
+  "2026-10-21": {
+    "themeName": "SUITE LIFE",
+    "description": "Hotel hospitality",
+    "wordList": [
+      "lobby",
+      "suite",
+      "bellhop",
+      "checkin",
+      "concierge"
+    ]
+  },
+  "2026-10-22": {
+    "themeName": "GRAVESTONE",
+    "description": "Cemetery markings",
+    "wordList": [
+      "crypt",
+      "coffin",
+      "hearse",
+      "epitaph",
+      "gravesite"
+    ]
+  },
+  "2026-10-23": {
+    "themeName": "DOUBLE BUBBLE",
+    "description": "Witches and spells",
+    "wordList": [
+      "potion",
+      "witches",
+      "cauldron",
+      "bewitched",
+      "sorceress"
+    ]
+  },
+  "2026-10-24": {
+    "themeName": "WORLD UN-ITED",
+    "description": "Diplomacy and global cooperation",
+    "wordList": [
+      "peace",
+      "global",
+      "treaty",
+      "assembly",
+      "diplomacy"
+    ],
+    "specialEvent": "United Nations Day"
+  },
+  "2026-10-25": {
+    "themeName": "BLACK TIE",
+    "description": "Formal evening wear",
+    "wordList": [
+      "formal",
+      "bowtie",
+      "tuxedo",
+      "elegant",
+      "accessory"
+    ]
+  },
+  "2026-10-26": {
+    "themeName": "WALKING DEAD",
+    "description": "The undead rise",
+    "wordList": [
+      "ghoul",
+      "zombie",
+      "undead",
+      "corpse",
+      "revenant"
+    ]
+  },
+  "2026-10-27": {
+    "themeName": "WICKED WEB",
+    "description": "Eight-legged things",
+    "wordList": [
+      "spider",
+      "webbed",
+      "scuttle",
+      "arachnid",
+      "tarantula"
+    ]
+  },
+  "2026-10-28": {
+    "themeName": "CANDY CRUSH",
+    "description": "Sugary loot",
+    "wordList": [
+      "candy",
+      "taffy",
+      "gummy",
+      "lollipop",
+      "chocolate"
+    ]
+  },
+  "2026-10-29": {
+    "themeName": "FRIGHT NIGHT",
+    "description": "Scary stories",
+    "wordList": [
+      "scary",
+      "creepy",
+      "spooky",
+      "horror",
+      "nightmare"
+    ]
+  },
+  "2026-10-30": {
+    "themeName": "MASQUERADE",
+    "description": "Costumes and disguises",
+    "wordList": [
+      "masked",
+      "costume",
+      "disguise",
+      "facepaint",
+      "masquerade"
+    ]
+  },
+  "2026-10-31": {
+    "themeName": "ALL HALLOWS",
+    "description": "Halloween classics",
+    "wordList": [
+      "ghost",
+      "witch",
+      "goblin",
+      "spectre",
+      "halloween"
+    ],
+    "specialEvent": "Halloween"
+  },
+  "2026-11-01": {
+    "themeName": "DIA DE MUERTOS",
+    "description": "Honoring loved ones who have passed",
+    "wordList": [
+      "altar",
+      "candle",
+      "spirits",
+      "ofrenda",
+      "marigold"
+    ],
+    "specialEvent": "Día de los Muertos"
+  },
+  "2026-11-02": {
+    "themeName": "ALL SAINTS",
+    "description": "Sacred and holy",
+    "wordList": [
+      "saint",
+      "sacred",
+      "pilgrim",
+      "holyday",
+      "blessing"
+    ]
+  },
+  "2026-11-03": {
+    "themeName": "VOTING BOOTH",
+    "description": "Cast your vote",
+    "wordList": [
+      "polls",
+      "voter",
+      "ballot",
+      "voting",
+      "candidate"
+    ],
+    "specialEvent": "Election Day"
+  },
+  "2026-11-04": {
+    "themeName": "FALL CLEANUP",
+    "description": "Yard work in autumn",
+    "wordList": [
+      "raking",
+      "pruning",
+      "tarping",
+      "mulching",
+      "composting"
+    ]
+  },
+  "2026-11-05": {
+    "themeName": "FORGE AHEAD",
+    "description": "Blacksmith's craft",
+    "wordList": [
+      "anvil",
+      "forge",
+      "smith",
+      "bellows",
+      "ironwork"
+    ]
+  },
+  "2026-11-06": {
+    "themeName": "FLEET FOOT",
+    "description": "Hit the ground running",
+    "wordList": [
+      "pacing",
+      "sprint",
+      "runner",
+      "jogging",
+      "marathon"
+    ]
+  },
+  "2026-11-07": {
+    "themeName": "ATTIC FIND",
+    "description": "Hidden treasures",
+    "wordList": [
+      "attic",
+      "boxes",
+      "trunk",
+      "treasure",
+      "heirloom"
+    ]
+  },
+  "2026-11-08": {
+    "themeName": "FESTIVAL OF LIGHTS",
+    "description": "Diwali brings light to the darkness",
+    "wordList": [
+      "lights",
+      "bright",
+      "lantern",
+      "radiance",
+      "illumination"
+    ],
+    "specialEvent": "Diwali"
+  },
+  "2026-11-09": {
+    "themeName": "CHILLY MORNING",
+    "description": "Winter is creeping in",
+    "wordList": [
+      "frost",
+      "chill",
+      "parka",
+      "gloves",
+      "shiver"
+    ]
+  },
+  "2026-11-10": {
+    "themeName": "STORYBOOK",
+    "description": "Fairy tales and folklore",
+    "wordList": [
+      "fable",
+      "legend",
+      "parable",
+      "folklore",
+      "fairytale"
+    ]
+  },
+  "2026-11-11": {
+    "themeName": "SERVICE & HONOR",
+    "description": "Honoring those who served",
+    "wordList": [
+      "salute",
+      "badges",
+      "service",
+      "veteran",
+      "sergeant"
+    ],
+    "specialEvent": "Veterans Day"
+  },
+  "2026-11-12": {
+    "themeName": "LECTURE HALL",
+    "description": "Higher education",
+    "wordList": [
+      "thesis",
+      "campus",
+      "lecture",
+      "studies",
+      "professor"
+    ]
+  },
+  "2026-11-13": {
+    "themeName": "BAD LUCK",
+    "description": "Friday the 13th superstitions",
+    "wordList": [
+      "curse",
+      "hexes",
+      "tarot",
+      "jinxed",
+      "unlucky"
+    ]
+  },
+  "2026-11-14": {
+    "themeName": "WOOD WORK",
+    "description": "Carpentry craft",
+    "wordList": [
+      "timber",
+      "planks",
+      "sawdust",
+      "woodwork",
+      "carpentry"
+    ]
+  },
+  "2026-11-15": {
+    "themeName": "INDOOR JUNGLE",
+    "description": "Houseplants",
+    "wordList": [
+      "pothos",
+      "monstera",
+      "succulent",
+      "terrarium",
+      "fertilizer"
+    ]
+  },
+  "2026-11-16": {
+    "themeName": "GRINDSTONE",
+    "description": "Hustle and dedication",
+    "wordList": [
+      "drive",
+      "focus",
+      "hustle",
+      "ambition",
+      "dedication"
+    ]
+  },
+  "2026-11-17": {
+    "themeName": "FILL'ER UP",
+    "description": "At the gas station",
+    "wordList": [
+      "petrol",
+      "diesel",
+      "nozzle",
+      "refill",
+      "gasoline"
+    ]
+  },
+  "2026-11-18": {
+    "themeName": "TOMATO PASTE",
+    "description": "Italian comfort food",
+    "wordList": [
+      "pizza",
+      "pasta",
+      "tomato",
+      "marinara",
+      "pomodoro"
+    ]
+  },
+  "2026-11-19": {
+    "themeName": "HOT AIR",
+    "description": "Up in a balloon",
+    "wordList": [
+      "basket",
+      "ballast",
+      "balloon",
+      "gondola",
+      "ascending"
+    ]
+  },
+  "2026-11-20": {
+    "themeName": "PAPER TRAIL",
+    "description": "Forms and bureaucracy",
+    "wordList": [
+      "forms",
+      "filing",
+      "notary",
+      "document",
+      "bureaucracy"
+    ]
+  },
+  "2026-11-21": {
+    "themeName": "FOUNTAIN PEN",
+    "description": "Writing implements",
+    "wordList": [
+      "quill",
+      "inkpot",
+      "scribe",
+      "penmanship",
+      "calligraphy"
+    ]
+  },
+  "2026-11-22": {
+    "themeName": "CIRCUIT BOARD",
+    "description": "Electronics inside",
+    "wordList": [
+      "volts",
+      "wiring",
+      "circuit",
+      "capacitor",
+      "transistor"
+    ]
+  },
+  "2026-11-23": {
+    "themeName": "TRUE NORTH",
+    "description": "Direction and navigation",
+    "wordList": [
+      "arrow",
+      "north",
+      "bearing",
+      "navigate",
+      "direction"
+    ]
+  },
+  "2026-11-24": {
+    "themeName": "COOK'S TOUR",
+    "description": "Kitchen utensils",
+    "wordList": [
+      "whisk",
+      "ladle",
+      "tongs",
+      "spatula",
+      "colander"
+    ]
+  },
+  "2026-11-25": {
+    "themeName": "EVE OF THANKS",
+    "description": "Holiday travels home",
+    "wordList": [
+      "gather",
+      "travels",
+      "reunion",
+      "arriving",
+      "homecoming"
+    ]
+  },
+  "2026-11-26": {
+    "themeName": "GOBBLE GOBBLE",
+    "description": "Thanksgiving feast",
+    "wordList": [
+      "gravy",
+      "feast",
+      "turkey",
+      "pumpkin",
+      "stuffing"
+    ],
+    "specialEvent": "Thanksgiving"
+  },
+  "2026-11-27": {
+    "themeName": "DOORBUSTERS",
+    "description": "Black Friday deals",
+    "wordList": [
+      "deals",
+      "sales",
+      "crowds",
+      "markdown",
+      "shopping"
+    ],
+    "specialEvent": "Black Friday"
+  },
+  "2026-11-28": {
+    "themeName": "SHOP LOCAL",
+    "description": "Supporting small business",
+    "wordList": [
+      "local",
+      "owner",
+      "artisan",
+      "boutique",
+      "independent"
+    ],
+    "specialEvent": "Small Business Saturday"
+  },
+  "2026-11-29": {
+    "themeName": "LEFTOVERS",
+    "description": "Round two of the feast",
+    "wordList": [
+      "fridge",
+      "heated",
+      "reheating",
+      "microwave",
+      "repurpose"
+    ]
+  },
+  "2026-11-30": {
+    "themeName": "ADD TO CART",
+    "description": "Online shopping spree",
+    "wordList": [
+      "online",
+      "virtual",
+      "browser",
+      "checkout",
+      "ecommerce"
+    ],
+    "specialEvent": "Cyber Monday"
+  },
+  "2026-12-01": {
+    "themeName": "ADVENT CALENDAR",
+    "description": "Counting down to Christmas",
+    "wordList": [
+      "count",
+      "advent",
+      "holiday",
+      "december",
+      "countdown"
+    ]
+  },
+  "2026-12-02": {
+    "themeName": "GIFT WRAP",
+    "description": "Wrapping paper and ribbons",
+    "wordList": [
+      "ribbon",
+      "present",
+      "package",
+      "gifting",
+      "wrapping"
+    ]
+  },
+  "2026-12-03": {
+    "themeName": "JINGLE BELLS",
+    "description": "Christmas classics",
+    "wordList": [
+      "jingle",
+      "sleigh",
+      "reindeer",
+      "mistletoe",
+      "gingerbread"
+    ]
+  },
+  "2026-12-04": {
+    "themeName": "EIGHT NIGHTS",
+    "description": "Hanukkah traditions",
+    "wordList": [
+      "latkes",
+      "dreidel",
+      "menorah",
+      "miracle",
+      "hanukkah"
+    ],
+    "specialEvent": "Hanukkah"
+  },
+  "2026-12-05": {
+    "themeName": "DAY SPA",
+    "description": "Pampering and relaxation",
+    "wordList": [
+      "sauna",
+      "relax",
+      "soothing",
+      "pampered",
+      "masseuse"
+    ]
+  },
+  "2026-12-06": {
+    "themeName": "ST. NICK",
+    "description": "Saint Nicholas Day traditions",
+    "wordList": [
+      "shoes",
+      "saint",
+      "chimney",
+      "stocking",
+      "surprise"
+    ]
+  },
+  "2026-12-07": {
+    "themeName": "DAY OF INFAMY",
+    "description": "Honoring those lost at Pearl Harbor",
+    "wordList": [
+      "attack",
+      "harbor",
+      "torpedo",
+      "wartime",
+      "aircraft"
+    ],
+    "specialEvent": "Pearl Harbor Day"
+  },
+  "2026-12-08": {
+    "themeName": "GOLDEN HOUR",
+    "description": "The photographer's magic light",
+    "wordList": [
+      "golden",
+      "sunset",
+      "exposure",
+      "portrait",
+      "panorama"
+    ]
+  },
+  "2026-12-09": {
+    "themeName": "ICE GAMES",
+    "description": "Winter sports on ice",
+    "wordList": [
+      "hockey",
+      "skating",
+      "curling",
+      "bobsled",
+      "sledding"
+    ]
+  },
+  "2026-12-10": {
+    "themeName": "BUNDLED UP",
+    "description": "Layering against the cold",
+    "wordList": [
+      "woolly",
+      "bundled",
+      "thermal",
+      "mittens",
+      "layered"
+    ]
+  },
+  "2026-12-11": {
+    "themeName": "DAILY DOZEN",
+    "description": "Numbers in words",
+    "wordList": [
+      "twelve",
+      "thirty",
+      "hundred",
+      "thousand",
+      "millions"
+    ]
+  },
+  "2026-12-12": {
+    "themeName": "DOZEN ROSES",
+    "description": "Romance in bloom",
+    "wordList": [
+      "bloom",
+      "stems",
+      "petals",
+      "thorns",
+      "bouquet"
+    ]
+  },
+  "2026-12-13": {
+    "themeName": "HOT COCOA",
+    "description": "Warm winter drinks",
+    "wordList": [
+      "cocoa",
+      "latte",
+      "cider",
+      "eggnog",
+      "peppermint"
+    ]
+  },
+  "2026-12-14": {
+    "themeName": "TIME PIECE",
+    "description": "Watches and clocks",
+    "wordList": [
+      "watch",
+      "clock",
+      "analog",
+      "digital",
+      "wristwatch"
+    ]
+  },
+  "2026-12-15": {
+    "themeName": "SLEEP TIGHT",
+    "description": "Bedtime essentials",
+    "wordList": [
+      "pillow",
+      "pajamas",
+      "bedtime",
+      "nightcap",
+      "blankets"
+    ]
+  },
+  "2026-12-16": {
+    "themeName": "THINK TANK",
+    "description": "Brainpower and intellect",
+    "wordList": [
+      "brainy",
+      "genius",
+      "insight",
+      "pondering",
+      "intellect"
+    ]
+  },
+  "2026-12-17": {
+    "themeName": "DECK THE HALLS",
+    "description": "Holiday decorating",
+    "wordList": [
+      "holly",
+      "tinsel",
+      "garland",
+      "ornament",
+      "evergreen"
+    ]
+  },
+  "2026-12-18": {
+    "themeName": "ALL ABOARD",
+    "description": "Trains and railways",
+    "wordList": [
+      "train",
+      "caboose",
+      "railway",
+      "platform",
+      "locomotive"
+    ]
+  },
+  "2026-12-19": {
+    "themeName": "WHEN PIGS FLY",
+    "description": "Idioms and expressions",
+    "wordList": [
+      "idiom",
+      "phrase",
+      "cliche",
+      "figurative",
+      "expression"
+    ]
+  },
+  "2026-12-20": {
+    "themeName": "INSIDE JOKES",
+    "description": "Humor and laughter",
+    "wordList": [
+      "humor",
+      "prank",
+      "giggle",
+      "chuckle",
+      "hilarious"
+    ]
+  },
+  "2026-12-21": {
+    "themeName": "LONGEST NIGHT",
+    "description": "The shortest day of the year",
+    "wordList": [
+      "polar",
+      "longest",
+      "moonrise",
+      "darkness",
+      "midwinter"
+    ],
+    "specialEvent": "Winter Solstice"
+  },
+  "2026-12-22": {
+    "themeName": "POSTAL RUSH",
+    "description": "Last-minute holiday shipping",
+    "wordList": [
+      "urgent",
+      "mailman",
+      "express",
+      "shipping",
+      "packages"
+    ]
+  },
+  "2026-12-23": {
+    "themeName": "AROUND THE WORLD",
+    "description": "Geography and continents",
+    "wordList": [
+      "globe",
+      "atlas",
+      "border",
+      "country",
+      "continent"
+    ]
+  },
+  "2026-12-24": {
+    "themeName": "ALL IS CALM",
+    "description": "Christmas Eve hush",
+    "wordList": [
+      "carol",
+      "silent",
+      "lullaby",
+      "peaceful",
+      "candlelight"
+    ],
+    "specialEvent": "Christmas Eve"
+  },
+  "2026-12-25": {
+    "themeName": "MERRY MERRY",
+    "description": "Christmas joy",
+    "wordList": [
+      "merry",
+      "joyful",
+      "festive",
+      "yuletide",
+      "christmas"
+    ],
+    "specialEvent": "Christmas Day"
+  },
+  "2026-12-26": {
+    "themeName": "SEVEN PRINCIPLES",
+    "description": "Kwanzaa values and unity",
+    "wordList": [
+      "unity",
+      "faith",
+      "purpose",
+      "heritage",
+      "community"
+    ],
+    "specialEvent": "Kwanzaa Begins"
+  },
+  "2026-12-27": {
+    "themeName": "HANDMADE",
+    "description": "DIY crafting",
+    "wordList": [
+      "patch",
+      "crafty",
+      "sewing",
+      "tinker",
+      "handmade"
+    ]
+  },
+  "2026-12-28": {
+    "themeName": "FUTURE TENSE",
+    "description": "Looking ahead",
+    "wordList": [
+      "ahead",
+      "tomorrow",
+      "forecast",
+      "upcoming",
+      "prediction"
+    ]
+  },
+  "2026-12-29": {
+    "themeName": "FRESH START",
+    "description": "Resolutions ahead",
+    "wordList": [
+      "goals",
+      "change",
+      "promise",
+      "improve",
+      "resolution"
+    ]
+  },
+  "2026-12-30": {
+    "themeName": "YEAR IN REVIEW",
+    "description": "Looking back",
+    "wordList": [
+      "recap",
+      "review",
+      "summary",
+      "flashback",
+      "retrospect"
+    ]
+  },
+  "2026-12-31": {
+    "themeName": "RING IT IN",
+    "description": "New Year's celebration",
+    "wordList": [
+      "toast",
+      "ballroom",
+      "midnight",
+      "confetti",
+      "champagne"
+    ],
+    "specialEvent": "New Year's Eve"
+  },
   "_fallback": {
     "themeName": "GENERAL",
     "description": "A mix of everyday words",

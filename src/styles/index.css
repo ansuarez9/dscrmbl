@@ -553,6 +553,15 @@ a.icon-btn {
     border-radius: 8px;
 }
 
+.theme-special-event {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: var(--spacing-xs);
+    opacity: 0.8;
+}
+
 .theme-name {
     font-family: var(--font-display);
     font-size: 1.1rem;
@@ -647,6 +656,10 @@ a.icon-btn {
         font-size: 0.7rem;
     }
 
+    .theme-special-event {
+        font-size: 0.6rem;
+    }
+  
     .sponsor-chip {
         font-size: 0.6rem;
         padding: 3px 8px;
