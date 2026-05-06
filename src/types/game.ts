@@ -83,6 +83,7 @@ export interface DailyTheme {
   themeName: string;
   description: string;
   wordList: string[];
+  specialEvent?: string;
 }
 
 export interface ThemesData {

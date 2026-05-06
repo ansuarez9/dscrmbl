@@ -21,6 +21,7 @@ import { useTimer } from './hooks/useTimer';
 import { calculateFinalScore } from './utils/scoring';
 import { getTimeUntilNextDay } from './utils/seededRandom';
 import { isValidWord, isDictionaryLoaded } from './utils/dictionary';
+import { getSpecialEventEmoji } from './utils/specialEvent';
 import type { DailyStats, HistoryPercentile } from './types/game';
 
 function GameContent() {
@@ -347,6 +348,11 @@ function GameContent() {
       {/* Theme Display - always show when available */}
       {theme && !isThemeLoading && (
         <div className="theme-display">
+          {theme.specialEvent && (
+            <div className="theme-special-event">
+              {getSpecialEventEmoji(theme.specialEvent)} {theme.specialEvent}
+            </div>
+          )}
           <div className="theme-name">{theme.themeName}</div>
           <div className="theme-description">{theme.description}</div>
         </div>
