@@ -1,7 +1,7 @@
 import type { WordResult } from '../types/game';
 
 export function generateShareText(
-  dailyNumber: number,
+  dailyNumber: number | null,
   score: number,
   wordResults: WordResult[],
   streakBonus: number,
@@ -11,7 +11,7 @@ export function generateShareText(
   isNewHighScore: boolean = false,
   currentStreak?: number
 ): string {
-  let shareText = `DSCRMBL Daily #${dailyNumber}\n`;
+  let shareText = dailyNumber === null ? 'DSCRMBL Practice\n' : `DSCRMBL Daily #${dailyNumber}\n`;
 
   // Add theme name on its own line if provided
   if (themeName) {
