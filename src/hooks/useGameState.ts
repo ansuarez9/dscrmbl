@@ -4,6 +4,7 @@ import { calculateWordScore } from '../utils/scoring';
 
 const STORAGE_KEY = 'dscrmbl-game-state';
 const HARD_MODE_KEY = 'dscrmbl-hard-mode-preference';
+const WORD_TIME_MS = 20_000;
 
 const initialState: GameState = {
   phase: 'idle',
@@ -20,13 +21,30 @@ const initialState: GameState = {
   replayCount: 0,
   replayPenalty: 0,
   lastTimeBonus: 0,
-  timeRemaining: 20,
+  wordDeadline: null,
   timerModeEnabled: false,
   hardModeEnabled: false,
   isDailyChallenge: true,
   showLetters: false,
   animationTrigger: 0
 };
+
+function expireWord(state: GameState): GameState {
+  const attemptIndex = state.attempts - 1;
+  const attemptResults: [AttemptResult, AttemptResult, AttemptResult] = [...state.attemptResults];
+  attemptResults[attemptIndex] = 'wrong';
+
+  return {
+    ...state,
+    phase: 'revealing',
+    wordDeadline: null,
+    attemptResults,
+    streak: 0,
+    wordResults: [...state.wordResults, { attempts: 4, solved: false, usedReplay: state.replayCount > 0 }],
+    wordScores: [...state.wordScores, 0],
+    showLetters: false
+  };
+}
 
 function gameReducer(state: GameState, action: GameAction): GameState {
   switch (action.type) {
@@ -50,6 +68,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
     }
 
     case 'NEXT_WORD': {
+      if (state.phase !== 'revealing') return state;
       if (state.playableWords.length === 0) {
         return { ...state, phase: 'complete' };
       }
@@ -65,17 +84,36 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         replayCount: 0,
         replayPenalty: 0,
         lastTimeBonus: 0,
-        timeRemaining: 20,
+        wordDeadline: state.timerModeEnabled ? action.startedAt + WORD_TIME_MS : null,
+        showLetters: true,
+        animationTrigger: state.animationTrigger + 1
+      };
+    }
+
+    case 'START_WORD_TIMER': {
+      if (state.phase !== 'playing' || state.wordIndex !== action.wordIndex || state.wordDeadline !== null) {
+        return state;
+      }
+      return {
+        ...state,
+        wordDeadline: state.timerModeEnabled ? action.startedAt + WORD_TIME_MS : null,
         showLetters: true,
         animationTrigger: state.animationTrigger + 1
       };
     }
 
     case 'SUBMIT_GUESS': {
+      if (state.phase !== 'playing') return state;
+      if (state.timerModeEnabled) {
+        if (state.wordDeadline === null) return state;
+        if (action.submittedAt >= state.wordDeadline) return expireWord(state);
+      }
       const guess = action.guess.toUpperCase();
       const isCorrect = guess === state.currentWord;
       const attemptIndex = state.attempts - 1;
-      const effectiveTimeRemaining = action.timeRemaining ?? state.timeRemaining;
+      const timeRemaining = state.wordDeadline === null
+        ? 0
+        : Math.max(0, Math.ceil((state.wordDeadline - action.submittedAt) / 1000));
 
       const newAttemptResults: [AttemptResult, AttemptResult, AttemptResult] = [...state.attemptResults];
       newAttemptResults[attemptIndex] = isCorrect ? 'correct' : 'wrong';
@@ -85,7 +123,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
           wordLength: state.currentWord.length,
           attempts: state.attempts,
           timerModeEnabled: state.timerModeEnabled,
-          timeRemaining: effectiveTimeRemaining,
+          timeRemaining,
           streak: state.streak,
           replayCount: state.replayCount,
           hardModeEnabled: state.hardModeEnabled,
@@ -95,6 +133,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         return {
           ...state,
           phase: 'revealing',
+          wordDeadline: null,
           attemptResults: newAttemptResults,
           score: state.score + wordScore,
           streak: newStreak,
@@ -112,6 +151,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         return {
           ...state,
           phase: 'revealing',
+          wordDeadline: null,
           attemptResults: newAttemptResults,
           streak: 0,
           wordResults: [...state.wordResults, { attempts: 4, solved: false, usedReplay: state.replayCount > 0 }],
@@ -150,27 +190,11 @@ function gameReducer(state: GameState, action: GameAction): GameState {
       };
     }
 
-    case 'TIMER_TICK': {
-      return {
-        ...state,
-        timeRemaining: Math.max(0, state.timeRemaining - 1)
-      };
-    }
-
     case 'TIMER_EXPIRED': {
-      const attemptIndex = state.attempts - 1;
-      const newAttemptResults: [AttemptResult, AttemptResult, AttemptResult] = [...state.attemptResults];
-      newAttemptResults[attemptIndex] = 'wrong';
-
-      return {
-        ...state,
-        phase: 'revealing',
-        attemptResults: newAttemptResults,
-        streak: 0,
-        wordResults: [...state.wordResults, { attempts: 4, solved: false, usedReplay: state.replayCount > 0 }],
-        wordScores: [...state.wordScores, 0],
-        showLetters: false
-      };
+      if (state.phase !== 'playing' || state.wordDeadline !== action.deadline || action.expiredAt < action.deadline) {
+        return state;
+      }
+      return expireWord(state);
     }
 
     case 'REVEAL_WORD': {
@@ -206,15 +230,6 @@ function gameReducer(state: GameState, action: GameAction): GameState {
       };
     }
 
-    case 'RESTORE_STATE': {
-      return {
-        ...action.state,
-        // Reset animation-related state for a fresh start
-        showLetters: action.state.phase === 'playing',
-        animationTrigger: action.state.animationTrigger + 1
-      };
-    }
-
     default:
       return state;
   }
@@ -247,7 +262,20 @@ function loadSavedState(): GameState | null {
 
     // Only restore if saved today and game is in progress
     if (parsed.savedDate === today && parsed.state.phase !== 'idle' && parsed.state.phase !== 'complete') {
-      return parsed.state;
+      const savedState = parsed.state;
+      const hasDeadline = typeof savedState.wordDeadline === 'number' && Number.isFinite(savedState.wordDeadline);
+      // Older saves cannot tell us how long the word has been active. Give later words
+      // one fresh window; the first word restarts its pre-timer countdown.
+      const wordDeadline = savedState.timerModeEnabled && savedState.phase === 'playing'
+        ? hasDeadline ? savedState.wordDeadline : savedState.wordIndex > 0 ? Date.now() + WORD_TIME_MS : null
+        : null;
+      return {
+        ...savedState,
+        wordDeadline,
+        // A refresh must not grant another free look at an active word.
+        // The pending first-word countdown starts its own animation when it ends.
+        showLetters: false
+      };
     }
 
     // Clear stale saved state
@@ -278,22 +306,16 @@ function saveState(state: GameState): void {
 }
 
 export function useGameState() {
-  const hardModePreference = loadHardModePreference();
-  const [state, dispatch] = useReducer(gameReducer, {
-    ...initialState,
-    hardModeEnabled: hardModePreference,
-    timerModeEnabled: hardModePreference // Timer mode is controlled by hard mode
+  const [state, dispatch] = useReducer(gameReducer, undefined, () => {
+    const hardModePreference = loadHardModePreference();
+    return loadSavedState() ?? {
+      ...initialState,
+      hardModeEnabled: hardModePreference,
+      timerModeEnabled: hardModePreference
+    };
   });
 
-  // Load saved state on mount
-  useEffect(() => {
-    const savedState = loadSavedState();
-    if (savedState) {
-      dispatch({ type: 'RESTORE_STATE', state: savedState });
-    }
-  }, []);
-
-  // Save state whenever it changes (but not on initial mount)
+  // The initial state is already restored before this effect can save it.
   useEffect(() => {
     saveState(state);
   }, [state]);
@@ -303,19 +325,23 @@ export function useGameState() {
   }, []);
 
   const nextWord = useCallback(() => {
-    dispatch({ type: 'NEXT_WORD' });
+    dispatch({ type: 'NEXT_WORD', startedAt: Date.now() });
   }, []);
 
-  const submitGuess = useCallback((guess: string, timeRemaining?: number) => {
-    dispatch({ type: 'SUBMIT_GUESS', guess, timeRemaining });
+  const startWordTimer = useCallback((wordIndex: number) => {
+    dispatch({ type: 'START_WORD_TIMER', wordIndex, startedAt: Date.now() });
+  }, []);
+
+  const submitGuess = useCallback((guess: string, submittedAt: number) => {
+    dispatch({ type: 'SUBMIT_GUESS', guess, submittedAt });
   }, []);
 
   const replayWord = useCallback(() => {
     dispatch({ type: 'REPLAY_WORD' });
   }, []);
 
-  const timerExpired = useCallback(() => {
-    dispatch({ type: 'TIMER_EXPIRED' });
+  const timerExpired = useCallback((deadline: number) => {
+    dispatch({ type: 'TIMER_EXPIRED', deadline, expiredAt: Date.now() });
   }, []);
 
   const toggleHardMode = useCallback(() => {
@@ -343,6 +369,7 @@ export function useGameState() {
     state,
     startGame,
     nextWord,
+    startWordTimer,
     submitGuess,
     replayWord,
     timerExpired,

@@ -23,7 +23,7 @@ export interface GameState {
   replayCount: number;
   replayPenalty: number;
   lastTimeBonus: number;
-  timeRemaining: number;
+  wordDeadline: number | null; // Epoch milliseconds; null until the first word starts or while untimed
   timerModeEnabled: boolean;
   hardModeEnabled: boolean;
   isDailyChallenge: boolean;
@@ -33,17 +33,16 @@ export interface GameState {
 
 export type GameAction =
   | { type: 'START_GAME'; words: string[]; initialStreak?: number }
-  | { type: 'NEXT_WORD' }
-  | { type: 'SUBMIT_GUESS'; guess: string; timeRemaining?: number }
+  | { type: 'NEXT_WORD'; startedAt: number }
+  | { type: 'START_WORD_TIMER'; wordIndex: number; startedAt: number }
+  | { type: 'SUBMIT_GUESS'; guess: string; submittedAt: number }
   | { type: 'REPLAY_WORD' }
   | { type: 'TRIGGER_ANIMATION' } // Re-trigger letter animation without replay penalty
-  | { type: 'TIMER_TICK' }
-  | { type: 'TIMER_EXPIRED' }
+  | { type: 'TIMER_EXPIRED'; deadline: number; expiredAt: number }
   | { type: 'REVEAL_WORD'; solved: boolean }
   | { type: 'TOGGLE_HARD_MODE' }
   | { type: 'SET_SHOW_LETTERS'; show: boolean }
-  | { type: 'RESET_GAME' }
-  | { type: 'RESTORE_STATE'; state: GameState };
+  | { type: 'RESET_GAME' };
 
 export interface SavedGameState {
   state: GameState;

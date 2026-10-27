@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { ThemeProvider } from './context/ThemeContext';
 import { AudioProvider, useAudioContext } from './context/AudioContext';
 import { GameProvider, useGameContext } from './context/GameContext';
@@ -29,7 +29,7 @@ import { getSpecialEventEmoji } from './utils/specialEvent';
 import type { DailyStats, HistoryPercentile } from './types/game';
 
 function GameContent() {
-  const { state, startGame, nextWord, submitGuess, replayWord, timerExpired, toggleHardMode, resetGame, setShowLetters } = useGameContext();
+  const { state, startGame, nextWord, startWordTimer, submitGuess, replayWord, timerExpired, toggleHardMode, resetGame } = useGameContext();
   const { playCorrectSound, playWrongSound, playVictorySound, playTimerWarningSound, playHighScoreJingle } = useAudioContext();
   const { dailyNumber, canPlayToday, todayScore, todayResults, dailyStats, updateDailyStats, getCurrentStreak, updateStreak } = useDailyChallenge();
   const { theme, isLoading: isThemeLoading, error: themeError } = useDailyTheme();
@@ -46,7 +46,6 @@ function GameContent() {
   const [startCountdown, setStartCountdown] = useState<'ready' | 'set' | 'go' | null>(null);
   const [wordValidationError, setWordValidationError] = useState<string | null>(null);
   const [isNewHighScore, setIsNewHighScore] = useState(false);
-  const countdownStartedRef = useRef(false);
 
   // Auto-show instructions for new players
   useEffect(() => {
@@ -58,8 +57,8 @@ function GameContent() {
   }, []);
 
   // Stable callbacks for timer
-  const handleTimerExpire = useCallback(() => {
-    timerExpired();
+  const handleTimerExpire = useCallback((deadline: number) => {
+    timerExpired(deadline);
     playWrongSound();
   }, [timerExpired, playWrongSound]);
 
@@ -67,10 +66,9 @@ function GameContent() {
   const {
     timeRemaining,
     isRunning: isTimerRunning,
-    isWarning: isTimerWarning,
-    startTimer,
-    stopTimer
+    isWarning: isTimerWarning
   } = useTimer({
+    deadline: state.phase === 'playing' ? state.wordDeadline : null,
     initialTime: 20,
     onWarning: playTimerWarningSound,
     onExpire: handleTimerExpire,
@@ -91,16 +89,6 @@ function GameContent() {
       return () => clearInterval(interval);
     }
   }, [canPlayToday]);
-
-  // Handle game phase changes
-  useEffect(() => {
-    // Don't auto-start timer for first word (it starts after countdown)
-    if (state.phase === 'playing' && state.timerModeEnabled && state.wordIndex > 0) {
-      startTimer();
-    } else if (state.phase !== 'playing') {
-      stopTimer();
-    }
-  }, [state.phase, state.timerModeEnabled, state.wordIndex, startTimer, stopTimer]);
 
   // Auto-transition to complete after final word is revealed
   useEffect(() => {
@@ -165,16 +153,8 @@ function GameContent() {
     if (state.phase === 'idle') {
       setGameCompleteHandled(false);
       setIsNewHighScore(false);
-      countdownStartedRef.current = false;
     }
   }, [state.phase]);
-
-  // Reset countdown ref when moving to next word
-  useEffect(() => {
-    if (state.wordIndex > 0) {
-      countdownStartedRef.current = false;
-    }
-  }, [state.wordIndex]);
 
   // Scroll to top after every guess
   useEffect(() => {
@@ -185,27 +165,23 @@ function GameContent() {
 
   // Countdown sequence when game starts
   useEffect(() => {
-    if (state.phase === 'playing' && state.wordIndex === 0 && !countdownStartedRef.current) {
-      countdownStartedRef.current = true;
-
-      const runCountdown = async () => {
-        setStartCountdown('ready');
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        setStartCountdown('set');
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        setStartCountdown('go');
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        setStartCountdown(null);
-        setShowLetters(true);
-        // Start timer after countdown completes and letters start showing
-        if (state.timerModeEnabled) {
-          startTimer();
-        }
-      };
-
-      runCountdown();
+    if (state.phase !== 'playing' || state.wordIndex !== 0 || (state.timerModeEnabled && state.wordDeadline !== null)) {
+      return;
     }
-  }, [state.phase, state.wordIndex, state.timerModeEnabled, setShowLetters, startTimer]);
+
+    setStartCountdown('ready');
+    const set = window.setTimeout(() => setStartCountdown('set'), 1000);
+    const go = window.setTimeout(() => setStartCountdown('go'), 2000);
+    const begin = window.setTimeout(() => {
+      setStartCountdown(null);
+      startWordTimer(0); // The deadline and first letter animation begin together.
+    }, 3000);
+    return () => {
+      clearTimeout(set);
+      clearTimeout(go);
+      clearTimeout(begin);
+    };
+  }, [state.phase, state.wordIndex, state.timerModeEnabled, state.wordDeadline, startWordTimer]);
 
   const handleStartGame = useCallback(() => {
     if (!canPlayToday || !theme) return;
@@ -217,6 +193,15 @@ function GameContent() {
   }, [nextWord]);
 
   const handleSubmit = useCallback((guess: string) => {
+    const submittedAt = Date.now();
+    if (state.timerModeEnabled) {
+      if (state.wordDeadline === null) return;
+      if (submittedAt >= state.wordDeadline) {
+        timerExpired(state.wordDeadline);
+        playWrongSound();
+        return;
+      }
+    }
     const isCorrectAnswer = guess.toUpperCase() === state.currentWord;
 
     if (!isCorrectAnswer && isDictionaryLoaded() && !isValidWord(guess)) {
@@ -225,14 +210,14 @@ function GameContent() {
       return;
     }
 
-    submitGuess(guess, timeRemaining);
+    submitGuess(guess, submittedAt);
 
     if (isCorrectAnswer) {
       playCorrectSound();
     } else {
       playWrongSound();
     }
-  }, [state.currentWord, submitGuess, playCorrectSound, playWrongSound, timeRemaining]);
+  }, [state.currentWord, state.timerModeEnabled, state.wordDeadline, submitGuess, timerExpired, playCorrectSound, playWrongSound]);
 
   const handleReplay = useCallback(() => {
     // Each word has 5 total replays in normal mode, 3 in hard mode
@@ -455,7 +440,7 @@ function GameContent() {
           <CyberButton
             id="repeat"
             variant="secondary"
-            disabled={!isPlaying || state.replayCount >= (state.hardModeEnabled ? 3 : 5)}
+            disabled={!isPlaying || (state.timerModeEnabled && state.wordDeadline === null) || state.replayCount >= (state.hardModeEnabled ? 3 : 5)}
             onClick={handleReplay}
           >
             REPLAY ({(state.hardModeEnabled ? 3 : 5) - state.replayCount})
@@ -466,7 +451,7 @@ function GameContent() {
       {/* Input Zone */}
       <InputZone
         onSubmit={handleSubmit}
-        disabled={!isPlaying}
+        disabled={!isPlaying || (state.timerModeEnabled && state.wordDeadline === null)}
         errorMessage={wordValidationError}
         onErrorClear={() => setWordValidationError(null)}
       />
