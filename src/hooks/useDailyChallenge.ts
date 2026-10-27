@@ -1,7 +1,9 @@
-import { useMemo, useCallback, useEffect } from 'react';
+import { useMemo, useCallback, useEffect, useRef } from 'react';
 import { useLocalStorage } from './useLocalStorage';
 import { getDailyWords, getDailyNumber } from '../utils/seededRandom';
 import type { DailyStats } from '../types/game';
+import { calculateFinalScore } from '../utils/scoring';
+import type { DailyTheme } from '../types/game';
 
 const STORAGE_KEY = 'dscrmbl-daily';
 
@@ -19,6 +21,7 @@ function isConsecutiveDay(lastPlayedStr: string, todayStr: string): boolean {
 
 export function useDailyChallenge() {
   const [dailyStats, setDailyStats] = useLocalStorage<DailyStats | null>(STORAGE_KEY, null);
+  const completedDateRef = useRef<string | null>(null);
 
   // Data migration: Add currentStreak to existing stats
   useEffect(() => {
@@ -86,6 +89,30 @@ export function useDailyChallenge() {
     setDailyStats(newStats);
   }, [setDailyStats]);
 
+  const recordDailyCompletion = useCallback((score: number, streak: number, results: NonNullable<DailyStats['lastGameResults']>, theme: DailyTheme | null) => {
+    const challengeDate = new Date().toDateString();
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null') as DailyStats | null;
+    if (completedDateRef.current === challengeDate || saved?.lastPlayed === challengeDate) {
+      return null;
+    }
+    completedDateRef.current = challengeDate;
+    const { stats, percentile, isNewHighScore } = calculateFinalScore(score, true, saved, streak);
+    const recorded = {
+      ...stats,
+      lastGameResults: {
+        ...results,
+        isNewHighScore,
+        percentile: percentile.percentile,
+        challengeDate,
+        dailyNumber,
+        themeName: theme?.themeName,
+        words: theme?.wordList
+      }
+    };
+    setDailyStats(recorded);
+    return { stats: recorded, percentile, isNewHighScore };
+  }, [dailyNumber, setDailyStats]);
+
   const getCurrentStreak = useMemo(() => {
     return dailyStats?.currentStreak ?? 0;
   }, [dailyStats]);
@@ -108,6 +135,7 @@ export function useDailyChallenge() {
     todayResults,
     dailyStats,
     updateDailyStats,
+    recordDailyCompletion,
     getCurrentStreak,
     updateStreak
   };

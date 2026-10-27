@@ -115,3 +115,29 @@ it('offers recovery even when the daily was already completed', async () => {
   expect(screen.getByRole('button', { name: 'RETRY' })).toBeTruthy();
   expect(screen.getByRole('button', { name: /PLAY FALLBACK PRACTICE ROUND/ })).toBeTruthy();
 });
+
+it('views a legacy completed result without changing its recorded statistics', async () => {
+  const completed = { ...stats, score: 60, average: 75, gamesPlayed: 2, highScore: 90,
+    history: [60, 90], lastPlayed: new Date().toDateString(),
+    lastGameResults: { wordResults: [], streakBonus: 0, wordScores: [], isNewHighScore: false } };
+  entries.set('dscrmbl-daily', JSON.stringify(completed));
+  vi.stubGlobal('fetch', vi.fn().mockResolvedValue(response({ '2026-10-26': daily, _fallback: fallback })));
+  const first = render(<App />);
+  await flushFetch();
+  for (let index = 0; index < 2; index++) {
+    fireEvent.click(document.getElementById('view-results')!);
+    expect(document.getElementById('gamesPlayed')?.textContent).toBe('2');
+    expect(document.getElementById('averageScore')?.textContent).toBe('75');
+    act(() => vi.advanceTimersByTime(1000));
+    expect(document.getElementById('marker-text')?.textContent).toBe('50%');
+    expect(entries.get('dscrmbl-daily')).toBe(JSON.stringify(completed));
+    fireEvent.click(document.getElementById('final-score-modal')!);
+    act(() => vi.advanceTimersByTime(250));
+  }
+  first.unmount();
+  render(<App />);
+  await flushFetch();
+  fireEvent.click(document.getElementById('view-results')!);
+  expect(document.getElementById('gamesPlayed')?.textContent).toBe('2');
+  expect(entries.get('dscrmbl-daily')).toBe(JSON.stringify(completed));
+});

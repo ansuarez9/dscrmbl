@@ -64,6 +64,11 @@ export interface DailyStats {
     streakBonus: number;
     wordScores: number[];
     isNewHighScore: boolean;
+    percentile?: number;
+    challengeDate?: string;
+    dailyNumber?: number;
+    themeName?: string;
+    words?: string[];
   };
 }
 

@@ -20,7 +20,7 @@ import { HighScoreCelebration } from './components/Effects/HighScoreCelebration'
 import { useDailyChallenge } from './hooks/useDailyChallenge';
 import { useDailyTheme } from './hooks/useDailyTheme';
 import { useTimer } from './hooks/useTimer';
-import { calculateFinalScore } from './utils/scoring';
+import { getRecordedPercentile } from './utils/scoring';
 import { getTimeUntilNextDay } from './utils/seededRandom';
 import { isValidWord, isDictionaryLoaded } from './utils/dictionary';
 import { getSpecialEventEmoji } from './utils/specialEvent';
@@ -31,7 +31,7 @@ import type { DailyStats, HistoryPercentile } from './types/game';
 function GameContent() {
   const { state, startGame, nextWord, startWordTimer, submitGuess, replayWord, timerExpired, toggleHardMode, resetGame } = useGameContext();
   const { playCorrectSound, playWrongSound, playVictorySound, playTimerWarningSound, playHighScoreJingle } = useAudioContext();
-  const { dailyNumber, canPlayToday, todayScore, todayResults, dailyStats, updateDailyStats, getCurrentStreak, updateStreak } = useDailyChallenge();
+  const { dailyNumber, canPlayToday, todayScore, todayResults, dailyStats, recordDailyCompletion, getCurrentStreak, updateStreak } = useDailyChallenge();
   const { theme, practiceTheme, isLoading: isThemeLoading, error: themeError, retry } = useDailyTheme();
 
   const [showInstructions, setShowInstructions] = useState(false);
@@ -122,7 +122,14 @@ function GameContent() {
         setTimeout(() => setShowFinalScore(true), 1500);
         return;
       }
-      const { stats, percentile, isNewHighScore: newHigh } = calculateFinalScore(state.score, true, dailyStats, state.streak);
+      const completion = recordDailyCompletion(state.score, state.streak, {
+        wordResults: state.wordResults,
+        streakBonus: state.streakBonus,
+        wordScores: state.wordScores,
+        isNewHighScore: false
+      }, state.roundTheme);
+      if (!completion) return;
+      const { stats, percentile, isNewHighScore: newHigh } = completion;
       setIsNewHighScore(newHigh);
 
       if (newHigh) {
@@ -139,22 +146,11 @@ function GameContent() {
         playVictorySound();
       }
 
-      // Store game results for viewing later
-      const statsWithResults = {
-        ...stats,
-        lastGameResults: {
-          wordResults: state.wordResults,
-          streakBonus: state.streakBonus,
-          wordScores: state.wordScores,
-          isNewHighScore: newHigh
-        }
-      };
-      setFinalStats(statsWithResults);
+      setFinalStats(stats);
       setFinalPercentile(percentile);
-      updateDailyStats(statsWithResults);
       setTimeout(() => setShowFinalScore(true), 1500);
     }
-  }, [state.phase, state.isDailyChallenge, gameCompleteHandled, state.score, state.streak, state.wordResults, state.streakBonus, state.wordScores, dailyStats, updateDailyStats, playVictorySound, playHighScoreJingle]);
+  }, [state.phase, state.isDailyChallenge, gameCompleteHandled, state.score, state.streak, state.wordResults, state.streakBonus, state.wordScores, state.roundTheme, recordDailyCompletion, playVictorySound, playHighScoreJingle]);
 
   // Reset gameCompleteHandled when game restarts
   useEffect(() => {
@@ -284,9 +280,8 @@ function GameContent() {
   // Handler to view past results
   const handleViewResults = useCallback(() => {
     if (dailyStats) {
-      const { stats, percentile } = calculateFinalScore(todayScore ?? 0, true, dailyStats, dailyStats.currentStreak);
-      setFinalStats(stats);
-      setFinalPercentile(percentile);
+      setFinalStats(dailyStats);
+      setFinalPercentile({ history: dailyStats.history, percentile: dailyStats.lastGameResults?.percentile ?? getRecordedPercentile(dailyStats.history, todayScore ?? 0) });
       // Use stored isNewHighScore from last game results (static only — no confetti/jingle)
       setIsNewHighScore(dailyStats.lastGameResults?.isNewHighScore ?? false);
       setShowFinalScore(true);
@@ -346,15 +341,15 @@ function GameContent() {
         <FinalScoreModal
           isOpen={showFinalScore}
           onClose={handleCloseFinalScore}
-          dailyNumber={dailyNumber}
+          dailyNumber={todayResults?.dailyNumber ?? dailyNumber}
           score={todayScore ?? 0}
           stats={finalStats}
           percentile={finalPercentile}
           wordResults={todayResults?.wordResults ?? []}
           wordScores={todayResults?.wordScores ?? []}
-          words={theme?.wordList}
+          words={todayResults?.words ?? (theme && !themeError ? theme.wordList : undefined)}
           streakBonus={todayResults?.streakBonus ?? 0}
-          themeName={theme?.themeName}
+          themeName={todayResults?.themeName ?? (theme && !themeError ? theme.themeName : undefined)}
           isNewHighScore={isNewHighScore}
           isDailyChallenge={true}
         />
