@@ -169,7 +169,7 @@ export function FinalScoreModal({
 
         {words && words.length > 0 && (
           <div className="word-results-section">
-            <span className="word-results-label">{isDailyChallenge ? "TODAY'S WORDS" : 'PRACTICE WORDS'}</span>
+            <span className="word-results-label">{isDailyChallenge ? 'DAILY WORDS' : 'PRACTICE WORDS'}</span>
             <div className="word-results-list">
               {words.map((word, i) => {
                 const result = wordResults[i];

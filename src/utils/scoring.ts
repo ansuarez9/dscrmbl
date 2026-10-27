@@ -95,7 +95,7 @@ export function getRecordedPercentile(history: number[] | undefined, score: numb
   return firstGreater === -1 ? 100 : Math.round((firstGreater / history.length) * 100);
 }
 
-export function calculateFinalScore(score: number, isDailyChallenge: boolean, cached: DailyStats | null, finalStreak: number): { stats: DailyStats; percentile: HistoryPercentile; isNewHighScore: boolean } {
+export function calculateFinalScore(score: number, isDailyChallenge: boolean, cached: DailyStats | null, finalStreak: number, challengeDate?: string): { stats: DailyStats; percentile: HistoryPercentile; isNewHighScore: boolean } {
   const validScore = isNaN(score) ? 0 : score;
 
   const average = calculateScoreAverage(cached?.average, cached?.gamesPlayed, validScore);
@@ -111,7 +111,7 @@ export function calculateFinalScore(score: number, isDailyChallenge: boolean, ca
     gamesPlayed,
     highScore: isNaN(highScore) ? validScore : highScore,
     history: historyPercentile.history,
-    lastPlayed: isDailyChallenge ? new Date().toDateString() : cached?.lastPlayed ?? null,
+    lastPlayed: isDailyChallenge ? challengeDate ?? new Date().toDateString() : cached?.lastPlayed ?? null,
     currentStreak: finalStreak
   };
 

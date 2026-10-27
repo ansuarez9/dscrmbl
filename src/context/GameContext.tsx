@@ -4,7 +4,7 @@ import type { GameState, DailyTheme } from '../types/game';
 
 interface GameContextType {
   state: GameState;
-  startGame: (theme: DailyTheme, isDailyChallenge: boolean, initialStreak?: number) => void;
+  startGame: (theme: DailyTheme, isDailyChallenge: boolean, initialStreak?: number, roundDate?: string | null) => void;
   nextWord: () => void;
   startWordTimer: (wordIndex: number) => void;
   submitGuess: (guess: string, submittedAt: number) => void;

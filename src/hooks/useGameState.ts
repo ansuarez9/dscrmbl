@@ -1,6 +1,7 @@
 import { useReducer, useCallback, useEffect } from 'react';
 import type { GameState, GameAction, AttemptResult, SavedGameState, DailyTheme } from '../types/game';
 import { calculateWordScore } from '../utils/scoring';
+import { storedDateKey } from '../utils/localDate';
 
 const STORAGE_KEY = 'dscrmbl-game-state';
 const HARD_MODE_KEY = 'dscrmbl-hard-mode-preference';
@@ -26,6 +27,7 @@ const initialState: GameState = {
   hardModeEnabled: false,
   isDailyChallenge: true,
   roundTheme: null,
+  roundDate: null,
   showLetters: false,
   animationTrigger: 0
 };
@@ -64,6 +66,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         hardModeEnabled: state.hardModeEnabled,
         isDailyChallenge: action.isDailyChallenge,
         roundTheme: { ...action.theme, wordList: [...words] },
+        roundDate: action.roundDate,
         showLetters: false,
         animationTrigger: state.animationTrigger + 1
       };
@@ -260,10 +263,8 @@ function loadSavedState(): GameState | null {
     if (!saved) return null;
 
     const parsed: SavedGameState = JSON.parse(saved);
-    const today = new Date().toDateString();
-
-    // Only restore if saved today and game is in progress
-    if (parsed.savedDate === today && parsed.state.phase !== 'idle' && parsed.state.phase !== 'complete') {
+    // Active rounds remain available after midnight, including across refresh.
+    if (parsed.state.phase !== 'idle' && parsed.state.phase !== 'complete') {
       const savedState = parsed.state;
       const hasDeadline = typeof savedState.wordDeadline === 'number' && Number.isFinite(savedState.wordDeadline);
       // Older saves cannot tell us how long the word has been active. Give later words
@@ -276,6 +277,7 @@ function loadSavedState(): GameState | null {
         // Saves made before round metadata existed were daily games.
         isDailyChallenge: savedState.isDailyChallenge ?? true,
         roundTheme: savedState.roundTheme ?? null,
+        roundDate: savedState.roundDate ?? (savedState.isDailyChallenge === false ? null : storedDateKey(parsed.savedDate)),
         wordDeadline,
         // A refresh must not grant another free look at an active word.
         // The pending first-word countdown starts its own animation when it ends.
@@ -302,7 +304,7 @@ function saveState(state: GameState): void {
 
     const saveData: SavedGameState = {
       state,
-      savedDate: new Date().toDateString()
+      savedDate: state.roundDate ?? new Date().toDateString()
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(saveData));
   } catch {
@@ -325,8 +327,8 @@ export function useGameState() {
     saveState(state);
   }, [state]);
 
-  const startGame = useCallback((theme: DailyTheme, isDailyChallenge: boolean, initialStreak?: number) => {
-    dispatch({ type: 'START_GAME', theme, isDailyChallenge, initialStreak });
+  const startGame = useCallback((theme: DailyTheme, isDailyChallenge: boolean, initialStreak?: number, roundDate: string | null = null) => {
+    dispatch({ type: 'START_GAME', theme, isDailyChallenge, initialStreak, roundDate });
   }, []);
 
   const nextWord = useCallback(() => {

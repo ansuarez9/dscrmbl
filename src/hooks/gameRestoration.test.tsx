@@ -27,7 +27,7 @@ function savedState(overrides: Partial<GameState> = {}): GameState {
     phase: 'playing', currentWord: 'APPLE', playableWords: WORDS.slice(1), wordIndex: 0,
     attempts: 1, attemptResults: ['pending', 'pending', 'pending'], wordResults: [], wordScores: [],
     score: 0, streak: 0, streakBonus: 0, replayCount: 0, replayPenalty: 0, lastTimeBonus: 0,
-    wordDeadline: null, timerModeEnabled: true, hardModeEnabled: true, isDailyChallenge: true, roundTheme: null,
+    wordDeadline: null, timerModeEnabled: true, hardModeEnabled: true, isDailyChallenge: true, roundTheme: null, roundDate: null,
     showLetters: false, animationTrigger: 0, ...overrides
   };
 }
@@ -55,6 +55,27 @@ afterEach(() => {
 });
 
 describe('Hard Mode restoration', () => {
+  it('preserves an unfinished daily round and its deadline across midnight', () => {
+    const beforeMidnight = new Date(2026, 9, 26, 23, 59, 50).getTime();
+    vi.setSystemTime(beforeMidnight);
+    const first = renderHook(useSession, { wrapper });
+    act(() => {
+      first.result.current.toggleHardMode();
+      first.result.current.startGame({ themeName: 'OLD', description: '', wordList: WORDS }, true, 0, '2026-10-26');
+      first.result.current.startWordTimer(0);
+      first.result.current.replayWord();
+    });
+    first.unmount();
+    vi.setSystemTime(beforeMidnight + 15_000);
+    const restored = renderHook(useSession, { wrapper });
+    expect(restored.result.current.state.roundDate).toBe('2026-10-26');
+    expect(restored.result.current.state.roundTheme?.themeName).toBe('OLD');
+    expect(restored.result.current.state.wordDeadline).toBe(beforeMidnight + 20_000);
+    expect(restored.result.current.timer.timeRemaining).toBe(5);
+    expect(restored.result.current.state.replayCount).toBe(1);
+    expect(restored.result.current.state.showLetters).toBe(false);
+  });
+
   it('keeps a practice round, its words, deadline, and replay cost on refresh', () => {
     const theme = { themeName: 'PRACTICE', description: 'Fallback', wordList: WORDS };
     const first = renderHook(useSession, { wrapper });

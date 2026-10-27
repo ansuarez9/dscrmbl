@@ -16,16 +16,9 @@ function isDailyTheme(value: unknown): value is DailyTheme {
     && theme.wordList.every(word => typeof word === 'string' && word.trim().length > 0);
 }
 
-function getLocalDateString(): string {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, '0');
-  const day = String(now.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-}
-
-export function useDailyTheme(): UseDailyThemeResult {
+export function useDailyTheme(dateKey: string): UseDailyThemeResult {
   const [theme, setTheme] = useState<DailyTheme | null>(null);
+  const [loadedDate, setLoadedDate] = useState<string | null>(null);
   const [practiceTheme, setPracticeTheme] = useState<DailyTheme>(FALLBACK_THEME);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -39,10 +32,10 @@ export function useDailyTheme(): UseDailyThemeResult {
     setIsLoading(true);
     setError(null);
     setTheme(null);
+    setLoadedDate(null);
 
     const load = async () => {
       try {
-        const today = getLocalDateString();
         const response = await fetch(`${import.meta.env.BASE_URL}themes.json`, { signal: controller.signal });
         if (!response.ok) throw new Error('fetch');
         const data: unknown = await response.json();
@@ -50,8 +43,8 @@ export function useDailyTheme(): UseDailyThemeResult {
         if (!data || typeof data !== 'object' || Array.isArray(data)) throw new Error('invalid');
         const entries = data as Record<string, unknown>;
         setPracticeTheme(isDailyTheme(entries._fallback) ? entries._fallback : FALLBACK_THEME);
-        if (!isDailyTheme(entries[today])) throw new Error('missing');
-        setTheme(entries[today]);
+        if (!isDailyTheme(entries[dateKey])) throw new Error('missing');
+        setTheme(entries[dateKey]);
       } catch (cause) {
         if (controller.signal.aborted || !mounted.current) return;
         setError(cause instanceof Error && cause.message === 'missing'
@@ -59,11 +52,14 @@ export function useDailyTheme(): UseDailyThemeResult {
           : "We couldn't load today's challenge. Please retry, or play a fallback practice round.");
       } finally {
         if (activeRequest.current === controller) activeRequest.current = null;
-        if (!controller.signal.aborted && mounted.current) setIsLoading(false);
+        if (!controller.signal.aborted && mounted.current) {
+          setLoadedDate(dateKey);
+          setIsLoading(false);
+        }
       }
     };
     void load();
-  }, []);
+  }, [dateKey]);
 
   useEffect(() => {
     mounted.current = true;
@@ -75,5 +71,7 @@ export function useDailyTheme(): UseDailyThemeResult {
     };
   }, [retry]);
 
-  return { theme, practiceTheme, isLoading, error, retry };
+  return { theme: loadedDate === dateKey ? theme : null, practiceTheme,
+    isLoading: loadedDate !== dateKey || isLoading,
+    error: loadedDate === dateKey ? error : null, retry };
 }

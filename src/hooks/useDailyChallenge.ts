@@ -1,25 +1,14 @@
 import { useMemo, useCallback, useEffect, useRef } from 'react';
 import { useLocalStorage } from './useLocalStorage';
-import { getDailyWords, getDailyNumber } from '../utils/seededRandom';
+import { getDailyNumber } from '../utils/seededRandom';
 import type { DailyStats } from '../types/game';
 import { calculateFinalScore } from '../utils/scoring';
 import type { DailyTheme } from '../types/game';
+import { isPreviousCalendarDay, storedDateKey } from '../utils/localDate';
 
 const STORAGE_KEY = 'dscrmbl-daily';
 
-// Helper to check if two dates are consecutive days
-function isConsecutiveDay(lastPlayedStr: string, todayStr: string): boolean {
-  const lastPlayed = new Date(lastPlayedStr);
-  const today = new Date(todayStr);
-
-  // Get yesterday's date string
-  const yesterday = new Date(today);
-  yesterday.setDate(yesterday.getDate() - 1);
-
-  return lastPlayed.toDateString() === yesterday.toDateString();
-}
-
-export function useDailyChallenge() {
+export function useDailyChallenge(today: string, dailyRoundActive = false, activeRoundDate: string | null = null) {
   const [dailyStats, setDailyStats] = useLocalStorage<DailyStats | null>(STORAGE_KEY, null);
   const completedDateRef = useRef<string | null>(null);
 
@@ -36,16 +25,14 @@ export function useDailyChallenge() {
 
   // Reset streak if player missed a day
   useEffect(() => {
-    if (!dailyStats?.lastPlayed) return;
-
-    const today = new Date().toDateString();
-    const lastPlayed = dailyStats.lastPlayed;
+    if (!dailyStats?.lastPlayed || dailyRoundActive) return;
+    const lastPlayed = storedDateKey(dailyStats.lastPlayed);
 
     // If last played was today, do nothing
     if (lastPlayed === today) return;
 
     // If last played was yesterday, streak continues
-    if (isConsecutiveDay(lastPlayed, today)) return;
+    if (lastPlayed && isPreviousCalendarDay(lastPlayed, today)) return;
 
     // Player missed a day - reset streak
     if (dailyStats.currentStreak > 0) {
@@ -55,48 +42,47 @@ export function useDailyChallenge() {
       };
       setDailyStats(resetStats);
     }
-  }, [dailyStats, setDailyStats]);
+  }, [dailyStats, dailyRoundActive, today, setDailyStats]);
 
-  const dailyNumber = useMemo(() => getDailyNumber(), []);
-
-  const dailyWords = useMemo(() => getDailyWords(), []);
+  const dailyNumber = useMemo(() => getDailyNumber(today), [today]);
 
   const canPlayToday = useMemo(() => {
     if (!dailyStats?.lastPlayed) return true;
-    const today = new Date().toDateString();
-    return dailyStats.lastPlayed !== today;
-  }, [dailyStats?.lastPlayed]);
+    return storedDateKey(dailyStats.lastPlayed) !== today;
+  }, [dailyStats?.lastPlayed, today]);
 
   const todayScore = useMemo(() => {
     if (!dailyStats?.lastPlayed) return null;
-    const today = new Date().toDateString();
-    if (dailyStats.lastPlayed === today) {
+    if (storedDateKey(dailyStats.lastPlayed) === today) {
       return dailyStats.score;
     }
     return null;
-  }, [dailyStats]);
+  }, [dailyStats, today]);
 
   const todayResults = useMemo(() => {
     if (!dailyStats?.lastPlayed || !dailyStats?.lastGameResults) return null;
-    const today = new Date().toDateString();
-    if (dailyStats.lastPlayed === today) {
+    if (storedDateKey(dailyStats.lastPlayed) === today) {
       return dailyStats.lastGameResults;
     }
     return null;
-  }, [dailyStats]);
+  }, [dailyStats, today]);
 
   const updateDailyStats = useCallback((newStats: DailyStats) => {
     setDailyStats(newStats);
   }, [setDailyStats]);
 
-  const recordDailyCompletion = useCallback((score: number, streak: number, results: NonNullable<DailyStats['lastGameResults']>, theme: DailyTheme | null) => {
-    const challengeDate = new Date().toDateString();
-    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null') as DailyStats | null;
-    if (completedDateRef.current === challengeDate || saved?.lastPlayed === challengeDate) {
+  const recordDailyCompletion = useCallback((score: number, streak: number, results: NonNullable<DailyStats['lastGameResults']>, theme: DailyTheme | null, challengeDate: string) => {
+    let saved: DailyStats | null = null;
+    try {
+      saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null') as DailyStats | null;
+    } catch {
+      // A malformed older save should not prevent a new completion.
+    }
+    if (completedDateRef.current === challengeDate || storedDateKey(saved?.lastPlayed) === challengeDate) {
       return null;
     }
     completedDateRef.current = challengeDate;
-    const { stats, percentile, isNewHighScore } = calculateFinalScore(score, true, saved, streak);
+    const { stats, percentile, isNewHighScore } = calculateFinalScore(score, true, saved, streak, challengeDate);
     const recorded = {
       ...stats,
       lastGameResults: {
@@ -104,18 +90,21 @@ export function useDailyChallenge() {
         isNewHighScore,
         percentile: percentile.percentile,
         challengeDate,
-        dailyNumber,
+        dailyNumber: getDailyNumber(challengeDate),
         themeName: theme?.themeName,
         words: theme?.wordList
       }
     };
     setDailyStats(recorded);
     return { stats: recorded, percentile, isNewHighScore };
-  }, [dailyNumber, setDailyStats]);
+  }, [setDailyStats]);
 
   const getCurrentStreak = useMemo(() => {
-    return dailyStats?.currentStreak ?? 0;
-  }, [dailyStats]);
+    const lastPlayed = storedDateKey(dailyStats?.lastPlayed);
+    const relevantDay = dailyRoundActive && activeRoundDate ? activeRoundDate : today;
+    return lastPlayed === relevantDay || (lastPlayed && isPreviousCalendarDay(lastPlayed, relevantDay))
+      ? dailyStats?.currentStreak ?? 0 : 0;
+  }, [dailyStats, today, dailyRoundActive, activeRoundDate]);
 
   const updateStreak = useCallback((newStreak: number) => {
     if (!dailyStats) return;
@@ -129,7 +118,6 @@ export function useDailyChallenge() {
 
   return {
     dailyNumber,
-    dailyWords,
     canPlayToday,
     todayScore,
     todayResults,
