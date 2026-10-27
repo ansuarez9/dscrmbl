@@ -1,10 +1,10 @@
 import { createContext, useContext, type ReactNode } from 'react';
 import { useGameState } from '../hooks/useGameState';
-import type { GameState } from '../types/game';
+import type { GameState, DailyTheme } from '../types/game';
 
 interface GameContextType {
   state: GameState;
-  startGame: (words: string[], initialStreak?: number) => void;
+  startGame: (theme: DailyTheme, isDailyChallenge: boolean, initialStreak?: number) => void;
   nextWord: () => void;
   startWordTimer: (wordIndex: number) => void;
   submitGuess: (guess: string, submittedAt: number) => void;

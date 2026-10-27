@@ -32,7 +32,7 @@ function GameContent() {
   const { state, startGame, nextWord, startWordTimer, submitGuess, replayWord, timerExpired, toggleHardMode, resetGame } = useGameContext();
   const { playCorrectSound, playWrongSound, playVictorySound, playTimerWarningSound, playHighScoreJingle } = useAudioContext();
   const { dailyNumber, canPlayToday, todayScore, todayResults, dailyStats, updateDailyStats, getCurrentStreak, updateStreak } = useDailyChallenge();
-  const { theme, isLoading: isThemeLoading, error: themeError } = useDailyTheme();
+  const { theme, practiceTheme, isLoading: isThemeLoading, error: themeError, retry } = useDailyTheme();
 
   const [showInstructions, setShowInstructions] = useState(false);
   const [showFinalScore, setShowFinalScore] = useState(false);
@@ -103,17 +103,25 @@ function GameContent() {
 
   // Persist streak breaks immediately
   useEffect(() => {
-    if (state.phase === 'playing' || state.phase === 'revealing') {
+    if (state.isDailyChallenge && (state.phase === 'playing' || state.phase === 'revealing')) {
       if (getCurrentStreak > 0 && state.streak === 0) {
         updateStreak(0); // Immediately save broken streak
       }
     }
-  }, [state.streak, state.phase, getCurrentStreak, updateStreak]);
+  }, [state.streak, state.phase, state.isDailyChallenge, getCurrentStreak, updateStreak]);
 
   // Handle game completion - use ref to prevent infinite loop
   useEffect(() => {
     if (state.phase === 'complete' && !gameCompleteHandled) {
       setGameCompleteHandled(true);
+      if (!state.isDailyChallenge) {
+        setFinalStats(null);
+        setFinalPercentile({ history: [], percentile: 100 });
+        setIsNewHighScore(false);
+        playVictorySound();
+        setTimeout(() => setShowFinalScore(true), 1500);
+        return;
+      }
       const { stats, percentile, isNewHighScore: newHigh } = calculateFinalScore(state.score, true, dailyStats, state.streak);
       setIsNewHighScore(newHigh);
 
@@ -146,7 +154,7 @@ function GameContent() {
       updateDailyStats(statsWithResults);
       setTimeout(() => setShowFinalScore(true), 1500);
     }
-  }, [state.phase, gameCompleteHandled, state.score, state.streak, state.wordResults, state.streakBonus, state.wordScores, dailyStats, updateDailyStats, playVictorySound, playHighScoreJingle]);
+  }, [state.phase, state.isDailyChallenge, gameCompleteHandled, state.score, state.streak, state.wordResults, state.streakBonus, state.wordScores, dailyStats, updateDailyStats, playVictorySound, playHighScoreJingle]);
 
   // Reset gameCompleteHandled when game restarts
   useEffect(() => {
@@ -185,8 +193,13 @@ function GameContent() {
 
   const handleStartGame = useCallback(() => {
     if (!canPlayToday || !theme) return;
-    startGame(theme.wordList, getCurrentStreak);
+    startGame(theme, true, getCurrentStreak);
   }, [canPlayToday, theme, startGame, getCurrentStreak]);
+
+  const handleStartPractice = useCallback(() => {
+    if (isThemeLoading || !themeError || state.phase !== 'idle') return;
+    startGame(practiceTheme, false, 0);
+  }, [isThemeLoading, themeError, state.phase, practiceTheme, startGame]);
 
   const handleNextWord = useCallback(() => {
     nextWord();
@@ -247,7 +260,26 @@ function GameContent() {
   const isRevealing = state.phase === 'revealing';
   const isComplete = state.phase === 'complete';
   const isFinalWordRevealing = isRevealing && state.wordIndex === 4 && state.playableWords.length === 0;
-  const canStart = (state.phase === 'idle' && !isThemeLoading && !!theme) || (isRevealing && !isFinalWordRevealing);
+  const canStart = (state.phase === 'idle' && canPlayToday && !isThemeLoading && !!theme) || (isRevealing && !isFinalWordRevealing);
+  const activeTheme = state.phase === 'idle' ? theme : state.roundTheme ?? theme;
+
+  const recoveryControls = state.phase === 'idle' && (isThemeLoading || themeError) && (
+    <div className="theme-display theme-error" role="status" aria-live="polite">
+      {isThemeLoading ? (
+        <div className="theme-loading">Loading today's challenge...</div>
+      ) : (
+        <>
+          <div className="theme-error-message">{themeError}</div>
+          <div className="action-grid theme-recovery-actions">
+            <CyberButton id="retry-theme" variant="secondary" onClick={retry}>RETRY</CyberButton>
+            <CyberButton id="practice-round" variant="primary" onClick={handleStartPractice}>
+              PLAY FALLBACK PRACTICE ROUND
+            </CyberButton>
+          </div>
+        </>
+      )}
+    </div>
+  );
 
   // Handler to view past results
   const handleViewResults = useCallback(() => {
@@ -295,6 +327,7 @@ function GameContent() {
             >
               VIEW RESULTS
             </CyberButton>
+            {recoveryControls}
           </div>
         </div>
 
@@ -323,6 +356,7 @@ function GameContent() {
           streakBonus={todayResults?.streakBonus ?? 0}
           themeName={theme?.themeName}
           isNewHighScore={isNewHighScore}
+          isDailyChallenge={true}
         />
       </GameContainer>
     );
@@ -346,15 +380,18 @@ function GameContent() {
       )}
 
       {/* Theme Display - always show when available */}
-      {theme && !isThemeLoading && (
+      {state.phase !== 'idle' && !state.isDailyChallenge && (
+        <div className="theme-display"><div className="theme-name">PRACTICE ROUND</div></div>
+      )}
+      {activeTheme && (state.phase !== 'idle' || !isThemeLoading) && (
         <div className="theme-display">
-          {theme.specialEvent && (
+          {activeTheme.specialEvent && state.isDailyChallenge && (
             <div className="theme-special-event">
-              {getSpecialEventEmoji(theme.specialEvent)} {theme.specialEvent}
+              {getSpecialEventEmoji(activeTheme.specialEvent)} {activeTheme.specialEvent}
             </div>
           )}
-          <div className="theme-name">{theme.themeName}</div>
-          <div className="theme-description">{theme.description}</div>
+          <div className="theme-name">{activeTheme.themeName}</div>
+          <div className="theme-description">{activeTheme.description}</div>
           {/* Monetization disabled — re-enable when ready
           {theme.sponsor && (
             theme.sponsor.url ? (
@@ -386,18 +423,7 @@ function GameContent() {
       )}
 
       {/* Theme Loading State */}
-      {isThemeLoading && (
-        <div className="theme-display">
-          <div className="theme-loading">Loading today's theme...</div>
-        </div>
-      )}
-
-      {/* Theme Error State */}
-      {themeError && (
-        <div className="theme-display theme-error">
-          <div className="theme-error-message">Failed to load theme. Using fallback words.</div>
-        </div>
-      )}
+      {recoveryControls}
 
       {/* Status Bar - only show during gameplay */}
       {state.phase !== 'idle' && (
@@ -479,11 +505,12 @@ function GameContent() {
         percentile={finalPercentile}
         wordResults={state.wordResults}
         wordScores={state.wordScores}
-        words={theme?.wordList}
+        words={activeTheme?.wordList}
         streakBonus={state.streakBonus}
-        themeName={theme?.themeName}
+        themeName={activeTheme?.themeName}
         isNewHighScore={isNewHighScore}
         animateCelebration={gameCompleteHandled}
+        isDailyChallenge={state.isDailyChallenge}
       />
 
       {showFinalScore && isNewHighScore && <HighScoreCelebration />}

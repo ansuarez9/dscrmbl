@@ -1,5 +1,5 @@
 import { useReducer, useCallback, useEffect } from 'react';
-import type { GameState, GameAction, AttemptResult, SavedGameState } from '../types/game';
+import type { GameState, GameAction, AttemptResult, SavedGameState, DailyTheme } from '../types/game';
 import { calculateWordScore } from '../utils/scoring';
 
 const STORAGE_KEY = 'dscrmbl-game-state';
@@ -25,6 +25,7 @@ const initialState: GameState = {
   timerModeEnabled: false,
   hardModeEnabled: false,
   isDailyChallenge: true,
+  roundTheme: null,
   showLetters: false,
   animationTrigger: 0
 };
@@ -49,7 +50,7 @@ function expireWord(state: GameState): GameState {
 function gameReducer(state: GameState, action: GameAction): GameState {
   switch (action.type) {
     case 'START_GAME': {
-      const words = action.words;
+      const words = action.theme.wordList;
       const initialStreak = action.initialStreak ?? 0;
       return {
         ...initialState,
@@ -61,7 +62,8 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         streak: initialStreak,
         timerModeEnabled: state.timerModeEnabled,
         hardModeEnabled: state.hardModeEnabled,
-        isDailyChallenge: true,
+        isDailyChallenge: action.isDailyChallenge,
+        roundTheme: { ...action.theme, wordList: [...words] },
         showLetters: false,
         animationTrigger: state.animationTrigger + 1
       };
@@ -271,6 +273,9 @@ function loadSavedState(): GameState | null {
         : null;
       return {
         ...savedState,
+        // Saves made before round metadata existed were daily games.
+        isDailyChallenge: savedState.isDailyChallenge ?? true,
+        roundTheme: savedState.roundTheme ?? null,
         wordDeadline,
         // A refresh must not grant another free look at an active word.
         // The pending first-word countdown starts its own animation when it ends.
@@ -320,8 +325,8 @@ export function useGameState() {
     saveState(state);
   }, [state]);
 
-  const startGame = useCallback((words: string[], initialStreak?: number) => {
-    dispatch({ type: 'START_GAME', words, initialStreak });
+  const startGame = useCallback((theme: DailyTheme, isDailyChallenge: boolean, initialStreak?: number) => {
+    dispatch({ type: 'START_GAME', theme, isDailyChallenge, initialStreak });
   }, []);
 
   const nextWord = useCallback(() => {
