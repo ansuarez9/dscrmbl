@@ -20,32 +20,48 @@ import { HighScoreCelebration } from './components/Effects/HighScoreCelebration'
 import { useDailyChallenge } from './hooks/useDailyChallenge';
 import { useDailyTheme } from './hooks/useDailyTheme';
 import { useTimer } from './hooks/useTimer';
-import { calculateFinalScore } from './utils/scoring';
-import { getTimeUntilNextDay } from './utils/seededRandom';
+import { useLocalDay } from './hooks/useLocalDay';
+import { getRecordedPercentile } from './utils/scoring';
+import { getDailyNumber, getTimeUntilNextDay } from './utils/seededRandom';
 import { isValidWord, isDictionaryLoaded } from './utils/dictionary';
 import { getSpecialEventEmoji } from './utils/specialEvent';
 // Monetization disabled — re-enable when ready (used for sponsor + merch tracking)
 // import { trackGameEvent } from './utils/analytics';
-import type { DailyStats, HistoryPercentile } from './types/game';
+import type { DailyStats, HistoryPercentile, WordResult } from './types/game';
+
+type ResultSnapshot = {
+  dailyNumber: number;
+  score: number;
+  stats: DailyStats | null;
+  percentile: HistoryPercentile;
+  wordResults: WordResult[];
+  wordScores: number[];
+  words?: string[];
+  streakBonus: number;
+  themeName?: string;
+  isNewHighScore: boolean;
+  isDailyChallenge: boolean;
+  animateCelebration: boolean;
+};
 
 function GameContent() {
   const { state, startGame, nextWord, startWordTimer, submitGuess, replayWord, timerExpired, toggleHardMode, resetGame } = useGameContext();
   const { playCorrectSound, playWrongSound, playVictorySound, playTimerWarningSound, playHighScoreJingle } = useAudioContext();
-  const { dailyNumber, canPlayToday, todayScore, todayResults, dailyStats, updateDailyStats, getCurrentStreak, updateStreak } = useDailyChallenge();
-  const { theme, practiceTheme, isLoading: isThemeLoading, error: themeError, retry } = useDailyTheme();
+  const today = useLocalDay();
+  const dailyRoundActive = state.isDailyChallenge && state.phase !== 'idle';
+  const { dailyNumber, canPlayToday, todayScore, todayResults, dailyStats, recordDailyCompletion, getCurrentStreak, updateStreak } = useDailyChallenge(today, dailyRoundActive, state.roundDate);
+  const { theme, practiceTheme, isLoading: isThemeLoading, error: themeError, retry } = useDailyTheme(today);
 
   const [showInstructions, setShowInstructions] = useState(false);
   const [showFinalScore, setShowFinalScore] = useState(false);
   const [showContact, setShowContact] = useState(false);
   // Monetization disabled — re-enable when ready
   // const [showMerch, setShowMerch] = useState(false);
-  const [finalStats, setFinalStats] = useState<DailyStats | null>(null);
-  const [finalPercentile, setFinalPercentile] = useState<HistoryPercentile>({ history: [], percentile: 100 });
+  const [modalResult, setModalResult] = useState<ResultSnapshot | null>(null);
   const [countdown, setCountdown] = useState('--:--:--');
   const [gameCompleteHandled, setGameCompleteHandled] = useState(false);
   const [startCountdown, setStartCountdown] = useState<'ready' | 'set' | 'go' | null>(null);
   const [wordValidationError, setWordValidationError] = useState<string | null>(null);
-  const [isNewHighScore, setIsNewHighScore] = useState(false);
 
   // Auto-show instructions for new players
   useEffect(() => {
@@ -115,15 +131,23 @@ function GameContent() {
     if (state.phase === 'complete' && !gameCompleteHandled) {
       setGameCompleteHandled(true);
       if (!state.isDailyChallenge) {
-        setFinalStats(null);
-        setFinalPercentile({ history: [], percentile: 100 });
-        setIsNewHighScore(false);
+        setModalResult({ dailyNumber: 0, score: state.score, stats: null,
+          percentile: { history: [], percentile: 100 }, wordResults: state.wordResults,
+          wordScores: state.wordScores, words: state.roundTheme?.wordList,
+          streakBonus: state.streakBonus, themeName: state.roundTheme?.themeName,
+          isNewHighScore: false, isDailyChallenge: false, animateCelebration: false });
         playVictorySound();
         setTimeout(() => setShowFinalScore(true), 1500);
         return;
       }
-      const { stats, percentile, isNewHighScore: newHigh } = calculateFinalScore(state.score, true, dailyStats, state.streak);
-      setIsNewHighScore(newHigh);
+      const completion = recordDailyCompletion(state.score, state.streak, {
+        wordResults: state.wordResults,
+        streakBonus: state.streakBonus,
+        wordScores: state.wordScores,
+        isNewHighScore: false
+      }, state.roundTheme, state.roundDate ?? today);
+      if (!completion) return;
+      const { stats, percentile, isNewHighScore: newHigh } = completion;
 
       if (newHigh) {
         playHighScoreJingle();
@@ -139,28 +163,19 @@ function GameContent() {
         playVictorySound();
       }
 
-      // Store game results for viewing later
-      const statsWithResults = {
-        ...stats,
-        lastGameResults: {
-          wordResults: state.wordResults,
-          streakBonus: state.streakBonus,
-          wordScores: state.wordScores,
-          isNewHighScore: newHigh
-        }
-      };
-      setFinalStats(statsWithResults);
-      setFinalPercentile(percentile);
-      updateDailyStats(statsWithResults);
+      setModalResult({ dailyNumber: getDailyNumber(state.roundDate ?? today), score: state.score,
+        stats, percentile, wordResults: state.wordResults, wordScores: state.wordScores,
+        words: state.roundTheme?.wordList, streakBonus: state.streakBonus,
+        themeName: state.roundTheme?.themeName, isNewHighScore: newHigh,
+        isDailyChallenge: true, animateCelebration: true });
       setTimeout(() => setShowFinalScore(true), 1500);
     }
-  }, [state.phase, state.isDailyChallenge, gameCompleteHandled, state.score, state.streak, state.wordResults, state.streakBonus, state.wordScores, dailyStats, updateDailyStats, playVictorySound, playHighScoreJingle]);
+  }, [state.phase, state.isDailyChallenge, gameCompleteHandled, state.score, state.streak, state.wordResults, state.streakBonus, state.wordScores, state.roundTheme, state.roundDate, today, recordDailyCompletion, playVictorySound, playHighScoreJingle]);
 
   // Reset gameCompleteHandled when game restarts
   useEffect(() => {
     if (state.phase === 'idle') {
       setGameCompleteHandled(false);
-      setIsNewHighScore(false);
     }
   }, [state.phase]);
 
@@ -193,12 +208,12 @@ function GameContent() {
 
   const handleStartGame = useCallback(() => {
     if (!canPlayToday || !theme) return;
-    startGame(theme, true, getCurrentStreak);
-  }, [canPlayToday, theme, startGame, getCurrentStreak]);
+    startGame(theme, true, getCurrentStreak, today);
+  }, [canPlayToday, theme, startGame, getCurrentStreak, today]);
 
   const handleStartPractice = useCallback(() => {
     if (isThemeLoading || !themeError || state.phase !== 'idle') return;
-    startGame(practiceTheme, false, 0);
+    startGame(practiceTheme, false, 0, null);
   }, [isThemeLoading, themeError, state.phase, practiceTheme, startGame]);
 
   const handleNextWord = useCallback(() => {
@@ -284,14 +299,18 @@ function GameContent() {
   // Handler to view past results
   const handleViewResults = useCallback(() => {
     if (dailyStats) {
-      const { stats, percentile } = calculateFinalScore(todayScore ?? 0, true, dailyStats, dailyStats.currentStreak);
-      setFinalStats(stats);
-      setFinalPercentile(percentile);
-      // Use stored isNewHighScore from last game results (static only — no confetti/jingle)
-      setIsNewHighScore(dailyStats.lastGameResults?.isNewHighScore ?? false);
+      setModalResult({ dailyNumber: todayResults?.dailyNumber ?? dailyNumber,
+        score: todayScore ?? 0, stats: dailyStats,
+        percentile: { history: dailyStats.history, percentile: todayResults?.percentile ?? getRecordedPercentile(dailyStats.history, todayScore ?? 0) },
+        wordResults: todayResults?.wordResults ?? [], wordScores: todayResults?.wordScores ?? [],
+        words: todayResults?.words ?? (theme && !themeError ? theme.wordList : undefined),
+        streakBonus: todayResults?.streakBonus ?? 0,
+        themeName: todayResults?.themeName ?? (theme && !themeError ? theme.themeName : undefined),
+        isNewHighScore: todayResults?.isNewHighScore ?? false,
+        isDailyChallenge: true, animateCelebration: false });
       setShowFinalScore(true);
     }
-  }, [todayScore, dailyStats]);
+  }, [todayScore, todayResults, dailyNumber, dailyStats, theme, themeError]);
 
   // Handler to close final score modal
   const handleCloseFinalScore = useCallback(() => {
@@ -301,6 +320,12 @@ function GameContent() {
       resetGame();
     }
   }, [state.phase, resetGame]);
+
+  const resultModal = modalResult && <FinalScoreModal
+    isOpen={showFinalScore}
+    onClose={handleCloseFinalScore}
+    {...modalResult}
+  />;
 
   // Monetization disabled — re-enable when ready
   // const handleMerchOpen = useCallback(() => {
@@ -343,21 +368,7 @@ function GameContent() {
         <MerchModal isOpen={showMerch} onClose={() => setShowMerch(false)} />
         */}
 
-        <FinalScoreModal
-          isOpen={showFinalScore}
-          onClose={handleCloseFinalScore}
-          dailyNumber={dailyNumber}
-          score={todayScore ?? 0}
-          stats={finalStats}
-          percentile={finalPercentile}
-          wordResults={todayResults?.wordResults ?? []}
-          wordScores={todayResults?.wordScores ?? []}
-          words={theme?.wordList}
-          streakBonus={todayResults?.streakBonus ?? 0}
-          themeName={theme?.themeName}
-          isNewHighScore={isNewHighScore}
-          isDailyChallenge={true}
-        />
+        {resultModal}
       </GameContainer>
     );
   }
@@ -496,24 +507,9 @@ function GameContent() {
       <MerchModal isOpen={showMerch} onClose={() => setShowMerch(false)} />
       */}
 
-      <FinalScoreModal
-        isOpen={showFinalScore}
-        onClose={handleCloseFinalScore}
-        dailyNumber={dailyNumber}
-        score={state.score}
-        stats={finalStats}
-        percentile={finalPercentile}
-        wordResults={state.wordResults}
-        wordScores={state.wordScores}
-        words={activeTheme?.wordList}
-        streakBonus={state.streakBonus}
-        themeName={activeTheme?.themeName}
-        isNewHighScore={isNewHighScore}
-        animateCelebration={gameCompleteHandled}
-        isDailyChallenge={state.isDailyChallenge}
-      />
+      {resultModal}
 
-      {showFinalScore && isNewHighScore && <HighScoreCelebration />}
+      {showFinalScore && modalResult?.isNewHighScore && modalResult.animateCelebration && <HighScoreCelebration />}
     </GameContainer>
   );
 }

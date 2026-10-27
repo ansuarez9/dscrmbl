@@ -47,7 +47,7 @@ function saveFirstWord(deadline: number | null) {
     wordIndex: 0, attempts: 1, attemptResults: ['pending', 'pending', 'pending'], wordResults: [],
     wordScores: [], score: 0, streak: 0, streakBonus: 0, replayCount: 0, replayPenalty: 0,
     lastTimeBonus: 0, wordDeadline: deadline, timerModeEnabled: true, hardModeEnabled: true,
-    isDailyChallenge: true, roundTheme: null, showLetters: deadline !== null, animationTrigger: 0
+    isDailyChallenge: true, roundTheme: null, roundDate: null, showLetters: deadline !== null, animationTrigger: 0
   };
   localStorage.setItem('dscrmbl-game-state', JSON.stringify({ state, savedDate: new Date().toDateString() }));
 }

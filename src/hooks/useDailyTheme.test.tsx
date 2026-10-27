@@ -22,7 +22,7 @@ it.each([
   ['JSON', () => Promise.resolve({ ok: true, json: async () => { throw new SyntaxError('bad JSON'); } } as unknown as Response)]
 ])('shows a recoverable %s failure without a daily theme', async (_kind, failure) => {
   vi.stubGlobal('fetch', vi.fn(failure));
-  const { result } = renderHook(useDailyTheme);
+  const { result } = renderHook(() => useDailyTheme(today));
   await waitFor(() => expect(result.current.isLoading).toBe(false));
   expect(result.current.theme).toBeNull();
   expect(result.current.error).toContain("couldn't load today's challenge");
@@ -31,7 +31,7 @@ it.each([
 
 it('uses a loaded fallback only for practice when today is missing', async () => {
   vi.stubGlobal('fetch', vi.fn().mockResolvedValue(response({ _fallback: fallback })));
-  const { result } = renderHook(useDailyTheme);
+  const { result } = renderHook(() => useDailyTheme(today));
   await waitFor(() => expect(result.current.isLoading).toBe(false));
   expect(result.current.theme).toBeNull();
   expect(result.current.practiceTheme).toEqual(fallback);
@@ -40,7 +40,7 @@ it('uses a loaded fallback only for practice when today is missing', async () =>
 
 it('uses built-in practice words when loaded data has no usable fallback', async () => {
   vi.stubGlobal('fetch', vi.fn().mockResolvedValue(response({ _fallback: { ...fallback, wordList: [] } })));
-  const { result } = renderHook(useDailyTheme);
+  const { result } = renderHook(() => useDailyTheme(today));
   await waitFor(() => expect(result.current.isLoading).toBe(false));
   expect(result.current.theme).toBeNull();
   expect(result.current.practiceTheme.themeName).toBe('GENERAL');
@@ -52,7 +52,7 @@ it('retries once while pending, then makes the daily theme available', async () 
     .mockRejectedValueOnce(new Error('offline'))
     .mockImplementationOnce(() => new Promise<Response>(resolve => { resolveRetry = resolve; }));
   vi.stubGlobal('fetch', fetchMock);
-  const { result } = renderHook(useDailyTheme);
+  const { result } = renderHook(() => useDailyTheme(today));
   await waitFor(() => expect(result.current.error).not.toBeNull());
   act(() => {
     result.current.retry();
@@ -70,7 +70,7 @@ it('retries once while pending, then makes the daily theme available', async () 
 it('keeps recovery available after a failed retry', async () => {
   const fetchMock = vi.fn().mockRejectedValue(new Error('offline'));
   vi.stubGlobal('fetch', fetchMock);
-  const { result } = renderHook(useDailyTheme);
+  const { result } = renderHook(() => useDailyTheme(today));
   await waitFor(() => expect(result.current.isLoading).toBe(false));
   act(() => result.current.retry());
   await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(2));
@@ -81,8 +81,23 @@ it('keeps recovery available after a failed retry', async () => {
 
 it('rejects malformed content for today instead of making it a daily round', async () => {
   vi.stubGlobal('fetch', vi.fn().mockResolvedValue(response({ [today]: { ...daily, wordList: [] }, _fallback: fallback })));
-  const { result } = renderHook(useDailyTheme);
+  const { result } = renderHook(() => useDailyTheme(today));
   await waitFor(() => expect(result.current.isLoading).toBe(false));
   expect(result.current.theme).toBeNull();
   expect(result.current.practiceTheme).toEqual(fallback);
+});
+
+it('ignores a prior-day response when the requested date changes', async () => {
+  let resolveOld!: (value: Response) => void;
+  const next = '2026-10-27';
+  const tomorrow = { ...daily, themeName: 'TOMORROW' };
+  const fetchMock = vi.fn().mockImplementationOnce(() => new Promise<Response>(resolve => { resolveOld = resolve; }))
+    .mockResolvedValueOnce(response({ [next]: tomorrow }));
+  vi.stubGlobal('fetch', fetchMock);
+  const { result, rerender } = renderHook(({ dateKey }) => useDailyTheme(dateKey), { initialProps: { dateKey: today } });
+  rerender({ dateKey: next });
+  await waitFor(() => expect(result.current.theme).toEqual(tomorrow));
+  await act(async () => resolveOld(response({ [today]: daily })));
+  expect(result.current.theme).toEqual(tomorrow);
+  expect(fetchMock).toHaveBeenCalledTimes(2);
 });

@@ -1,4 +1,5 @@
 import { words, categorizeWordsByLength } from './words';
+import { calendarDayNumber, localDateKey } from './localDate';
 
 export function hashCode(str: string): number {
   let hash = 0;
@@ -15,13 +16,8 @@ export function seededRandom(seed: number): number {
   return x - Math.floor(x);
 }
 
-export function getDailyNumber(): number {
-  const startDate = new Date('2024-01-01');
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const diffTime = today.getTime() - startDate.getTime();
-  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-  return diffDays;
+export function getDailyNumber(dateKey = localDateKey()): number {
+  return calendarDayNumber(dateKey) - calendarDayNumber('2024-01-01');
 }
 
 export function getDailyWords(): string[] {
