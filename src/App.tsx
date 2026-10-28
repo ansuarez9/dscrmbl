@@ -21,13 +21,15 @@ import { useDailyChallenge } from './hooks/useDailyChallenge';
 import { useDailyTheme } from './hooks/useDailyTheme';
 import { useTimer } from './hooks/useTimer';
 import { useLocalDay } from './hooks/useLocalDay';
+import { storedDateKey } from './utils/localDate';
+import { getThemeExplanation } from './utils/themeExplanation';
 import { getRecordedPercentile } from './utils/scoring';
 import { getDailyNumber, getTimeUntilNextDay } from './utils/seededRandom';
 import { isValidWord, isDictionaryLoaded } from './utils/dictionary';
 import { getSpecialEventEmoji } from './utils/specialEvent';
 // Monetization disabled — re-enable when ready (used for sponsor + merch tracking)
 // import { trackGameEvent } from './utils/analytics';
-import type { DailyStats, HistoryPercentile, WordResult } from './types/game';
+import type { DailyStats, HistoryPercentile, WordResult, ThemeExplanation } from './types/game';
 
 type ResultSnapshot = {
   dailyNumber: number;
@@ -37,6 +39,7 @@ type ResultSnapshot = {
   wordResults: WordResult[];
   wordScores: number[];
   words?: string[];
+  explanation?: ThemeExplanation;
   streakBonus: number;
   themeName?: string;
   isNewHighScore: boolean;
@@ -134,6 +137,7 @@ function GameContent() {
         setModalResult({ dailyNumber: 0, score: state.score, stats: null,
           percentile: { history: [], percentile: 100 }, wordResults: state.wordResults,
           wordScores: state.wordScores, words: state.roundTheme?.wordList,
+          explanation: getThemeExplanation(state.roundTheme?.explanation, state.roundTheme?.wordList),
           streakBonus: state.streakBonus, themeName: state.roundTheme?.themeName,
           isNewHighScore: false, isDailyChallenge: false, animateCelebration: false });
         playVictorySound();
@@ -165,7 +169,9 @@ function GameContent() {
 
       setModalResult({ dailyNumber: getDailyNumber(state.roundDate ?? today), score: state.score,
         stats, percentile, wordResults: state.wordResults, wordScores: state.wordScores,
-        words: state.roundTheme?.wordList, streakBonus: state.streakBonus,
+        words: state.roundTheme?.wordList,
+        explanation: getThemeExplanation(state.roundTheme?.explanation, state.roundTheme?.wordList),
+        streakBonus: state.streakBonus,
         themeName: state.roundTheme?.themeName, isNewHighScore: newHigh,
         isDailyChallenge: true, animateCelebration: true });
       setTimeout(() => setShowFinalScore(true), 1500);
@@ -296,21 +302,27 @@ function GameContent() {
     </div>
   );
 
-  // Handler to view past results
+  const lastResultDate = storedDateKey(dailyStats?.lastGameResults?.challengeDate ?? dailyStats?.lastPlayed);
+  const hasPastResult = !!(dailyStats?.lastGameResults && lastResultDate && lastResultDate < today);
+
+  // Viewing a result only reads the recorded completion, including its puzzle content.
   const handleViewResults = useCallback(() => {
-    if (dailyStats) {
-      setModalResult({ dailyNumber: todayResults?.dailyNumber ?? dailyNumber,
-        score: todayScore ?? 0, stats: dailyStats,
-        percentile: { history: dailyStats.history, percentile: todayResults?.percentile ?? getRecordedPercentile(dailyStats.history, todayScore ?? 0) },
-        wordResults: todayResults?.wordResults ?? [], wordScores: todayResults?.wordScores ?? [],
-        words: todayResults?.words ?? (theme && !themeError ? theme.wordList : undefined),
-        streakBonus: todayResults?.streakBonus ?? 0,
-        themeName: todayResults?.themeName ?? (theme && !themeError ? theme.themeName : undefined),
-        isNewHighScore: todayResults?.isNewHighScore ?? false,
-        isDailyChallenge: true, animateCelebration: false });
-      setShowFinalScore(true);
-    }
-  }, [todayScore, todayResults, dailyNumber, dailyStats, theme, themeError]);
+    if (!dailyStats) return;
+    const result = dailyStats.lastGameResults;
+    const resultDate = storedDateKey(result?.challengeDate ?? dailyStats.lastPlayed);
+    const isToday = resultDate === today;
+    setModalResult({ dailyNumber: result?.dailyNumber ?? (resultDate ? getDailyNumber(resultDate) : dailyNumber),
+      score: dailyStats.score, stats: dailyStats,
+      percentile: { history: dailyStats.history, percentile: result?.percentile ?? getRecordedPercentile(dailyStats.history, dailyStats.score) },
+      wordResults: result?.wordResults ?? [], wordScores: result?.wordScores ?? [],
+      words: result?.words ?? (isToday && theme && !themeError ? theme.wordList : undefined),
+      explanation: getThemeExplanation(result?.explanation, result?.words),
+      streakBonus: result?.streakBonus ?? 0,
+      themeName: result?.themeName ?? (isToday && theme && !themeError ? theme.themeName : undefined),
+      isNewHighScore: result?.isNewHighScore ?? false,
+      isDailyChallenge: true, animateCelebration: false });
+    setShowFinalScore(true);
+  }, [dailyNumber, dailyStats, today, theme, themeError]);
 
   // Handler to close final score modal
   const handleCloseFinalScore = useCallback(() => {
@@ -388,6 +400,13 @@ function GameContent() {
           streak={getCurrentStreak}
           highScore={dailyStats?.highScore ?? 0}
         />
+      )}
+
+      {state.phase === 'idle' && hasPastResult && lastResultDate && (
+        <div className="last-results-action">
+          <button type="button" onClick={handleViewResults}>View last results</button>
+          <span>Completed <time dateTime={lastResultDate}>{lastResultDate}</time></span>
+        </div>
       )}
 
       {/* Theme Display - always show when available */}

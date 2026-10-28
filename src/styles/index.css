@@ -2370,12 +2370,108 @@ a.icon-btn {
 }
 
 .word-result-word {
+    min-width: 0;
+    overflow-wrap: anywhere;
     font-family: var(--font-mono);
     font-size: 0.8rem;
     font-weight: 700;
     color: var(--text-primary);
     letter-spacing: 0.1em;
     text-align: left;
+}
+
+.theme-explanation {
+    margin-top: var(--spacing-lg);
+    border-top: 1px solid var(--bg-tertiary);
+    padding-top: var(--spacing-md);
+    text-align: left;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+.theme-explanation summary {
+    color: var(--text-primary);
+    cursor: pointer;
+    padding: var(--spacing-sm) 0;
+    min-height: 44px;
+}
+
+.theme-explanation p {
+    margin: var(--spacing-sm) 0;
+}
+
+.theme-explanation ul {
+    padding-left: 1.25rem;
+    margin: var(--spacing-md) 0 0;
+}
+
+.theme-explanation li + li {
+    margin-top: var(--spacing-sm);
+}
+
+.theme-explanation strong {
+    font-family: var(--font-mono);
+}
+
+.theme-explanation li span {
+    display: block;
+    color: var(--text-secondary);
+}
+
+.results-close,
+.last-results-action button {
+    font: inherit;
+    color: var(--text-primary);
+    background: transparent;
+    border: 0;
+    text-decoration: underline;
+    cursor: pointer;
+    min-height: 44px;
+    padding: var(--spacing-xs);
+}
+
+.results-close {
+    display: block;
+    margin: 0 0 var(--spacing-sm) auto;
+}
+
+/* Let the result summary reflow when players enlarge the text on a phone. */
+.modal-container--score .stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 4rem), 1fr));
+}
+
+.modal-container--score .stat-card {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.modal-container--score .percentile-section {
+    /* Endpoint labels are centered on the marker; leave room for their text. */
+    padding-inline: 1.75rem;
+}
+
+@media (max-width: 480px) {
+    .modal-container--score {
+        padding: min(var(--spacing-lg), 24px);
+    }
+}
+
+.last-results-action {
+    text-align: center;
+    margin-bottom: var(--spacing-md);
+}
+
+.last-results-action span {
+    display: block;
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+}
+
+.theme-explanation summary:focus-visible,
+.results-close:focus-visible,
+.last-results-action button:focus-visible {
+    outline: 2px solid var(--amber);
+    outline-offset: 3px;
 }
 
 .word-result-score {

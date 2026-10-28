@@ -70,6 +70,7 @@ export interface DailyStats {
     dailyNumber?: number;
     themeName?: string;
     words?: string[];
+    explanation?: ThemeExplanation;
   };
 }
 
@@ -91,10 +92,16 @@ export interface Sponsor {
   tagline?: string;
 }
 
+export interface ThemeExplanation {
+  summary: string;
+  wordNotes?: Record<string, string>;
+}
+
 export interface DailyTheme {
   themeName: string;
   description: string;
   wordList: string[];
+  explanation?: ThemeExplanation;
   specialEvent?: string;
   sponsor?: Sponsor;
 }

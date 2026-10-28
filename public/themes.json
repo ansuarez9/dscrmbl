@@ -3057,7 +3057,10 @@
       "gummy",
       "lollipop",
       "chocolate"
-    ]
+    ],
+    "explanation": {
+      "summary": "Sugar is the common thread: taffy, gummy sweets, lollipops, and chocolate are all sugary treats."
+    }
   },
   "2026-10-29": {
     "themeName": "FRIGHT NIGHT",
@@ -3068,7 +3071,13 @@
       "spooky",
       "horror",
       "phantom"
-    ]
+    ],
+    "explanation": {
+      "summary": "Scary, creepy, and spooky describe the unsettling mood of horror stories, where a phantom might be the source of the fright.",
+      "wordNotes": {
+        "phantom": "A ghost or mysterious apparition that might haunt a scary story."
+      }
+    }
   },
   "2026-10-30": {
     "themeName": "MASQUERADE",
@@ -3079,7 +3088,13 @@
       "disguise",
       "facepaint",
       "gala"
-    ]
+    ],
+    "explanation": {
+      "summary": "A masquerade is a gathering where people wear masks or costumes. A masked guest might use a costume, disguise, or facepaint to change their appearance at a gala.",
+      "wordNotes": {
+        "gala": "A festive social event; a masquerade can be one kind of gala."
+      }
+    }
   },
   "2026-10-31": {
     "themeName": "ALL HALLOWS",
@@ -3091,7 +3106,13 @@
       "spectre",
       "halloween"
     ],
-    "specialEvent": "Halloween"
+    "specialEvent": "Halloween",
+    "explanation": {
+      "summary": "Ghosts, witches, and goblins are familiar Halloween characters. A spectre is another name for a ghost, completing this cast of spooky figures.",
+      "wordNotes": {
+        "spectre": "A ghostly apparition; also spelled “specter.”"
+      }
+    }
   },
   "2026-11-01": {
     "themeName": "DIA DE MUERTOS",
@@ -3103,7 +3124,13 @@
       "ofrenda",
       "marigold"
     ],
-    "specialEvent": "Día de los Muertos"
+    "specialEvent": "Día de los Muertos",
+    "explanation": {
+      "summary": "These words connect through Día de los Muertos, when offerings honor departed loved ones. An altar or ofrenda may hold candles and marigolds as families remember and welcome their spirits.",
+      "wordNotes": {
+        "ofrenda": "An offering, or a commemorative altar arranged with offerings for departed loved ones."
+      }
+    }
   },
   "2026-11-02": {
     "themeName": "ALL SAINTS",
@@ -3114,7 +3141,13 @@
       "pilgrim",
       "holyday",
       "blessing"
-    ]
+    ],
+    "explanation": {
+      "summary": "These words evoke religious devotion: a halo marks a holy figure in art, sacred things are treated with reverence, and a pilgrim may travel to a holy place for worship or a blessing.",
+      "wordNotes": {
+        "holyday": "A day set apart for religious observance."
+      }
+    }
   },
   "2026-11-03": {
     "themeName": "VOTING BOOTH",
@@ -3126,7 +3159,13 @@
       "primary",
       "candidate"
     ],
-    "specialEvent": "Election Day"
+    "specialEvent": "Election Day",
+    "explanation": {
+      "summary": "These words follow the path to an election: a candidate may compete in a primary, and a voter casts a ballot at the polls.",
+      "wordNotes": {
+        "primary": "An election used to choose candidates for a later election."
+      }
+    }
   },
   "2026-11-04": {
     "themeName": "FALL CLEANUP",
@@ -3137,7 +3176,13 @@
       "tarping",
       "mulching",
       "composting"
-    ]
+    ],
+    "explanation": {
+      "summary": "These are ways to tidy and care for an autumn yard: raking gathers leaves, pruning trims plants, tarping covers or collects materials, mulching covers soil, and composting turns organic waste into a soil amendment.",
+      "wordNotes": {
+        "tarping": "Using a tarp to cover garden materials or gather leaves and yard debris."
+      }
+    }
   },
   "2026-11-05": {
     "themeName": "FORGE AHEAD",
@@ -3148,7 +3193,14 @@
       "smith",
       "bellows",
       "ironwork"
-    ]
+    ],
+    "explanation": {
+      "summary": "These words belong in a blacksmith’s workshop, where heated metal is shaped into useful or decorative ironwork.",
+      "wordNotes": {
+        "anvil": "The heavy surface on which metal is shaped.",
+        "bellows": "A device that blows air into the forge to make the fire burn hotter."
+      }
+    }
   },
   "2026-11-06": {
     "themeName": "FLEET FOOT",
@@ -3159,7 +3211,10 @@
       "runner",
       "jogging",
       "marathon"
-    ]
+    ],
+    "explanation": {
+      "summary": "These words connect through running: a runner controls their pacing, might sprint for speed or go jogging, and may train for a marathon."
+    }
   },
   "2026-11-07": {
     "themeName": "ATTIC FIND",
@@ -3170,7 +3225,13 @@
       "trunk",
       "treasure",
       "heirloom"
-    ]
+    ],
+    "explanation": {
+      "summary": "Picture opening a dusty attic: boxes and a trunk can hold forgotten treasure, including an heirloom passed down through a family.",
+      "wordNotes": {
+        "heirloom": "An object kept and passed down through generations of a family."
+      }
+    }
   },
   "2026-11-08": {
     "themeName": "FESTIVAL OF LIGHTS",
@@ -3182,7 +3243,14 @@
       "radiance",
       "illumination"
     ],
-    "specialEvent": "Diwali"
+    "specialEvent": "Diwali",
+    "explanation": {
+      "summary": "Diwali is known as the festival of lights. Candles and lanterns create the bright radiance and illumination that connect these five words.",
+      "wordNotes": {
+        "radiance": "Light shining from something.",
+        "illumination": "The lighting of a place or object."
+      }
+    }
   },
   "2026-11-09": {
     "themeName": "CHILLY MORNING",
@@ -3193,7 +3261,10 @@
       "parka",
       "gloves",
       "shiver"
-    ]
+    ],
+    "explanation": {
+      "summary": "These words paint a chilly morning: frost and a cold breeze may make you shiver, so a parka and gloves help keep you warm."
+    }
   },
   "2026-11-10": {
     "themeName": "STORYBOOK",
@@ -3204,7 +3275,13 @@
       "parable",
       "folklore",
       "fairytale"
-    ]
+    ],
+    "explanation": {
+      "summary": "These words connect through storytelling and traditional narratives, including tales that teach a lesson.",
+      "wordNotes": {
+        "parable": "A short story that teaches a moral or spiritual lesson; it need not include fairy-tale magic."
+      }
+    }
   },
   "2026-11-11": {
     "themeName": "SERVICE & HONOR",
