@@ -1,11 +1,12 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
+import { getThemeExplanation } from '../../utils/themeExplanation';
 import { CyberButton } from '../Buttons/CyberButton';
 import { generateShareText, copyToClipboard, canUseWebShare, shareViaWeb } from '../../utils/share';
 import { useAudioContext } from '../../context/AudioContext';
 // Monetization disabled — re-enable when ready
 // import { trackGameEvent } from '../../utils/analytics';
 // import { TIP_JAR_URL } from '../../config/monetization';
-import type { DailyStats, WordResult, HistoryPercentile } from '../../types/game';
+import type { DailyStats, WordResult, HistoryPercentile, ThemeExplanation } from '../../types/game';
 
 interface FinalScoreModalProps {
   isOpen: boolean;
@@ -18,6 +19,7 @@ interface FinalScoreModalProps {
   wordResults: WordResult[];
   wordScores?: number[];
   words?: string[];
+  explanation?: ThemeExplanation;
   streakBonus: number;
   themeName?: string;
   isNewHighScore: boolean;
@@ -35,6 +37,7 @@ export function FinalScoreModal({
   wordResults,
   wordScores,
   words,
+  explanation,
   streakBonus,
   themeName,
   isNewHighScore,
@@ -50,6 +53,25 @@ export function FinalScoreModal({
   const [rollUpComplete, setRollUpComplete] = useState(false);
   const rollUpRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const tickCountRef = useRef(0);
+  const explanationRef = useRef<HTMLDetailsElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!isOpen || !isVisible) return;
+    if (explanationRef.current) explanationRef.current.open = false;
+    const previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const dialog = dialogRef.current;
+    dialog?.focus({ preventScroll: true });
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      if (previousFocus?.isConnected) previousFocus.focus({ preventScroll: true });
+    };
+  }, [isOpen, isVisible]);
+
+  const completedExplanation = isOpen && wordResults.length === 5 && wordResults.every(result => typeof result?.solved === 'boolean')
+    ? getThemeExplanation(explanation, words) : undefined;
 
   useEffect(() => {
     if (isOpen) {
@@ -138,7 +160,21 @@ export function FinalScoreModal({
 
   return (
     <div id="final-score-modal" className={overlayClass} onClick={onClose}>
-      <div className={modalContainerClass} onClick={(e) => e.stopPropagation()}>
+      <div className={modalContainerClass} ref={dialogRef} role="dialog" aria-modal="true"
+        aria-labelledby="modal-title" tabIndex={-1} onClick={(e) => e.stopPropagation()}
+        onKeyDown={(event) => {
+          if (event.key === 'Escape') { event.stopPropagation(); onClose(); }
+          if (event.key !== 'Tab') return;
+          const controls = Array.from(event.currentTarget.querySelectorAll<HTMLElement>('button, input, summary'));
+          const first = controls[0];
+          const last = controls[controls.length - 1];
+          if (event.shiftKey && (document.activeElement === first || document.activeElement === event.currentTarget)) {
+            event.preventDefault(); last?.focus();
+          } else if (!event.shiftKey && document.activeElement === last) {
+            event.preventDefault(); first?.focus();
+          }
+        }}>
+        <button type="button" className="results-close" onClick={onClose}>Close results</button>
         <div className="score-display">
           <div className="score-label" id="modal-title">{isDailyChallenge ? `DAILY #${dailyNumber}` : 'PRACTICE ROUND'}</div>
           {themeName && <div className="score-theme">{themeName}</div>}
@@ -247,6 +283,21 @@ export function FinalScoreModal({
         >
           {shareText}
         </CyberButton>
+
+        {completedExplanation && words && (
+          <details className="theme-explanation" ref={explanationRef}>
+            <summary>How the words connect</summary>
+            <p>{completedExplanation.summary}</p>
+            <ul>
+              {words.map(word => (
+                <li key={word}>
+                  <strong>{word.toUpperCase()}</strong>
+                  {completedExplanation.wordNotes?.[word] && <span>{completedExplanation.wordNotes[word]}</span>}
+                </li>
+              ))}
+            </ul>
+          </details>
+        )}
 
         {/* Monetization disabled — re-enable when ready
         <a

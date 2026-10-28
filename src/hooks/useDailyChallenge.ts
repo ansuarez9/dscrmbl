@@ -2,6 +2,7 @@ import { useMemo, useCallback, useEffect, useRef } from 'react';
 import { useLocalStorage } from './useLocalStorage';
 import { getDailyNumber } from '../utils/seededRandom';
 import type { DailyStats } from '../types/game';
+import { getThemeExplanation } from '../utils/themeExplanation';
 import { calculateFinalScore } from '../utils/scoring';
 import type { DailyTheme } from '../types/game';
 import { isPreviousCalendarDay, storedDateKey } from '../utils/localDate';
@@ -92,7 +93,8 @@ export function useDailyChallenge(today: string, dailyRoundActive = false, activ
         challengeDate,
         dailyNumber: getDailyNumber(challengeDate),
         themeName: theme?.themeName,
-        words: theme?.wordList
+        words: theme?.wordList,
+        explanation: getThemeExplanation(theme?.explanation, theme?.wordList)
       }
     };
     setDailyStats(recorded);

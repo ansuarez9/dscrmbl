@@ -5,10 +5,7 @@ import { useDailyTheme } from './useDailyTheme';
 
 const daily = { themeName: 'DAILY', description: 'Today', wordList: ['apple', 'beach', 'cloud', 'dance', 'earth'] };
 const fallback = { themeName: 'BACKUP', description: 'Practice', wordList: ['flame', 'grape', 'house', 'ivory', 'jelly'] };
-const today = (() => {
-  const date = new Date();
-  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-})();
+const today = '2026-10-26';
 const response = (data: unknown, ok = true) => ({ ok, json: async () => data }) as Response;
 
 afterEach(() => {
@@ -100,4 +97,17 @@ it('ignores a prior-day response when the requested date changes', async () => {
   await act(async () => resolveOld(response({ [today]: daily })));
   expect(result.current.theme).toEqual(tomorrow);
   expect(fetchMock).toHaveBeenCalledTimes(2);
+});
+
+
+it('keeps daily and practice playable when optional explanation content is malformed', async () => {
+  const malformed = { summary: 'Valid summary', wordNotes: { absent: 'Not a puzzle word' } };
+  vi.stubGlobal('fetch', vi.fn().mockResolvedValue(response({
+    [today]: { ...daily, explanation: malformed }, _fallback: { ...fallback, explanation: malformed }
+  })));
+  const { result } = renderHook(() => useDailyTheme(today));
+  await waitFor(() => expect(result.current.isLoading).toBe(false));
+  expect(result.current.error).toBeNull();
+  expect(result.current.theme?.wordList).toEqual(daily.wordList);
+  expect(result.current.practiceTheme.wordList).toEqual(fallback.wordList);
 });

@@ -2,7 +2,7 @@
 import { act, cleanup, fireEvent, render, renderHook, screen } from '@testing-library/react';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import App from './App';
-import type { DailyStats, GameState } from './types/game';
+import type { DailyStats, GameState, DailyTheme } from './types/game';
 import { generateShareText } from './utils/share';
 import { useDailyChallenge } from './hooks/useDailyChallenge';
 
@@ -253,3 +253,175 @@ it('recovers when the next day’s theme is missing after a background return', 
   expect(screen.getByRole('button', { name: /PLAY TODAY'S CHALLENGE/ })).toBeTruthy();
   expect(entries.get('dscrmbl-daily')).toBe(JSON.stringify(previous));
 });
+
+const explainedDaily: DailyTheme = { ...daily,
+  explanation: { summary: 'The original puzzle connection.', wordNotes: { ivory: 'The original ivory note.' } } };
+
+it('reveals explanations only after completion, then reopens and refreshes the saved snapshot read-only', async () => {
+  const fetchMock = vi.fn().mockResolvedValue(response({ '2026-10-26': explainedDaily }));
+  vi.stubGlobal('fetch', fetchMock);
+  const first = render(<App />);
+  await flushFetch();
+  expect(screen.queryByText('How the words connect')).toBeNull();
+  fireEvent.click(screen.getByRole('button', { name: /PLAY TODAY'S CHALLENGE/ }));
+  expect(screen.queryByText(explainedDaily.explanation!.summary)).toBeNull();
+  solveRound(daily.wordList);
+  // Even with all five outcomes, wait for the completed results experience.
+  expect(screen.queryByText('How the words connect')).toBeNull();
+  act(() => vi.advanceTimersByTime(1999));
+  expect(screen.queryByText(explainedDaily.explanation!.summary)).toBeNull();
+  act(() => vi.advanceTimersByTime(1));
+  act(() => vi.advanceTimersByTime(1500));
+  expect(screen.getByText(explainedDaily.explanation!.summary)).toBeTruthy();
+  const recorded = entries.get('dscrmbl-daily');
+  expect(JSON.parse(recorded!).lastGameResults.explanation).toEqual(explainedDaily.explanation);
+  const details = document.querySelector('details')!;
+  details.open = true;
+  fireEvent.click(screen.getByRole('button', { name: 'Close results' }));
+  act(() => vi.advanceTimersByTime(250));
+  fireEvent.click(screen.getByRole('button', { name: /VIEW RESULTS/ }));
+  expect(document.querySelector('details')!.open).toBe(false);
+  expect(entries.get('dscrmbl-daily')).toBe(recorded);
+  first.unmount();
+
+  // Refresh with unavailable catalog content must still show the saved explanation.
+  fetchMock.mockRejectedValue(new Error('offline'));
+  const offline = render(<App />);
+  await flushFetch();
+  fireEvent.click(screen.getByRole('button', { name: /VIEW RESULTS/ }));
+  expect(screen.getByText(explainedDaily.explanation!.summary)).toBeTruthy();
+  expect(screen.getByText('The original ivory note.')).toBeTruthy();
+  expect(entries.get('dscrmbl-daily')).toBe(recorded);
+  offline.unmount();
+
+  fetchMock.mockResolvedValue(response({ '2026-10-26': { ...daily,
+    explanation: { summary: 'Edited catalog explanation.' } } }));
+  render(<App />);
+  await flushFetch();
+  fireEvent.click(screen.getByRole('button', { name: /VIEW RESULTS/ }));
+  expect(screen.getByText(explainedDaily.explanation!.summary)).toBeTruthy();
+  expect(screen.queryByText('Edited catalog explanation.')).toBeNull();
+  expect(entries.get('dscrmbl-daily')).toBe(recorded);
+});
+
+function storeExplainedCompletion() {
+  const results = { wordResults: daily.wordList.map((_, index) => ({ attempts: index === 2 ? 4 : 1,
+    solved: index !== 2, usedReplay: false })), wordScores: [10, 10, 0, 10, 10], streakBonus: 0,
+    isNewHighScore: false, percentile: 50, challengeDate: '2026-10-26', dailyNumber: 1029,
+    themeName: daily.themeName, words: daily.wordList, explanation: explainedDaily.explanation };
+  entries.set('dscrmbl-daily', JSON.stringify({ ...stats, lastPlayed: '2026-10-26', lastGameResults: results }));
+}
+
+it('holds explanation identity across midnight and refresh, with last-results access beside the new daily', async () => {
+  vi.setSystemTime(new Date(2026, 9, 26, 23, 59, 59));
+  storeExplainedCompletion();
+  const recorded = entries.get('dscrmbl-daily');
+  const tomorrow = { ...daily, themeName: 'TOMORROW', wordList: ['apple', 'beach', 'cloud', 'dance', 'earth'],
+    explanation: { summary: 'A different puzzle connection.' } };
+  vi.stubGlobal('fetch', vi.fn().mockResolvedValue(response({ '2026-10-26': explainedDaily, '2026-10-27': tomorrow })));
+  const first = render(<App />);
+  await flushFetch();
+  fireEvent.click(screen.getByRole('button', { name: /VIEW RESULTS/ }));
+  act(() => vi.advanceTimersByTime(2000));
+  await flushFetch();
+  expect(screen.getByText(explainedDaily.explanation!.summary)).toBeTruthy();
+  expect(screen.queryByText(tomorrow.explanation.summary)).toBeNull();
+  expect(document.getElementById('modal-title')?.textContent).toBe('DAILY #1029');
+  first.unmount();
+
+  render(<App />);
+  await flushFetch();
+  expect(screen.getByRole('button', { name: /PLAY TODAY'S CHALLENGE/ })).toBeTruthy();
+  expect(screen.getByText('2026-10-26')).toBeTruthy();
+  fireEvent.click(screen.getByRole('button', { name: 'View last results' }));
+  expect(document.getElementById('modal-title')?.textContent).toBe('DAILY #1029');
+  expect(screen.getByText(explainedDaily.explanation!.summary)).toBeTruthy();
+  expect(screen.queryByText(tomorrow.explanation.summary)).toBeNull();
+  expect(Array.from(document.querySelectorAll('.theme-explanation li strong')).map(el => el.textContent))
+    .toEqual(daily.wordList.map(word => word.toUpperCase()));
+  expect(entries.get('dscrmbl-daily')).toBe(recorded);
+  fireEvent.click(screen.getByRole('button', { name: 'Close results' }));
+  fireEvent.click(screen.getByRole('button', { name: /PLAY TODAY'S CHALLENGE/ }));
+  expect(screen.queryByRole('button', { name: 'View last results' })).toBeNull();
+  expect(savedGame().roundTheme?.themeName).toBe('TOMORROW');
+});
+
+it('restores an unfinished round after midnight without spoilers and records its original explanation', async () => {
+  vi.stubGlobal('fetch', vi.fn().mockResolvedValue(response({ '2026-10-26': explainedDaily,
+    '2026-10-27': { ...daily, explanation: { summary: 'A different puzzle connection.' } } })));
+  const first = render(<App />);
+  await flushFetch();
+  fireEvent.click(screen.getByRole('button', { name: /PLAY TODAY'S CHALLENGE/ }));
+  expect(savedGame().roundTheme?.explanation).toEqual(explainedDaily.explanation);
+  first.unmount();
+  vi.setSystemTime(new Date(2026, 9, 27, 8));
+  render(<App />);
+  await flushFetch();
+  expect(screen.queryByText(explainedDaily.explanation!.summary)).toBeNull();
+  expect(screen.queryByText('How the words connect')).toBeNull();
+  solveRound(daily.wordList);
+  act(() => vi.advanceTimersByTime(2000));
+  act(() => vi.advanceTimersByTime(1500));
+  const recorded = JSON.parse(entries.get('dscrmbl-daily')!);
+  expect(recorded.lastGameResults.challengeDate).toBe('2026-10-26');
+  expect(recorded.lastGameResults.explanation).toEqual(explainedDaily.explanation);
+  expect(screen.getByText(explainedDaily.explanation!.summary)).toBeTruthy();
+  expect(screen.queryByText('A different puzzle connection.')).toBeNull();
+});
+
+it.each([true, false])('keeps completed practice isolated with explanation=%s, including refresh during play', async withExplanation => {
+  const practice = { ...fallback, ...(withExplanation ? { explanation: { summary: 'Practice-only connection.' } } : {}) };
+  vi.stubGlobal('fetch', vi.fn().mockResolvedValue(response({ _fallback: practice })));
+  const recorded = entries.get('dscrmbl-daily');
+  const first = render(<App />);
+  await flushFetch();
+  fireEvent.click(screen.getByRole('button', { name: /PLAY FALLBACK PRACTICE ROUND/ }));
+  first.unmount();
+  render(<App />);
+  await flushFetch();
+  expect(screen.queryByText('Practice-only connection.')).toBeNull();
+  solveRound(practice.wordList);
+  act(() => vi.advanceTimersByTime(2000));
+  act(() => vi.advanceTimersByTime(1500));
+  expect(!!screen.queryByText('How the words connect')).toBe(withExplanation);
+  expect(!!screen.queryByText('Practice-only connection.')).toBe(withExplanation);
+  expect(screen.queryByText('HISTORICAL RANKING')).toBeNull();
+  expect(entries.get('dscrmbl-daily')).toBe(recorded);
+  fireEvent.click(screen.getByRole('button', { name: 'Close results' }));
+  // A successful retry can still make the untouched daily available.
+  vi.stubGlobal('fetch', vi.fn().mockResolvedValue(response({ '2026-10-26': explainedDaily })));
+  fireEvent.click(screen.getByRole('button', { name: 'RETRY' }));
+  await flushFetch();
+  expect(screen.getByRole('button', { name: /PLAY TODAY'S CHALLENGE/ })).toBeTruthy();
+  expect(entries.get('dscrmbl-daily')).toBe(recorded);
+});
+
+it('omits explanations from legacy completed results even when today’s catalog has one', async () => {
+  entries.set('dscrmbl-daily', JSON.stringify({ ...stats, lastPlayed: '2026-10-26',
+    lastGameResults: { wordResults: daily.wordList.map(() => ({ attempts: 1, solved: true, usedReplay: false })),
+      wordScores: [10, 10, 10, 10, 10], streakBonus: 0, isNewHighScore: false } }));
+  const recorded = entries.get('dscrmbl-daily');
+  vi.stubGlobal('fetch', vi.fn().mockResolvedValue(response({ '2026-10-26': explainedDaily })));
+  render(<App />);
+  await flushFetch();
+  fireEvent.click(screen.getByRole('button', { name: /VIEW RESULTS/ }));
+  expect(screen.queryByText('How the words connect')).toBeNull();
+  expect(entries.get('dscrmbl-daily')).toBe(recorded);
+});
+
+it.each([undefined, { summary: 'Invalid optional content', wordNotes: { wrong: 'Unrelated word' } }])(
+  'completes daily content without a usable explanation: %j', async explanation => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(response({ '2026-10-26': { ...daily, explanation } })));
+    render(<App />);
+    await flushFetch();
+    fireEvent.click(screen.getByRole('button', { name: /PLAY TODAY'S CHALLENGE/ }));
+    solveRound(daily.wordList);
+    act(() => vi.advanceTimersByTime(2000));
+    act(() => vi.advanceTimersByTime(1500));
+    expect(screen.getByRole('dialog')).toBeTruthy();
+    expect(screen.queryByText('How the words connect')).toBeNull();
+    const completion = JSON.parse(entries.get('dscrmbl-daily')!);
+    expect(completion.lastGameResults.explanation).toBeUndefined();
+    expect(completion.gamesPlayed).toBe(2);
+  }
+);
