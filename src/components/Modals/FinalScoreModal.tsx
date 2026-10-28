@@ -11,6 +11,7 @@ interface FinalScoreModalProps {
   isOpen: boolean;
   onClose: () => void;
   dailyNumber: number;
+  isDailyChallenge: boolean;
   score: number;
   stats: DailyStats | null;
   percentile: HistoryPercentile;
@@ -27,6 +28,7 @@ export function FinalScoreModal({
   isOpen,
   onClose,
   dailyNumber,
+  isDailyChallenge,
   score,
   stats,
   percentile,
@@ -108,8 +110,8 @@ export function FinalScoreModal({
   }, [isOpen, isVisible, isNewHighScore, animateCelebration, score, playTickSound]);
 
   const handleShare = useCallback(async () => {
-    const highScore = stats?.highScore ?? score;
-    const text = generateShareText(dailyNumber, score, wordResults, streakBonus, themeName, includeLink, highScore, isNewHighScore, stats?.currentStreak);
+    const highScore = isDailyChallenge ? stats?.highScore ?? score : undefined;
+    const text = generateShareText(isDailyChallenge ? dailyNumber : null, score, wordResults, streakBonus, themeName, includeLink, highScore, isNewHighScore, isDailyChallenge ? stats?.currentStreak : undefined);
 
     // Check if Web Share API is available (mobile devices)
     if (canUseWebShare()) {
@@ -126,7 +128,7 @@ export function FinalScoreModal({
       setShareText('COPIED!');
       setTimeout(() => setShareText('SHARE RESULTS'), 2000);
     }
-  }, [score, wordResults, streakBonus, themeName, dailyNumber, includeLink, stats, isNewHighScore]);
+  }, [score, wordResults, streakBonus, themeName, dailyNumber, isDailyChallenge, includeLink, stats, isNewHighScore]);
 
   if (!isVisible) return null;
 
@@ -138,7 +140,7 @@ export function FinalScoreModal({
     <div id="final-score-modal" className={overlayClass} onClick={onClose}>
       <div className={modalContainerClass} onClick={(e) => e.stopPropagation()}>
         <div className="score-display">
-          <div className="score-label" id="modal-title">DAILY #{dailyNumber}</div>
+          <div className="score-label" id="modal-title">{isDailyChallenge ? `DAILY #${dailyNumber}` : 'PRACTICE ROUND'}</div>
           {themeName && <div className="score-theme">{themeName}</div>}
 
           {isNewHighScore && (
@@ -150,7 +152,7 @@ export function FinalScoreModal({
           </div>
         </div>
 
-        <div className="stats-grid">
+        {isDailyChallenge && <div className="stats-grid">
           <div className="stat-card">
             <span className="stat-label">GAMES</span>
             <span className="stat-value" id="gamesPlayed">{stats?.gamesPlayed ?? 1}</span>
@@ -163,11 +165,11 @@ export function FinalScoreModal({
             <span className="stat-label">AVG</span>
             <span className="stat-value" id="averageScore">{Math.round(stats?.average ?? score)}</span>
           </div>
-        </div>
+        </div>}
 
         {words && words.length > 0 && (
           <div className="word-results-section">
-            <span className="word-results-label">TODAY'S WORDS</span>
+            <span className="word-results-label">{isDailyChallenge ? 'DAILY WORDS' : 'PRACTICE WORDS'}</span>
             <div className="word-results-list">
               {words.map((word, i) => {
                 const result = wordResults[i];
@@ -203,7 +205,7 @@ export function FinalScoreModal({
           </div>
         )}
 
-        <div className="percentile-section">
+        {isDailyChallenge && <div className="percentile-section">
           <span className="percentile-label">HISTORICAL RANKING</span>
           <div className="percentile-bar">
             <span
@@ -224,7 +226,7 @@ export function FinalScoreModal({
               {isNewHighScore ? 'BEST EVER' : `${percentile.percentile}%`}
             </span>
           </div>
-        </div>
+        </div>}
 
         <div className="share-options">
           <label className="link-checkbox">

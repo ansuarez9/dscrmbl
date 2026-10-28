@@ -1,5 +1,5 @@
-import { useState, useEffect, useMemo } from 'react';
-import type { DailyTheme, ThemesData, UseDailyThemeResult } from '../types/game';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import type { DailyTheme, UseDailyThemeResult } from '../types/game';
 
 const FALLBACK_THEME: DailyTheme = {
   themeName: 'GENERAL',
@@ -7,67 +7,71 @@ const FALLBACK_THEME: DailyTheme = {
   wordList: ['python', 'rocket', 'castle', 'garden', 'planet']
 };
 
-function getLocalDateString(): string {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, '0');
-  const day = String(now.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
+function isDailyTheme(value: unknown): value is DailyTheme {
+  if (!value || typeof value !== 'object') return false;
+  const theme = value as Partial<DailyTheme>;
+  return typeof theme.themeName === 'string' && theme.themeName.trim().length > 0
+    && typeof theme.description === 'string'
+    && Array.isArray(theme.wordList) && theme.wordList.length === 5
+    && theme.wordList.every(word => typeof word === 'string' && word.trim().length > 0);
 }
 
-export function useDailyTheme(): UseDailyThemeResult {
-  const [themesData, setThemesData] = useState<ThemesData | null>(null);
+export function useDailyTheme(dateKey: string): UseDailyThemeResult {
+  const [theme, setTheme] = useState<DailyTheme | null>(null);
+  const [loadedDate, setLoadedDate] = useState<string | null>(null);
+  const [practiceTheme, setPracticeTheme] = useState<DailyTheme>(FALLBACK_THEME);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const activeRequest = useRef<AbortController | null>(null);
+  const mounted = useRef(false);
 
-  useEffect(() => {
-    let isMounted = true;
+  const retry = useCallback(() => {
+    if (!mounted.current || activeRequest.current) return;
+    const controller = new AbortController();
+    activeRequest.current = controller;
+    setIsLoading(true);
+    setError(null);
+    setTheme(null);
+    setLoadedDate(null);
 
-    async function fetchThemes() {
+    const load = async () => {
       try {
-        const themesUrl = `${import.meta.env.BASE_URL}themes.json`;
-        const response = await fetch(themesUrl);
-        if (!response.ok) {
-          throw new Error(`Failed to fetch themes: ${response.status}`);
-        }
-        const data: ThemesData = await response.json();
-        if (isMounted) {
-          setThemesData(data);
-          setIsLoading(false);
-        }
-      } catch (err) {
-        if (isMounted) {
-          setError(err instanceof Error ? err.message : 'Unknown error loading themes');
+        const response = await fetch(`${import.meta.env.BASE_URL}themes.json`, { signal: controller.signal });
+        if (!response.ok) throw new Error('fetch');
+        const data: unknown = await response.json();
+        if (controller.signal.aborted || !mounted.current) return;
+        if (!data || typeof data !== 'object' || Array.isArray(data)) throw new Error('invalid');
+        const entries = data as Record<string, unknown>;
+        setPracticeTheme(isDailyTheme(entries._fallback) ? entries._fallback : FALLBACK_THEME);
+        if (!isDailyTheme(entries[dateKey])) throw new Error('missing');
+        setTheme(entries[dateKey]);
+      } catch (cause) {
+        if (controller.signal.aborted || !mounted.current) return;
+        setError(cause instanceof Error && cause.message === 'missing'
+          ? "Today's challenge isn't available right now. Please retry, or play a fallback practice round."
+          : "We couldn't load today's challenge. Please retry, or play a fallback practice round.");
+      } finally {
+        if (activeRequest.current === controller) activeRequest.current = null;
+        if (!controller.signal.aborted && mounted.current) {
+          setLoadedDate(dateKey);
           setIsLoading(false);
         }
       }
-    }
-
-    fetchThemes();
-
-    return () => {
-      isMounted = false;
     };
-  }, []);
+    void load();
+  }, [dateKey]);
 
-  const theme = useMemo<DailyTheme | null>(() => {
-    if (isLoading || !themesData) return null;
+  useEffect(() => {
+    mounted.current = true;
+    retry();
+    return () => {
+      mounted.current = false;
+      activeRequest.current?.abort();
+      activeRequest.current = null;
+    };
+  }, [retry]);
 
-    const today = getLocalDateString();
-
-    // Try to get today's theme
-    if (themesData[today]) {
-      return themesData[today];
-    }
-
-    // Fall back to _fallback entry if present
-    if (themesData['_fallback']) {
-      return themesData['_fallback'];
-    }
-
-    // Ultimate fallback
-    return FALLBACK_THEME;
-  }, [themesData, isLoading]);
-
-  return { theme, isLoading, error };
+  return { theme: loadedDate === dateKey ? theme : null, practiceTheme,
+    isLoading: loadedDate !== dateKey || isLoading,
+    error: loadedDate === dateKey ? error : null, retry };
 }

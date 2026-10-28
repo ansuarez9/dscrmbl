@@ -27,12 +27,14 @@ export interface GameState {
   timerModeEnabled: boolean;
   hardModeEnabled: boolean;
   isDailyChallenge: boolean;
+  roundTheme: DailyTheme | null;
+  roundDate: string | null; // Local calendar date on which this round began
   showLetters: boolean;
   animationTrigger: number; // Increments to force re-animation
 }
 
 export type GameAction =
-  | { type: 'START_GAME'; words: string[]; initialStreak?: number }
+  | { type: 'START_GAME'; theme: DailyTheme; isDailyChallenge: boolean; roundDate: string | null; initialStreak?: number }
   | { type: 'NEXT_WORD'; startedAt: number }
   | { type: 'START_WORD_TIMER'; wordIndex: number; startedAt: number }
   | { type: 'SUBMIT_GUESS'; guess: string; submittedAt: number }
@@ -63,6 +65,11 @@ export interface DailyStats {
     streakBonus: number;
     wordScores: number[];
     isNewHighScore: boolean;
+    percentile?: number;
+    challengeDate?: string;
+    dailyNumber?: number;
+    themeName?: string;
+    words?: string[];
   };
 }
 
@@ -98,6 +105,8 @@ export interface ThemesData {
 
 export interface UseDailyThemeResult {
   theme: DailyTheme | null;
+  practiceTheme: DailyTheme;
   isLoading: boolean;
   error: string | null;
+  retry: () => void;
 }

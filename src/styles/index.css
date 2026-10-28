@@ -592,6 +592,16 @@ a.icon-btn {
     color: var(--magenta);
 }
 
+.theme-recovery-actions {
+    grid-template-columns: 1fr;
+    margin-top: var(--spacing-sm);
+}
+
+.already-played .theme-error {
+    box-sizing: border-box;
+    width: 100%;
+}
+
 /* Sponsor chip - appears when a daily theme has a sponsor attached */
 .sponsor-chip {
     display: inline-flex;
