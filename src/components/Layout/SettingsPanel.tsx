@@ -34,16 +34,16 @@ export function SettingsPanel({
       <div className="settings-status">
         {isTimerVisible && (
           <div className={timerClass}>
-            <span className="status-icon">{String.fromCodePoint(0x23F1)}</span>
+            <span className="status-icon" aria-hidden="true">{String.fromCodePoint(0x23F1)}</span>
             <span className="status-value">{timeRemaining}s</span>
           </div>
         )}
-        <div className="status-item status-item--streak">
-          <span className="status-icon">{String.fromCodePoint(0x1F525)}</span>
+        <div className="status-item status-item--streak" aria-label={`Streak: ${streak}`}>
+          <span className="status-icon" aria-hidden="true">{String.fromCodePoint(0x1F525)}</span>
           <span className="status-value">{streak}</span>
         </div>
-        <div className="status-item status-item--highscore">
-          <span className="status-icon">{String.fromCodePoint(0x1F3C6)}</span>
+        <div className="status-item status-item--highscore" aria-label={`High score: ${highScore}`}>
+          <span className="status-icon" aria-hidden="true">{String.fromCodePoint(0x1F3C6)}</span>
           <span className="status-value">{highScore}</span>
         </div>
       </div>

@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { ModalShell } from './ModalShell';
 import { CyberButton } from '../Buttons/CyberButton';
 
 type RequestType = 'theme' | 'bug' | 'feedback';
@@ -12,8 +13,6 @@ interface ContactModalProps {
 const FORMSPREE_ENDPOINT = 'https://formspree.io/f/mpqjolvw';
 
 export function ContactModal({ isOpen, onClose }: ContactModalProps) {
-  const [isVisible, setIsVisible] = useState(false);
-  const [isHiding, setIsHiding] = useState(false);
   const [requestType, setRequestType] = useState<RequestType>('theme');
   const [email, setEmail] = useState('');
   const [themeName, setThemeName] = useState('');
@@ -21,20 +20,6 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
   const [preferredDate, setPreferredDate] = useState('');
   const [message, setMessage] = useState('');
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
-
-  useEffect(() => {
-    if (isOpen) {
-      setIsVisible(true);
-      setIsHiding(false);
-    } else if (isVisible) {
-      setIsHiding(true);
-      const timeout = setTimeout(() => {
-        setIsVisible(false);
-        setIsHiding(false);
-      }, 250);
-      return () => clearTimeout(timeout);
-    }
-  }, [isOpen, isVisible]);
 
   const resetForm = () => {
     setRequestType('theme');
@@ -46,14 +31,32 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
     setStatus('idle');
   };
 
-  const handleClose = () => {
-    onClose();
-    setTimeout(resetForm, 300);
-  };
+  const requestVersion = useRef(0);
+  const [validation, setValidation] = useState('');
+  const [invalidFields, setInvalidFields] = useState<string[]>([]);
+  useEffect(() => {
+    if (isOpen) { resetForm(); setValidation(''); setInvalidFields([]); }
+    return () => { requestVersion.current++; };
+  }, [isOpen]);
+  const handleClose = onClose;
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (status === 'sending') return;
+    const form = e.currentTarget;
+    if (!form.checkValidity() || (requestType === 'theme' ? !themeName.trim() : !message.trim())) {
+      setValidation('Complete the required fields and enter a valid email, or leave email blank.');
+      const fields = Array.from(form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input:invalid, textarea:invalid')).map(field => field.id);
+      const requiredText = requestType === 'theme' ? 'theme-name' : 'contact-message';
+      if (!(requestType === 'theme' ? themeName : message).trim() && !fields.includes(requiredText)) fields.push(requiredText);
+      setInvalidFields(fields);
+      const invalid = document.getElementById(fields[0]);
+      invalid?.focus();
+      return;
+    }
+    setValidation('');
     setStatus('sending');
+    const version = ++requestVersion.current;
 
     const payload = {
       _subject: `DSCRMBL — ${requestType.toUpperCase()} from ${email || 'anonymous'}`,
@@ -74,19 +77,17 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
         body: JSON.stringify(payload),
       });
 
+      if (version !== requestVersion.current) return;
       if (response.ok) {
         setStatus('success');
       } else {
         setStatus('error');
       }
     } catch {
-      setStatus('error');
+      if (version === requestVersion.current) setStatus('error');
     }
   };
 
-  if (!isVisible) return null;
-
-  const overlayClass = `modal-overlay ${isHiding ? 'hide-modal' : 'show-modal'}`;
   const today = new Date().toISOString().split('T')[0];
 
   const typeLabels: Record<RequestType, string> = {
@@ -96,11 +97,10 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
   };
 
   return (
-    <div className={overlayClass}>
-      <div className="modal-container">
+    <ModalShell id="contact-modal" isOpen={isOpen} onClose={handleClose} labelledBy="contact-title">
         <div className="modal-header">
           <div>
-            <h2 className="modal-title">// CONTACT</h2>
+            <h2 id="contact-title" className="modal-title">// CONTACT</h2>
             <div className="modal-decoration"></div>
           </div>
           <button className="modal-close-btn" onClick={handleClose} aria-label="Close contact form">
@@ -110,7 +110,7 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
 
         <div className="modal-content">
           {status === 'success' ? (
-            <div className="contact-success">
+            <div className="contact-success" role="status" tabIndex={-1} ref={element => { if (element) element.focus(); }}>
               <div className="contact-success-icon">{String.fromCodePoint(0x2713)}</div>
               <p className="contact-success-title">MESSAGE SENT!</p>
               <p className="contact-success-sub">
@@ -122,17 +122,18 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
               </CyberButton>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="contact-form" noValidate>
+            <form onSubmit={handleSubmit} className="contact-form" noValidate aria-describedby="contact-feedback">
               {/* Request type selector */}
               <div className="contact-field">
-                <label className="contact-label">REQUEST TYPE</label>
-                <div className="contact-type-grid">
+                <span id="request-type-label" className="contact-label">REQUEST TYPE</span>
+                <div className="contact-type-grid" role="group" aria-labelledby="request-type-label">
                   {(['theme', 'bug', 'feedback'] as RequestType[]).map((type) => (
                     <button
                       key={type}
+                      aria-pressed={requestType === type}
                       type="button"
                       className={`contact-type-btn${requestType === type ? ' contact-type-btn--active' : ''}`}
-                      onClick={() => setRequestType(type)}
+                      onClick={() => { setRequestType(type); setValidation(''); }}
                     >
                       {typeLabels[type]}
                     </button>
@@ -148,6 +149,7 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                       THEME NAME <span className="contact-required">*</span>
                     </label>
                     <input
+                      aria-invalid={!!validation && invalidFields.includes('theme-name')} aria-describedby={validation ? "contact-feedback" : undefined}
                       id="theme-name"
                       type="text"
                       className="contact-input"
@@ -182,6 +184,7 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                       PREFERRED DATE <span className="contact-hint">(optional)</span>
                     </label>
                     <input
+                      aria-invalid={!!validation && invalidFields.includes('preferred-date')} aria-describedby={validation ? "contact-feedback" : undefined}
                       id="preferred-date"
                       type="date"
                       className="contact-input contact-input--date"
@@ -214,6 +217,7 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                 </label>
                 <div className="contact-textarea-wrap">
                   <textarea
+                    aria-invalid={!!validation && invalidFields.includes('contact-message')} aria-describedby={validation ? "contact-feedback" : undefined}
                     id="contact-message"
                     className="contact-textarea"
                     placeholder={
@@ -239,6 +243,7 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                   YOUR EMAIL <span className="contact-hint">(optional — for replies)</span>
                 </label>
                 <input
+                  aria-invalid={!!validation && invalidFields.includes('contact-email')} aria-describedby={validation ? "contact-feedback" : undefined}
                   id="contact-email"
                   type="email"
                   className="contact-input"
@@ -249,11 +254,9 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                 />
               </div>
 
-              {status === 'error' && (
-                <p className="contact-error">
-                  {String.fromCodePoint(0x26a0)} Failed to send. Please try again.
-                </p>
-              )}
+              <p id="contact-feedback" className="contact-error" role="status" aria-live="polite" aria-atomic="true">
+                {validation || (status === 'sending' ? 'Sending message…' : status === 'error' ? 'Failed to send. Please try again.' : '')}
+              </p>
 
               <CyberButton
                 type="submit"
@@ -266,7 +269,6 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
             </form>
           )}
         </div>
-      </div>
-    </div>
+    </ModalShell>
   );
 }

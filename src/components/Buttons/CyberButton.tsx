@@ -25,7 +25,7 @@ export function CyberButton({
       <span className="btn-glitch" data-text={text}>
         {children}
       </span>
-      {tag && <span className="btn-tag">{tag}</span>}
+      {tag && <span className="btn-tag" aria-hidden="true">{tag}</span>}
     </button>
   );
 }

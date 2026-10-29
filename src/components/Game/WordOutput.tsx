@@ -72,7 +72,7 @@ export function WordOutput({ word, isRevealed, showLetters, animationTrigger, on
           if (completedAnimations.size === newLetters.length && !animationCompleteRef.current) {
             animationCompleteRef.current = true;
             // Wait for the last animation to complete (300ms) before callback
-            setTimeout(() => onAnimationComplete?.(), 400);
+            timeoutsRef.current.push(window.setTimeout(() => onAnimationComplete?.(), 400));
           }
         }, randomTimeout());
         timeoutsRef.current.push(timeout);
@@ -91,7 +91,7 @@ export function WordOutput({ word, isRevealed, showLetters, animationTrigger, on
       <div className="game-display">
         <div className="display-screen">
           <div className="screen-border"></div>
-          <div id="typewritter-output" className="word-output fade-in-result">
+          <div id="typewritter-output" className="word-output fade-in-result" tabIndex={-1}>
             {word}
           </div>
           <div id="letter-count" className="letter-hint">({word.length} letters)</div>
@@ -113,7 +113,7 @@ export function WordOutput({ word, isRevealed, showLetters, animationTrigger, on
           </div>
         ) : (
           <>
-            <div id="typewritter-output" className="word-output">
+            <div id="typewritter-output" className="word-output" aria-hidden="true">
               {letters.map((letter, index) => (
                 <span
                   key={`${letter.animationKey}-${index}`}

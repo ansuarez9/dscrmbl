@@ -1,4 +1,6 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
+import { ModalShell } from './ModalShell';
+import { useReducedMotion } from '../../hooks/useReducedMotion';
 import { getThemeExplanation } from '../../utils/themeExplanation';
 import { CyberButton } from '../Buttons/CyberButton';
 import { generateShareText, copyToClipboard, canUseWebShare, shareViaWeb } from '../../utils/share';
@@ -44,8 +46,7 @@ export function FinalScoreModal({
   animateCelebration = false
 }: FinalScoreModalProps) {
   const { playTickSound } = useAudioContext();
-  const [isVisible, setIsVisible] = useState(false);
-  const [isHiding, setIsHiding] = useState(false);
+  const reducedMotion = useReducedMotion();
   const [showPercentile, setShowPercentile] = useState(false);
   const [shareText, setShareText] = useState('SHARE RESULTS');
   const [includeLink, setIncludeLink] = useState(true);
@@ -54,34 +55,20 @@ export function FinalScoreModal({
   const rollUpRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const tickCountRef = useRef(0);
   const explanationRef = useRef<HTMLDetailsElement>(null);
-  const dialogRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
-    if (!isOpen || !isVisible) return;
-    if (explanationRef.current) explanationRef.current.open = false;
-    const previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    const dialog = dialogRef.current;
-    dialog?.focus({ preventScroll: true });
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      if (previousFocus?.isConnected) previousFocus.focus({ preventScroll: true });
-    };
-  }, [isOpen, isVisible]);
+    if (isOpen && explanationRef.current) explanationRef.current.open = false;
+  }, [isOpen]);
 
   const completedExplanation = isOpen && wordResults.length === 5 && wordResults.every(result => typeof result?.solved === 'boolean')
     ? getThemeExplanation(explanation, words) : undefined;
 
   useEffect(() => {
     if (isOpen) {
-      setIsVisible(true);
-      setIsHiding(false);
-      setShowPercentile(false);
+      setShowPercentile(reducedMotion);
       setRollUpComplete(false);
       tickCountRef.current = 0;
 
-      if (animateCelebration && isNewHighScore && score > 0) {
+      if (!reducedMotion && animateCelebration && isNewHighScore && score > 0) {
         // Start score roll-up
         setDisplayScore(0);
         const totalSteps = 60;
@@ -120,16 +107,8 @@ export function FinalScoreModal({
         clearTimeout(timeout);
         if (rollUpRef.current) clearInterval(rollUpRef.current);
       };
-    } else if (isVisible) {
-      setIsHiding(true);
-      if (rollUpRef.current) clearInterval(rollUpRef.current);
-      const timeout = setTimeout(() => {
-        setIsVisible(false);
-        setIsHiding(false);
-      }, 250);
-      return () => clearTimeout(timeout);
     }
-  }, [isOpen, isVisible, isNewHighScore, animateCelebration, score, playTickSound]);
+  }, [isOpen, isNewHighScore, animateCelebration, score, playTickSound, reducedMotion]);
 
   const handleShare = useCallback(async () => {
     const highScore = isDailyChallenge ? stats?.highScore ?? score : undefined;
@@ -152,28 +131,12 @@ export function FinalScoreModal({
     }
   }, [score, wordResults, streakBonus, themeName, dailyNumber, isDailyChallenge, includeLink, stats, isNewHighScore]);
 
-  if (!isVisible) return null;
-
-  const overlayClass = `modal-overlay ${isHiding ? 'hide-modal' : 'show-modal'}`;
   const percentilePosition = showPercentile ? `${percentile.percentile}%` : '0%';
   const modalContainerClass = `modal-container modal-container--score${isNewHighScore ? ' modal-container--highscore' : ''}`;
 
   return (
-    <div id="final-score-modal" className={overlayClass} onClick={onClose}>
-      <div className={modalContainerClass} ref={dialogRef} role="dialog" aria-modal="true"
-        aria-labelledby="modal-title" tabIndex={-1} onClick={(e) => e.stopPropagation()}
-        onKeyDown={(event) => {
-          if (event.key === 'Escape') { event.stopPropagation(); onClose(); }
-          if (event.key !== 'Tab') return;
-          const controls = Array.from(event.currentTarget.querySelectorAll<HTMLElement>('button, input, summary'));
-          const first = controls[0];
-          const last = controls[controls.length - 1];
-          if (event.shiftKey && (document.activeElement === first || document.activeElement === event.currentTarget)) {
-            event.preventDefault(); last?.focus();
-          } else if (!event.shiftKey && document.activeElement === last) {
-            event.preventDefault(); first?.focus();
-          }
-        }}>
+    <ModalShell id="final-score-modal" isOpen={isOpen} onClose={onClose} labelledBy="modal-title" describedBy="score-summary"
+      className={modalContainerClass.replace('modal-container ', '')} dismissOnBackdrop>
         <button type="button" className="results-close" onClick={onClose}>Close results</button>
         <div className="score-display">
           <div className="score-label" id="modal-title">{isDailyChallenge ? `DAILY #${dailyNumber}` : 'PRACTICE ROUND'}</div>
@@ -183,9 +146,10 @@ export function FinalScoreModal({
             <div className="high-score-banner">NEW HIGH SCORE!</div>
           )}
 
-          <div className={`score-value${isNewHighScore && rollUpComplete ? ' score-glow-pulse' : ''}`} id="score">
+          <div className={`score-value${isNewHighScore && rollUpComplete ? ' score-glow-pulse' : ''}`} id="score" aria-hidden="true">
             {displayScore}
           </div>
+          <span id="score-summary" className="sr-only">Final score: {score}</span>
         </div>
 
         {isDailyChallenge && <div className="stats-grid">
@@ -216,13 +180,13 @@ export function FinalScoreModal({
                 if (result) {
                   if (result.solved && !result.usedReplay && result.attempts === 1) {
                     statusClass = 'word-result-row--green';
-                    statusChar = String.fromCodePoint(0x2713);
+                    statusChar = '✓ Clean';
                   } else if (result.solved) {
                     statusClass = 'word-result-row--yellow';
-                    statusChar = String.fromCodePoint(0x2713);
+                    statusChar = '✓ Assisted';
                   } else {
                     statusClass = 'word-result-row--red';
-                    statusChar = String.fromCodePoint(0x2717);
+                    statusChar = '✗ Missed';
                   }
                 }
 
@@ -275,6 +239,7 @@ export function FinalScoreModal({
           </label>
         </div>
 
+        <p className="sr-only" role="status">{shareText === 'SHARE RESULTS' ? '' : shareText}</p>
         <CyberButton
           id="share-btn"
           variant="share"
@@ -310,7 +275,6 @@ export function FinalScoreModal({
           Enjoying DSCRMBL? <span className="tip-jar-link-cta">Buy us a coffee {String.fromCodePoint(0x2615)}</span>
         </a>
         */}
-      </div>
-    </div>
+    </ModalShell>
   );
 }

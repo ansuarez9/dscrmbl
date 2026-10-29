@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { useReducedMotion } from '../../hooks/useReducedMotion';
 
 interface Particle {
   x: number;
@@ -18,13 +19,13 @@ const GRAVITY = 0.25;
 const ALPHA_DECAY = 0.008;
 
 export function HighScoreCelebration() {
+  const reducedMotion = useReducedMotion();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationRef = useRef<number>(0);
 
   useEffect(() => {
     // Respect prefers-reduced-motion
-    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    if (motionQuery.matches) return;
+    if (reducedMotion) return;
 
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -102,12 +103,13 @@ export function HighScoreCelebration() {
 
     return () => {
       cancelAnimationFrame(animationRef.current);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
       window.removeEventListener('resize', resize);
     };
-  }, []);
+  }, [reducedMotion]);
 
   return (
-    <canvas
+    <canvas aria-hidden="true"
       ref={canvasRef}
       style={{
         position: 'fixed',
