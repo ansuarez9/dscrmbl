@@ -22,10 +22,14 @@ export function WordSlot({ index, score, status, usedReplay, attempts }: WordSlo
     displayText = score !== null ? String(score) : 'Word';
   }
 
+  const outcome = status === 'solved' ? (!usedReplay && (!attempts || attempts === 1) ? 'Clean solve' : 'Assisted solve') :
+    status === 'failed' ? 'Not solved' : status === 'active' ? 'Current word' : 'Pending';
+  const symbol = status === 'solved' ? (outcome === 'Clean solve' ? '✓' : '≈') : status === 'failed' ? '✗' : status === 'active' ? '▶' : '·';
+
   return (
-    <div className="word-slot">
+    <div className="word-slot" aria-label={`Word ${index + 1}: ${outcome}${score !== null ? `, ${score} points` : ''}`}>
       <span className="slot-number">{String(index + 1).padStart(2, '0')}</span>
-      <span className={wordClass}>{displayText}</span>
+      <span className={wordClass} aria-hidden="true"><span>{symbol}</span>{displayText}</span>
     </div>
   );
 }

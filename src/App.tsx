@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { ThemeProvider } from './context/ThemeContext';
 import { AudioProvider, useAudioContext } from './context/AudioContext';
 import { GameProvider, useGameContext } from './context/GameContext';
@@ -19,6 +19,7 @@ import { ContactModal } from './components/Modals/ContactModal';
 import { HighScoreCelebration } from './components/Effects/HighScoreCelebration';
 import { useDailyChallenge } from './hooks/useDailyChallenge';
 import { useDailyTheme } from './hooks/useDailyTheme';
+import { useReducedMotion } from './hooks/useReducedMotion';
 import { useTimer } from './hooks/useTimer';
 import { useLocalDay } from './hooks/useLocalDay';
 import { storedDateKey } from './utils/localDate';
@@ -65,6 +66,55 @@ function GameContent() {
   const [gameCompleteHandled, setGameCompleteHandled] = useState(false);
   const [startCountdown, setStartCountdown] = useState<'ready' | 'set' | 'go' | null>(null);
   const [wordValidationError, setWordValidationError] = useState<string | null>(null);
+  const reducedMotion = useReducedMotion();
+  const gameplayRef = useRef<HTMLElement>(null);
+  const scrollRequested = useRef(false);
+  const timedOut = useRef(false);
+  const [announcement, setAnnouncement] = useState('');
+  const lastOutcome = useRef('');
+
+  useEffect(() => {
+    setWordValidationError(null);
+  }, [state.wordIndex, state.phase]);
+
+  useEffect(() => {
+    if (state.phase === 'revealing') {
+      const result = state.wordResults[state.wordIndex];
+      const key = `${state.wordIndex}:${state.phase}`;
+      if (lastOutcome.current !== key && result) {
+        setAnnouncement(`${timedOut.current ? 'Time expired. ' : ''}${result.solved ? 'Correct!' : 'Word not solved.'} The word was ${state.currentWord}.`);
+        lastOutcome.current = key;
+      }
+    } else if (state.phase === 'playing') {
+      const key = `${state.wordIndex}:${state.attempts}`;
+      if (lastOutcome.current !== key) {
+        setAnnouncement(state.attempts > 1 ? `Incorrect guess. ${4 - state.attempts} attempts remaining.` : `Word ${state.wordIndex + 1} of 5. ${state.currentWord.length} letters.`);
+        lastOutcome.current = key;
+        timedOut.current = false;
+      }
+    } else if (state.phase === 'idle') {
+      lastOutcome.current = '';
+      setAnnouncement('');
+    }
+  }, [state.phase, state.wordIndex, state.attempts, state.wordResults, state.currentWord]);
+
+  useEffect(() => {
+    if (!scrollRequested.current || state.phase !== 'playing') return;
+    scrollRequested.current = false;
+    const section = gameplayRef.current;
+    const bounds = section?.getBoundingClientRect();
+    const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
+    if (bounds && (bounds.top < 0 || bounds.bottom > viewportHeight)) {
+      section?.scrollIntoView?.({ block: 'nearest', behavior: 'instant' });
+    }
+  }, [state.phase, state.wordIndex]);
+
+  useEffect(() => {
+    if (state.phase !== 'revealing' || document.querySelector('[role="dialog"]')) return;
+    const next = document.querySelector<HTMLElement>('#start-game:not(:disabled)');
+    const answer = document.querySelector<HTMLElement>('.word-output');
+    (next ?? answer)?.focus({ preventScroll: true });
+  }, [state.phase]);
 
   // Auto-show instructions for new players
   useEffect(() => {
@@ -77,6 +127,7 @@ function GameContent() {
 
   // Stable callbacks for timer
   const handleTimerExpire = useCallback((deadline: number) => {
+    timedOut.current = true;
     timerExpired(deadline);
     playWrongSound();
   }, [timerExpired, playWrongSound]);
@@ -155,14 +206,6 @@ function GameContent() {
 
       if (newHigh) {
         playHighScoreJingle();
-        // CRT glitch fires before modal opens
-        const root = document.getElementById('root');
-        if (root) {
-          setTimeout(() => {
-            root.classList.add('crt-glitch');
-            setTimeout(() => root.classList.remove('crt-glitch'), 300);
-          }, 1100);
-        }
       } else {
         playVictorySound();
       }
@@ -178,19 +221,24 @@ function GameContent() {
     }
   }, [state.phase, state.isDailyChallenge, gameCompleteHandled, state.score, state.streak, state.wordResults, state.streakBonus, state.wordScores, state.roundTheme, state.roundDate, today, recordDailyCompletion, playVictorySound, playHighScoreJingle]);
 
+  useEffect(() => {
+    if (reducedMotion || state.phase !== 'complete' || !modalResult?.isNewHighScore || !modalResult.animateCelebration) return;
+    const root = document.getElementById('root');
+    const begin = window.setTimeout(() => root?.classList.add('crt-glitch'), 1100);
+    const end = window.setTimeout(() => root?.classList.remove('crt-glitch'), 1400);
+    return () => { clearTimeout(begin); clearTimeout(end); root?.classList.remove('crt-glitch'); };
+  }, [state.phase, modalResult, reducedMotion]);
+
+  useEffect(() => {
+    if (showFinalScore) { setShowInstructions(false); setShowContact(false); }
+  }, [showFinalScore]);
+
   // Reset gameCompleteHandled when game restarts
   useEffect(() => {
     if (state.phase === 'idle') {
       setGameCompleteHandled(false);
     }
   }, [state.phase]);
-
-  // Scroll to top after every guess
-  useEffect(() => {
-    if (state.phase === 'revealing' || (state.phase === 'playing' && state.attempts > 1)) {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  }, [state.phase, state.attempts]);
 
   // Countdown sequence when game starts
   useEffect(() => {
@@ -214,26 +262,30 @@ function GameContent() {
 
   const handleStartGame = useCallback(() => {
     if (!canPlayToday || !theme) return;
+    scrollRequested.current = true;
     startGame(theme, true, getCurrentStreak, today);
   }, [canPlayToday, theme, startGame, getCurrentStreak, today]);
 
   const handleStartPractice = useCallback(() => {
     if (isThemeLoading || !themeError || state.phase !== 'idle') return;
+    scrollRequested.current = true;
     startGame(practiceTheme, false, 0, null);
   }, [isThemeLoading, themeError, state.phase, practiceTheme, startGame]);
 
   const handleNextWord = useCallback(() => {
+    scrollRequested.current = true;
     nextWord();
   }, [nextWord]);
 
   const handleSubmit = useCallback((guess: string) => {
     const submittedAt = Date.now();
     if (state.timerModeEnabled) {
-      if (state.wordDeadline === null) return;
+      if (state.wordDeadline === null) return false;
       if (submittedAt >= state.wordDeadline) {
+        timedOut.current = true;
         timerExpired(state.wordDeadline);
         playWrongSound();
-        return;
+        return false;
       }
     }
     const isCorrectAnswer = guess.toUpperCase() === state.currentWord;
@@ -241,9 +293,10 @@ function GameContent() {
     if (!isCorrectAnswer && isDictionaryLoaded() && !isValidWord(guess)) {
       setWordValidationError('Not a valid word');
       playWrongSound();
-      return;
+      return false;
     }
 
+    setWordValidationError(null);
     submitGuess(guess, submittedAt);
 
     if (isCorrectAnswer) {
@@ -251,6 +304,7 @@ function GameContent() {
     } else {
       playWrongSound();
     }
+    return true;
   }, [state.currentWord, state.timerModeEnabled, state.wordDeadline, submitGuess, timerExpired, playCorrectSound, playWrongSound]);
 
   const handleReplay = useCallback(() => {
@@ -280,6 +334,8 @@ function GameContent() {
   const isPlaying = state.phase === 'playing';
   const isRevealing = state.phase === 'revealing';
   const isComplete = state.phase === 'complete';
+  const showVisibleFeedback = (isPlaying && state.attempts > 1) ||
+    ((isRevealing || isComplete) && state.wordResults[state.wordIndex]?.solved === false);
   const isFinalWordRevealing = isRevealing && state.wordIndex === 4 && state.playableWords.length === 0;
   const canStart = (state.phase === 'idle' && canPlayToday && !isThemeLoading && !!theme) || (isRevealing && !isFinalWordRevealing);
   const activeTheme = state.phase === 'idle' ? theme : state.roundTheme ?? theme;
@@ -374,8 +430,8 @@ function GameContent() {
           cumulativeScores={todayResults?.wordScores ?? []}
         />
 
-        <InstructionsModal isOpen={showInstructions} onClose={() => setShowInstructions(false)} />
-        <ContactModal isOpen={showContact} onClose={() => setShowContact(false)} />
+        {!showFinalScore && <InstructionsModal isOpen={showInstructions} onClose={() => setShowInstructions(false)} />}
+        {!showFinalScore && <ContactModal isOpen={showContact} onClose={() => setShowContact(false)} />}
         {/* Monetization disabled — re-enable when ready
         <MerchModal isOpen={showMerch} onClose={() => setShowMerch(false)} />
         */}
@@ -455,6 +511,8 @@ function GameContent() {
       {/* Theme Loading State */}
       {recoveryControls}
 
+      <section ref={gameplayRef} className={`gameplay ${state.phase !== 'idle' ? 'gameplay--active' : ''}`} aria-label="Game">
+      <p className={`game-feedback${showVisibleFeedback ? '' : ' sr-only'}`} role="status" aria-live="polite" aria-atomic="true">{announcement}</p>
       {/* Status Bar - only show during gameplay */}
       {state.phase !== 'idle' && (
         <StatusBar
@@ -498,6 +556,7 @@ function GameContent() {
             variant="secondary"
             disabled={!isPlaying || (state.timerModeEnabled && state.wordDeadline === null) || state.replayCount >= (state.hardModeEnabled ? 3 : 5)}
             onClick={handleReplay}
+            onPointerDown={event => { if (document.activeElement?.id === 'user-input') event.preventDefault(); }}
           >
             REPLAY ({(state.hardModeEnabled ? 3 : 5) - state.replayCount})
           </CyberButton>
@@ -510,7 +569,11 @@ function GameContent() {
         disabled={!isPlaying || (state.timerModeEnabled && state.wordDeadline === null)}
         errorMessage={wordValidationError}
         onErrorClear={() => setWordValidationError(null)}
+        wordIndex={state.wordIndex}
+        modalOpen={showInstructions || showContact || showFinalScore}
       />
+
+      </section>
 
       {/* Progress Track */}
       <ProgressTrack
@@ -520,15 +583,15 @@ function GameContent() {
       />
 
       {/* Modals */}
-      <InstructionsModal isOpen={showInstructions} onClose={() => setShowInstructions(false)} />
-      <ContactModal isOpen={showContact} onClose={() => setShowContact(false)} />
+      {!showFinalScore && <InstructionsModal isOpen={showInstructions} onClose={() => setShowInstructions(false)} />}
+      {!showFinalScore && <ContactModal isOpen={showContact} onClose={() => setShowContact(false)} />}
       {/* Monetization disabled — re-enable when ready
       <MerchModal isOpen={showMerch} onClose={() => setShowMerch(false)} />
       */}
 
       {resultModal}
 
-      {showFinalScore && modalResult?.isNewHighScore && modalResult.animateCelebration && <HighScoreCelebration />}
+      {!reducedMotion && showFinalScore && modalResult?.isNewHighScore && modalResult.animateCelebration && <HighScoreCelebration />}
     </GameContainer>
   );
 }

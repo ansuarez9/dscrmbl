@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { ModalShell } from './ModalShell';
 
 interface InstructionsModalProps {
   isOpen: boolean;
@@ -6,33 +6,11 @@ interface InstructionsModalProps {
 }
 
 export function InstructionsModal({ isOpen, onClose }: InstructionsModalProps) {
-  const [isVisible, setIsVisible] = useState(false);
-  const [isHiding, setIsHiding] = useState(false);
-
-  useEffect(() => {
-    if (isOpen) {
-      setIsVisible(true);
-      setIsHiding(false);
-    } else if (isVisible) {
-      setIsHiding(true);
-      const timeout = setTimeout(() => {
-        setIsVisible(false);
-        setIsHiding(false);
-      }, 250);
-      return () => clearTimeout(timeout);
-    }
-  }, [isOpen, isVisible]);
-
-  if (!isVisible) return null;
-
-  const overlayClass = `modal-overlay ${isHiding ? 'hide-modal' : 'show-modal'}`;
-
   return (
-    <div id="instruction-modal" className={overlayClass} onClick={onClose}>
-      <div className="modal-container" onClick={(e) => e.stopPropagation()}>
+    <ModalShell id="instruction-modal" isOpen={isOpen} onClose={onClose} labelledBy="instructions-title" dismissOnBackdrop>
         <div className="modal-header">
           <div>
-            <h2 className="modal-title">// HOW TO PLAY</h2>
+            <h2 id="instructions-title" className="modal-title">// HOW TO PLAY</h2>
             <div className="modal-decoration"></div>
           </div>
           <button className="modal-close-btn" onClick={onClose} aria-label="Close instructions">✕</button>
@@ -85,9 +63,9 @@ export function InstructionsModal({ isOpen, onClose }: InstructionsModalProps) {
           <section className="instruction-section">
             <h3>PROGRESS INDICATORS</h3>
             <ul>
-              <li><span className="text-success">GREEN</span> square - Solved on first attempt with no replay used</li>
-              <li><span style={{color: 'var(--amber)'}}>YELLOW</span> square - Solved but used a replay or needed more than one attempt</li>
-              <li><span className="text-danger">RED</span> square - Not solved</li>
+              <li><span className="text-success">GREEN</span> ✓ square - Solved on first attempt with no replay used</li>
+              <li><span style={{color: 'var(--amber)'}}>YELLOW</span> ≈ square - Solved but used a replay or needed more than one attempt</li>
+              <li><span className="text-danger">RED</span> ✗ square - Not solved</li>
             </ul>
           </section>
 
@@ -122,9 +100,9 @@ export function InstructionsModal({ isOpen, onClose }: InstructionsModalProps) {
               <li>"BEST EVER" ranking badge</li>
               <li>Trophy icon in share text</li>
             </ul>
+            <p>Decorative animations respect your device’s reduced-motion setting. Letter flashes keep their original timing.</p>
           </section>
         </div>
-      </div>
-    </div>
+    </ModalShell>
   );
 }
