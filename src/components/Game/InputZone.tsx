@@ -1,100 +1,66 @@
-import { useState, useRef, useEffect, type FormEvent, type KeyboardEvent } from 'react';
+import { useState, useRef, useEffect, type FormEvent } from 'react';
 
 interface InputZoneProps {
-  onSubmit: (guess: string) => void;
+  onSubmit: (guess: string) => boolean | void;
   disabled: boolean;
   buttonText?: string;
   errorMessage?: string | null;
   onErrorClear?: () => void;
+  wordIndex?: number;
+  modalOpen?: boolean;
 }
 
-export function InputZone({ onSubmit, disabled, buttonText = 'SUBMIT', errorMessage, onErrorClear }: InputZoneProps) {
+export function InputZone({ onSubmit, disabled, buttonText = 'SUBMIT', errorMessage, onErrorClear, wordIndex, modalOpen = false }: InputZoneProps) {
   const [value, setValue] = useState('');
-  const [showError, setShowError] = useState(false);
-  const [showShake, setShowShake] = useState(false);
-  const [showFloatingMessage, setShowFloatingMessage] = useState(false);
+  const [emptyError, setEmptyError] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
-  const wrapperRef = useRef<HTMLDivElement>(null);
+  const needsFocus = useRef(!disabled);
+  const previousDisabled = useRef(disabled);
+  const error = errorMessage || (emptyError ? 'Enter a guess first.' : '');
+
+  useEffect(() => { setValue(''); setEmptyError(false); }, [wordIndex]);
 
   useEffect(() => {
-    if (!disabled && inputRef.current) {
-      setTimeout(() => inputRef.current?.focus(), 100);
+    if (previousDisabled.current !== disabled) {
+      needsFocus.current = !disabled;
+      previousDisabled.current = disabled;
     }
-  }, [disabled]);
+    if (disabled || modalOpen) { needsFocus.current = false; return; }
+    if (!needsFocus.current) return;
+    const timer = window.setTimeout(() => {
+      needsFocus.current = false;
+      if (!document.querySelector('[role="dialog"]')) inputRef.current?.focus({ preventScroll: true });
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [disabled, modalOpen]);
 
-  useEffect(() => {
-    if (errorMessage) {
-      setShowShake(true);
-      setShowFloatingMessage(true);
-      const timeout = setTimeout(() => {
-        onErrorClear?.();
-        setShowShake(false);
-        setShowFloatingMessage(false);
-      }, 1500);
-      return () => clearTimeout(timeout);
-    }
-  }, [errorMessage, onErrorClear]);
-
-  const handleSubmit = (e?: FormEvent) => {
-    e?.preventDefault();
-
-    if (!value.trim()) {
-      setShowError(true);
-      setTimeout(() => setShowError(false), 2000);
-      return;
-    }
-
-    onSubmit(value.trim());
-    setValue('');
-
-    // Hide mobile keyboard after submission
-    inputRef.current?.blur();
-  };
-
-  const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      handleSubmit();
-    }
+  const handleSubmit = (event: FormEvent) => {
+    event.preventDefault();
+    if (disabled) return;
+    setEmptyError(false);
+    onErrorClear?.();
+    if (!value.trim()) { setEmptyError(true); return; }
+    if (onSubmit(value.trim()) !== false) setValue('');
   };
 
   return (
-    <div className="input-zone">
-      <div ref={wrapperRef} className={`input-wrapper ${showShake ? 'shake' : ''}`}>
-        {showFloatingMessage && errorMessage && (
-          <div className="floating-error-message">
-            {errorMessage}
-          </div>
-        )}
-        <span className="input-prefix">&gt;</span>
-        <input
-          ref={inputRef}
-          className="cyber-input"
-          id="user-input"
-          type="text"
-          placeholder="ENTER GUESS..."
-          autoComplete="off"
-          autoCorrect="off"
-          autoCapitalize="off"
-          spellCheck="false"
-          value={value}
-          onChange={(e) => setValue(e.target.value.toUpperCase())}
-          onKeyPress={handleKeyPress}
-          disabled={disabled}
-        />
-        <button
-          type="button"
-          id="submit-action"
-          className="submit-btn"
-          disabled={disabled}
-          onClick={() => handleSubmit()}
-        >
+    <form className="input-zone" onSubmit={handleSubmit} aria-label="Guess the word">
+      <label className="sr-only" htmlFor="user-input">Your guess</label>
+      <div className="input-wrapper">
+        <span className="input-prefix" aria-hidden="true">&gt;</span>
+        <input ref={inputRef} className="cyber-input" id="user-input" type="text"
+          placeholder="ENTER GUESS..." autoComplete="off" autoCorrect="off" autoCapitalize="characters"
+          spellCheck={false} enterKeyHint="go" value={value} disabled={disabled}
+          aria-describedby={`guess-instructions${error ? ' guess-error' : ''}`} aria-invalid={!!error}
+          onChange={event => { setValue(event.target.value.toUpperCase()); setEmptyError(false); onErrorClear?.(); }} />
+        <button type="submit" id="submit-action" className="submit-btn" disabled={disabled} aria-label={buttonText}
+          onPointerDown={event => { if (document.activeElement === inputRef.current) event.preventDefault(); }}>
           <span className="submit-text">{buttonText}</span>
-          <span className="submit-arrow">{String.fromCharCode(0x2192)}</span>
+          <span className="submit-arrow" aria-hidden="true">→</span>
         </button>
       </div>
-      <p className={`error-message ${showError || errorMessage ? 'fade-out' : ''}`}>
-        {errorMessage ?? <>Press <strong id="button-text">{buttonText}</strong> or enter a guess!</>}
-      </p>
-    </div>
+      <p id="guess-instructions" className="guess-instructions">Type a word, then press Enter or Submit.</p>
+      <p id="guess-error" className="guess-error" role="status" aria-live="polite" aria-atomic="true">{error}</p>
+    </form>
   );
 }

@@ -8,14 +8,14 @@ export function GameContainer({ children }: GameContainerProps) {
   return (
     <>
       {/* Scanline overlay */}
-      <div className="scanlines"></div>
+      <div className="scanlines" aria-hidden="true"></div>
 
       {/* Ambient glow */}
-      <div className="ambient-glow"></div>
+      <div className="ambient-glow" aria-hidden="true"></div>
 
-      <div className="game-container">
+      <main className="game-container">
         {children}
-      </div>
+      </main>
     </>
   );
 }

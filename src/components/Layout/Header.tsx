@@ -16,8 +16,8 @@ export function Header({ onInstructionsClick, onContactClick }: HeaderProps) {
     <>
       <header className="game-header">
         <div className="logo-container">
-          <img src={`${import.meta.env.BASE_URL}logo-d-only.png`} alt="D" className="logo-d" />
-          <h1 className="logo-text">SCRMBL</h1>
+          <img src={`${import.meta.env.BASE_URL}logo-d-only.png`} alt="" className="logo-d" />
+          <h1 className="logo-text" aria-label="DSCRMBL">SCRMBL</h1>
           <span className="version-tag">v2.0</span>
         </div>
         <div className="header-actions">
@@ -57,7 +57,8 @@ export function Header({ onInstructionsClick, onContactClick }: HeaderProps) {
             id="dark-mode-toggle"
             className="icon-btn"
             title="Toggle Theme"
-            aria-label="Toggle Theme"
+            aria-label="Light theme"
+            aria-pressed={lightMode}
             onClick={toggleTheme}
           >
             <span className="icon-glow"></span>
