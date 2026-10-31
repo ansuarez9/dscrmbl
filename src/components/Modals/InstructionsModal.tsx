@@ -1,11 +1,13 @@
+import type { ReactNode } from 'react';
 import { ModalShell } from './ModalShell';
 
 interface InstructionsModalProps {
   isOpen: boolean;
+  tutorialActions?: ReactNode;
   onClose: () => void;
 }
 
-export function InstructionsModal({ isOpen, onClose }: InstructionsModalProps) {
+export function InstructionsModal({ isOpen, onClose, tutorialActions }: InstructionsModalProps) {
   return (
     <ModalShell id="instruction-modal" isOpen={isOpen} onClose={onClose} labelledBy="instructions-title" dismissOnBackdrop>
         <div className="modal-header">
@@ -17,6 +19,7 @@ export function InstructionsModal({ isOpen, onClose }: InstructionsModalProps) {
         </div>
 
         <div className="modal-content">
+          {tutorialActions}
           <section className="instruction-section">
             <h3>OBJECTIVE</h3>
             <p>Guess all 5 words in today's themed challenge in 3 tries or less. Each day features a new theme with words that share a lateral thinking connection.</p>
