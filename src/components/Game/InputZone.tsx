@@ -8,9 +8,10 @@ interface InputZoneProps {
   onErrorClear?: () => void;
   wordIndex?: number;
   modalOpen?: boolean;
+  guidanceId?: string;
 }
 
-export function InputZone({ onSubmit, disabled, buttonText = 'SUBMIT', errorMessage, onErrorClear, wordIndex, modalOpen = false }: InputZoneProps) {
+export function InputZone({ onSubmit, disabled, buttonText = 'SUBMIT', errorMessage, onErrorClear, wordIndex, modalOpen = false, guidanceId }: InputZoneProps) {
   const [value, setValue] = useState('');
   const [emptyError, setEmptyError] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -51,7 +52,7 @@ export function InputZone({ onSubmit, disabled, buttonText = 'SUBMIT', errorMess
         <input ref={inputRef} className="cyber-input" id="user-input" type="text"
           placeholder="ENTER GUESS..." autoComplete="off" autoCorrect="off" autoCapitalize="characters"
           spellCheck={false} enterKeyHint="go" value={value} disabled={disabled}
-          aria-describedby={`guess-instructions${error ? ' guess-error' : ''}`} aria-invalid={!!error}
+          aria-describedby={`guess-instructions${guidanceId ? ` ${guidanceId}` : ''}${error ? ' guess-error' : ''}`} aria-invalid={!!error}
           onChange={event => { setValue(event.target.value.toUpperCase()); setEmptyError(false); onErrorClear?.(); }} />
         <button type="submit" id="submit-action" className="submit-btn" disabled={disabled} aria-label={buttonText}
           onPointerDown={event => { if (document.activeElement === inputRef.current) event.preventDefault(); }}>
