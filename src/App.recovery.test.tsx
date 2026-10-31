@@ -144,16 +144,13 @@ it('views a legacy completed result without changing its recorded statistics', a
   expect(entries.get('dscrmbl-daily')).toBe(JSON.stringify(completed));
 });
 
-it('records the same daily completion only once', () => {
+it('records the same daily completion only once', async () => {
   const { result } = renderHook(() => useDailyChallenge('2026-10-26'));
   const details = { wordResults: [], wordScores: [], streakBonus: 0, isNewHighScore: false };
-  const completions: Array<ReturnType<typeof result.current.recordDailyCompletion>> = [];
-  act(() => {
-    completions.push(result.current.recordDailyCompletion(100, 3, details, daily, '2026-10-26'));
-    completions.push(result.current.recordDailyCompletion(100, 3, details, daily, '2026-10-26'));
-  });
-  expect(completions[0]?.stats.gamesPlayed).toBe(2);
-  expect(completions[1]).toBeNull();
+  const input = { score: 100, finalStreak: 3, results: details, theme: daily, challengeDate: '2026-10-26', mode: 'normal' as const };
+  const completions = await act(async () => [await result.current.recordDailyCompletion(input), await result.current.recordDailyCompletion(input)]);
+  expect(completions[0].stats.gamesPlayed).toBe(2);
+  expect(completions[1].duplicate).toBe(true);
   expect(JSON.parse(entries.get('dscrmbl-daily')!).history).toEqual([87, 100]);
 });
 
@@ -425,3 +422,25 @@ it.each([undefined, { summary: 'Invalid optional content', wordNotes: { wrong: '
     expect(completion.gamesPlayed).toBe(2);
   }
 );
+
+it('recovers an unacknowledged completed daily once, retaining its original date and mode', async () => {
+  const completed: GameState = { phase: 'complete', currentWord: 'JELLY', playableWords: [], wordIndex: 4, attempts: 1,
+    attemptResults: ['correct', 'pending', 'pending'], wordResults: daily.wordList.map(() => ({ solved: true, attempts: 1, usedReplay: false })),
+    wordScores: [20, 20, 20, 20, 20], score: 100, streak: 5, streakBonus: 0, replayCount: 0, replayPenalty: 0, lastTimeBonus: 0,
+    wordDeadline: null, timerModeEnabled: true, hardModeEnabled: true, isDailyChallenge: true, roundTheme: daily,
+    roundDate: '2026-10-25', showLetters: false, animationTrigger: 1 };
+  entries.set('dscrmbl-daily', JSON.stringify({ ...stats, lastPlayed: '2026-10-24' }));
+  entries.set('dscrmbl-game-state', JSON.stringify({ state: completed, savedDate: '2026-10-25' }));
+  vi.stubGlobal('fetch', vi.fn().mockResolvedValue(response({ '2026-10-26': daily })));
+  const app = render(<App />); await flushFetch();
+  act(() => vi.advanceTimersByTime(1500));
+  const recorded = JSON.parse(entries.get('dscrmbl-daily')!);
+  expect(recorded.gamesPlayed).toBe(2);
+  expect(recorded.progress.records['2026-10-25'].mode).toBe('hard');
+  expect(recorded.progress.records['2026-10-26']).toBeUndefined();
+  expect(entries.has('dscrmbl-game-state')).toBe(false);
+  fireEvent.keyDown(screen.getByRole('dialog'), { key: 'Escape' });
+  expect(screen.getByRole('button', { name: /PLAY TODAY'S CHALLENGE/ })).toBeTruthy();
+  app.unmount(); render(<App />); await flushFetch();
+  expect(JSON.parse(entries.get('dscrmbl-daily')!).gamesPlayed).toBe(2);
+});

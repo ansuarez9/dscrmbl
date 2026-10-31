@@ -2994,3 +2994,19 @@ body.light-mode .attempt-orb .result { color: #fff; }
     .tutorial-label { max-width: 13rem; }
     .tutorial-toolbar > .cyber-btn { font-size: 0.75rem; }
 }
+
+/* Personal statistics reuse the existing cards, modal, and disclosure treatments. */
+.lifetime-summary h3, .your-progress h3 { font-size: 0.85rem; margin: 1rem 0 0.5rem; }
+.statistics-note { color: var(--text-secondary); font-size: 0.75rem; line-height: 1.5; margin: 0.5rem 0; }
+.lifetime-summary .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.your-progress { border-top: 1px solid var(--text-muted); margin-top: 1rem; padding-top: 0.5rem; font-size: 0.85rem; line-height: 1.5; overflow-wrap: anywhere; }
+.your-progress summary { cursor: pointer; min-height: 44px; display: list-item; align-content: center; }
+.mode-statistics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.mode-statistics dl { margin: 0; }
+.mode-statistics dl div { margin-block: 0.5rem; }
+.mode-statistics dt { color: var(--text-secondary); }
+.mode-statistics dd { margin: 0; }
+.recent-results { list-style: none; padding: 0; }
+.recent-results li { border-bottom: 1px solid var(--text-muted); padding-block: 0.75rem; }
+.instructions-bar { flex-wrap: wrap; gap: 0.5rem; }
+@media (max-width: 576px) { .mode-statistics { grid-template-columns: minmax(0, 1fr); } }

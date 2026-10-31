@@ -28,8 +28,17 @@ function loadSavedState(): GameState | null {
     if (!saved) return null;
 
     const parsed: SavedGameState = JSON.parse(saved);
+    if (parsed.state.phase === 'complete' && parsed.state.isDailyChallenge) {
+      try {
+        const daily = JSON.parse(localStorage.getItem('dscrmbl-daily') || 'null');
+        if (storedDateKey(daily?.lastPlayed) === parsed.state.roundDate || daily?.progress?.records?.[parsed.state.roundDate ?? '']) {
+          localStorage.removeItem(STORAGE_KEY);
+          return null;
+        }
+      } catch { /* Keep the pending completion if daily statistics cannot be read. */ }
+    }
     // Active rounds remain available after midnight, including across refresh.
-    if (parsed.state.phase !== 'idle' && parsed.state.phase !== 'complete') {
+    if (parsed.state.phase !== 'idle' && (parsed.state.phase !== 'complete' || parsed.state.isDailyChallenge === true)) {
       const savedState = parsed.state;
       const hasDeadline = typeof savedState.wordDeadline === 'number' && Number.isFinite(savedState.wordDeadline);
       // Older saves cannot tell us how long the word has been active. Give later words
@@ -54,15 +63,25 @@ function loadSavedState(): GameState | null {
     localStorage.removeItem(STORAGE_KEY);
     return null;
   } catch {
-    localStorage.removeItem(STORAGE_KEY);
+    try { localStorage.removeItem(STORAGE_KEY); } catch { /* Storage may be blocked. */ }
     return null;
   }
 }
 
 function saveState(state: GameState): void {
   try {
-    // Only save if game is in progress
-    if (state.phase === 'idle' || state.phase === 'complete') {
+    if (state.phase === 'complete' && state.isDailyChallenge) {
+      const daily = JSON.parse(localStorage.getItem('dscrmbl-daily') || 'null');
+      if (storedDateKey(daily?.lastPlayed) === state.roundDate || daily?.progress?.records?.[state.roundDate ?? '']) {
+        acknowledgeDailyCompletion(state.roundDate!);
+        return;
+      }
+    }
+    // Completed daily state stays recoverable until its statistics have been committed.
+    if (state.phase === 'idle' || (state.phase === 'complete' && !state.isDailyChallenge)) {
+      // Keep an unsaved daily completion even if its session results have been closed.
+      const pending = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null') as SavedGameState | null;
+      if (pending?.state.phase === 'complete' && pending.state.isDailyChallenge) return;
       localStorage.removeItem(STORAGE_KEY);
       return;
     }
@@ -75,6 +94,13 @@ function saveState(state: GameState): void {
   } catch {
     // Ignore storage errors
   }
+}
+
+export function acknowledgeDailyCompletion(challengeDate: string) {
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null') as SavedGameState | null;
+    if (saved?.state.phase === 'complete' && saved.state.roundDate === challengeDate) localStorage.removeItem(STORAGE_KEY);
+  } catch { /* A duplicate completion will be reconciled on the next restoration. */ }
 }
 
 export function useGameState() {

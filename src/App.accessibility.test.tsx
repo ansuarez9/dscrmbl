@@ -185,3 +185,94 @@ it.each(['idle', 'playing', 'validation', 'instructions', 'contact', 'results', 
     expect(report.violations.map(item => ({ id: item.id, nodes: item.nodes.map(node => node.target) }))).toEqual([]);
   }
 );
+
+it('opens spoiler-free Stats by keyboard, expands progress and restores focus without writes', async () => {
+  const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+  const setItem = vi.spyOn(localStorage, 'setItem');
+  render(<App />);
+  const before = localStorage.getItem('dscrmbl-daily');
+  const writes = setItem.mock.calls.filter(([key]) => key === 'dscrmbl-daily').length;
+  const opener = screen.getByRole('button', { name: 'STATS' });
+  opener.focus(); await user.keyboard('{Enter}');
+  const dialog = screen.getByRole('dialog', { name: 'Your Stats' });
+  expect(document.activeElement).toBe(dialog);
+  expect(document.getElementById('root')?.getAttribute('aria-hidden') ?? document.querySelector('main')?.parentElement?.getAttribute('aria-hidden')).toBe('true');
+  expect(document.querySelector('.your-progress')?.hasAttribute('open')).toBe(false);
+  const disclosure = screen.getByText('Your Progress');
+  disclosure.focus(); await user.click(disclosure); // jsdom does not implement native summary keyboard activation.
+  expect(document.querySelector('.your-progress')?.hasAttribute('open')).toBe(true);
+  expect(screen.getByText(/No daily progress tracked yet/)).toBeTruthy();
+  expect(dialog.textContent).not.toMatch(/apple|beach|cloud|dance|earth|SHARE|How the words connect|TEST/);
+  expect(localStorage.getItem('dscrmbl-daily')).toBe(before);
+  expect(setItem.mock.calls.filter(([key]) => key === 'dscrmbl-daily')).toHaveLength(writes);
+  await user.keyboard('{Tab}');
+  expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Close statistics' }));
+  await user.keyboard('{Shift>}{Tab}{/Shift}');
+  expect(document.activeElement).toBe(disclosure);
+  await user.keyboard('{Escape}');
+  expect(document.activeElement).toBe(opener);
+  await user.keyboard('{Enter}');
+  expect(document.querySelector('.your-progress')?.hasAttribute('open')).toBe(false);
+  expect(localStorage.getItem('dscrmbl-daily')).toBe(before);
+});
+
+it('uses the same progress in Stats and results, keeps sharing before progress, and leaves views read-only', () => {
+  const results = [
+    { solved: true, attempts: 1, usedReplay: false },
+    { solved: true, attempts: 1, usedReplay: true },
+    { solved: true, attempts: 2, usedReplay: false },
+    { solved: false, attempts: 4, usedReplay: false },
+    { solved: false, attempts: 4, usedReplay: true }
+  ];
+  localStorage.setItem('dscrmbl-daily', JSON.stringify({ score: 80, gamesPlayed: 1, highScore: 80, average: 80, history: [80],
+    lastPlayed: '2026-10-28', currentStreak: 0, lastGameResults: { wordResults: results, wordScores: [20, 20, 40, 0, 0], streakBonus: 0, isNewHighScore: false },
+    progress: { version: 1, records: { '2026-10-28': { challengeDate: '2026-10-28', mode: 'normal', score: 80, wordResults: results } } } }));
+  render(<App />);
+  const saved = localStorage.getItem('dscrmbl-daily');
+  fireEvent.click(screen.getByRole('button', { name: 'STATS' }));
+  const progress = document.querySelector('.your-progress')!;
+  const contents = progress.textContent;
+  expect(contents).toContain('60% — 3 of 5 words');
+  expect(contents).toContain('20% — 1 of 5 words');
+  expect(contents).toContain('No tracked games');
+  fireEvent.keyDown(screen.getByRole('dialog'), { key: 'Escape' });
+  fireEvent.click(screen.getByRole('button', { name: 'VIEW RESULTS' }));
+  expect(document.querySelector('.your-progress')!.textContent).toBe(contents);
+  expect(document.getElementById('share-btn')!.compareDocumentPosition(document.querySelector('.your-progress')!) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  expect(document.getElementById('share-btn')!.textContent).toContain('SHARE SCORE');
+  expect(localStorage.getItem('dscrmbl-daily')).toBe(saved);
+});
+
+it('hides Stats throughout active rounds and offers it during recovery', () => {
+  const view = render(<App />);
+  start(true);
+  expect(screen.queryByRole('button', { name: 'STATS' })).toBeNull();
+  view.unmount(); localStorage.removeItem('dscrmbl-game-state');
+  catalog.error = 'Unavailable';
+  render(<App />);
+  expect(screen.getByRole('button', { name: 'STATS' })).toBeTruthy();
+});
+
+it('keeps Stats read-only across midnight and resets the visible streak without persisting a reset', () => {
+  vi.setSystemTime(new Date(2026, 9, 28, 23, 59, 59));
+  localStorage.setItem('dscrmbl-daily', JSON.stringify({ score: 50, highScore: 50, average: 50, gamesPlayed: 1, history: [50], lastPlayed: '2026-10-27', currentStreak: 5 }));
+  render(<App />);
+  const saved = localStorage.getItem('dscrmbl-daily');
+  fireEvent.click(screen.getByRole('button', { name: 'STATS' }));
+  expect(document.getElementById('currentStreak')?.textContent).toBe('5');
+  act(() => vi.advanceTimersByTime(2000));
+  expect(document.getElementById('currentStreak')?.textContent).toBe('0');
+  expect(localStorage.getItem('dscrmbl-daily')).toBe(saved);
+});
+
+it('has no structural axe violations with expanded Stats and mode-specific progress', async () => {
+  localStorage.setItem('dscrmbl-daily', JSON.stringify({ score: 50, highScore: 50, average: 50, gamesPlayed: 1, history: [50], lastPlayed: '2026-10-27', currentStreak: 0,
+    progress: { version: 1, records: { '2026-10-27': { challengeDate: '2026-10-27', mode: 'hard', score: 50,
+      wordResults: Array.from({ length: 5 }, () => ({ solved: true, attempts: 1, usedReplay: false })) } } } }));
+  render(<App />);
+  fireEvent.click(screen.getByRole('button', { name: 'STATS' }));
+  (document.querySelector('.your-progress') as HTMLDetailsElement).open = true;
+  vi.useRealTimers();
+  const result = await axe.run(document.body, { rules: { 'color-contrast': { enabled: false } } });
+  expect(result.violations).toEqual([]);
+});

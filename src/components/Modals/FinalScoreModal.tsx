@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
+import { LifetimeSummary, YourProgress } from '../Statistics/PersonalStatistics';
 import { ModalShell } from './ModalShell';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
 import { getThemeExplanation } from '../../utils/themeExplanation';
@@ -26,6 +27,9 @@ interface FinalScoreModalProps {
   themeName?: string;
   isNewHighScore: boolean;
   animateCelebration?: boolean;
+  personalStats?: DailyStats | null;
+  currentStreak?: number;
+  storageWarning?: string | null;
 }
 
 export function FinalScoreModal({
@@ -43,12 +47,13 @@ export function FinalScoreModal({
   streakBonus,
   themeName,
   isNewHighScore,
-  animateCelebration = false
+  animateCelebration = false,
+  personalStats, currentStreak, storageWarning
 }: FinalScoreModalProps) {
   const { playTickSound } = useAudioContext();
   const reducedMotion = useReducedMotion();
   const [showPercentile, setShowPercentile] = useState(false);
-  const [shareText, setShareText] = useState('SHARE RESULTS');
+  const [shareText, setShareText] = useState('SHARE SCORE');
   const [includeLink, setIncludeLink] = useState(true);
   const [displayScore, setDisplayScore] = useState(0);
   const [rollUpComplete, setRollUpComplete] = useState(false);
@@ -120,14 +125,14 @@ export function FinalScoreModal({
       const webShareSuccess = await shareViaWeb(text);
       if (webShareSuccess) {
         setShareText('SHARED!');
-        setTimeout(() => setShareText('SHARE RESULTS'), 2000);
+        setTimeout(() => setShareText('SHARE SCORE'), 2000);
       }
       // If user cancelled, don't do anything
     } else {
       // Desktop/laptop - copy to clipboard only
       await copyToClipboard(text);
       setShareText('COPIED!');
-      setTimeout(() => setShareText('SHARE RESULTS'), 2000);
+      setTimeout(() => setShareText('SHARE SCORE'), 2000);
     }
   }, [score, wordResults, streakBonus, themeName, dailyNumber, isDailyChallenge, includeLink, stats, isNewHighScore]);
 
@@ -152,20 +157,8 @@ export function FinalScoreModal({
           <span id="score-summary" className="sr-only">Final score: {score}</span>
         </div>
 
-        {isDailyChallenge && <div className="stats-grid">
-          <div className="stat-card">
-            <span className="stat-label">GAMES</span>
-            <span className="stat-value" id="gamesPlayed">{stats?.gamesPlayed ?? 1}</span>
-          </div>
-          <div className="stat-card">
-            <span className="stat-label">HIGH</span>
-            <span className="stat-value" id="highScore">{stats?.highScore ?? score}</span>
-          </div>
-          <div className="stat-card">
-            <span className="stat-label">AVG</span>
-            <span className="stat-value" id="averageScore">{Math.round(stats?.average ?? score)}</span>
-          </div>
-        </div>}
+        {isDailyChallenge && <LifetimeSummary stats={personalStats ?? stats} currentStreak={currentStreak ?? stats?.currentStreak ?? 0} />}
+        {isDailyChallenge && storageWarning && <p role="status">{storageWarning}</p>}
 
         {words && words.length > 0 && (
           <div className="word-results-section">
@@ -207,6 +200,7 @@ export function FinalScoreModal({
 
         {isDailyChallenge && <div className="percentile-section">
           <span className="percentile-label">HISTORICAL RANKING</span>
+          <p className="statistics-note">Lifetime scores across all modes.</p>
           <div className="percentile-bar">
             <span
               id="percentage-fill"
@@ -239,7 +233,7 @@ export function FinalScoreModal({
           </label>
         </div>
 
-        <p className="sr-only" role="status">{shareText === 'SHARE RESULTS' ? '' : shareText}</p>
+        <p className="sr-only" role="status">{shareText === 'SHARE SCORE' ? '' : shareText}</p>
         <CyberButton
           id="share-btn"
           variant="share"
@@ -263,6 +257,8 @@ export function FinalScoreModal({
             </ul>
           </details>
         )}
+
+        {isDailyChallenge && isOpen && <YourProgress stats={personalStats ?? stats} isOpen={isOpen} />}
 
         {/* Monetization disabled — re-enable when ready
         <a

@@ -4,12 +4,13 @@ import { useThemeContext } from '../../context/ThemeContext';
 // import { TIP_JAR_URL } from '../../config/monetization';
 
 interface HeaderProps {
+  onStatsClick?: () => void;
   onInstructionsClick: () => void;
   onContactClick: () => void;
   // onMerchClick: () => void;
 }
 
-export function Header({ onInstructionsClick, onContactClick }: HeaderProps) {
+export function Header({ onInstructionsClick, onContactClick, onStatsClick }: HeaderProps) {
   const { lightMode, toggleTheme } = useThemeContext();
 
   return (
@@ -74,6 +75,7 @@ export function Header({ onInstructionsClick, onContactClick }: HeaderProps) {
           <span className="link-text">HOW TO PLAY</span>
           <span className="bracket">]</span>
         </button>
+        {onStatsClick && <button id="view-stats" className="instructions-link" onClick={onStatsClick}>STATS</button>}
         <p className="tagline">A new challenge every day. Compete with friends!</p>
       </div>
     </>

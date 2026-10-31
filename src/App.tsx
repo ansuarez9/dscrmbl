@@ -15,6 +15,9 @@ import { TutorialScreen } from './components/Tutorial/TutorialScreen';
 import { ModalShell } from './components/Modals/ModalShell';
 import { loadTutorialBoot, useTutorial, type TutorialBoot } from './hooks/useTutorial';
 import { InstructionsModal } from './components/Modals/InstructionsModal';
+import { StatsModal } from './components/Modals/StatsModal';
+import { acknowledgeDailyCompletion } from './hooks/useGameState';
+import type { CompletionResult } from './utils/dailyStore';
 import { FinalScoreModal } from './components/Modals/FinalScoreModal';
 import { ContactModal } from './components/Modals/ContactModal';
 // Monetization disabled — re-enable when ready
@@ -56,19 +59,20 @@ function GameContent({ tutorialBoot }: { tutorialBoot: TutorialBoot }) {
   const { playCorrectSound, playWrongSound, playVictorySound, playTimerWarningSound, playHighScoreJingle } = useAudioContext();
   const today = useLocalDay();
   const dailyRoundActive = state.isDailyChallenge && state.phase !== 'idle';
-  const { dailyNumber, canPlayToday, todayScore, todayResults, dailyStats, recordDailyCompletion, getCurrentStreak, updateStreak } = useDailyChallenge(today, dailyRoundActive, state.roundDate);
+  const { dailyNumber, canPlayToday, todayScore, todayResults, dailyStats, recordDailyCompletion, getCurrentStreak, updateStreak, storageWarning } = useDailyChallenge(today, dailyRoundActive, state.roundDate);
   const { theme, practiceTheme, isLoading: isThemeLoading, error: themeError, retry } = useDailyTheme(today);
 
   const tutorial = useTutorial(tutorialBoot);
   const returnFromTutorial = useRef(false);
   const [showInstructions, setShowInstructions] = useState(false);
+  const [showStats, setShowStats] = useState(false);
   const [showFinalScore, setShowFinalScore] = useState(false);
   const [showContact, setShowContact] = useState(false);
   // Monetization disabled — re-enable when ready
   // const [showMerch, setShowMerch] = useState(false);
   const [modalResult, setModalResult] = useState<ResultSnapshot | null>(null);
   const [countdown, setCountdown] = useState('--:--:--');
-  const [gameCompleteHandled, setGameCompleteHandled] = useState(false);
+  const gameCompleteHandled = useRef(false);
   const [startCountdown, setStartCountdown] = useState<'ready' | 'set' | 'go' | null>(null);
   const [wordValidationError, setWordValidationError] = useState<string | null>(null);
   const reducedMotion = useReducedMotion();
@@ -185,8 +189,8 @@ function GameContent({ tutorialBoot }: { tutorialBoot: TutorialBoot }) {
 
   // Handle game completion - use ref to prevent infinite loop
   useEffect(() => {
-    if (state.phase === 'complete' && !gameCompleteHandled) {
-      setGameCompleteHandled(true);
+    if (state.phase === 'complete' && !gameCompleteHandled.current) {
+      gameCompleteHandled.current = true;
       if (!state.isDailyChallenge) {
         setModalResult({ dailyNumber: 0, score: state.score, stats: null,
           percentile: { history: [], percentile: 100 }, wordResults: state.wordResults,
@@ -198,31 +202,33 @@ function GameContent({ tutorialBoot }: { tutorialBoot: TutorialBoot }) {
         setTimeout(() => setShowFinalScore(true), 1500);
         return;
       }
-      const completion = recordDailyCompletion(state.score, state.streak, {
-        wordResults: state.wordResults,
-        streakBonus: state.streakBonus,
-        wordScores: state.wordScores,
-        isNewHighScore: false
-      }, state.roundTheme, state.roundDate ?? today);
-      if (!completion) return;
-      const { stats, percentile, isNewHighScore: newHigh } = completion;
+      const challengeDate = state.roundDate ?? today;
+      const completion = recordDailyCompletion({ score: state.score, finalStreak: state.streak,
+        mode: state.hardModeEnabled ? 'hard' : 'normal', challengeDate, theme: state.roundTheme,
+        results: { wordResults: state.wordResults, streakBonus: state.streakBonus,
+          wordScores: state.wordScores, isNewHighScore: false } });
+      const finish = ({ stats, percentile, isNewHighScore: newHigh, persisted, duplicate }: CompletionResult) => {
+        if (persisted) acknowledgeDailyCompletion(challengeDate);
 
-      if (newHigh) {
-        playHighScoreJingle();
-      } else {
-        playVictorySound();
-      }
+        if (newHigh) {
+          playHighScoreJingle();
+        } else if (!duplicate) {
+          playVictorySound();
+        }
 
-      setModalResult({ dailyNumber: getDailyNumber(state.roundDate ?? today), score: state.score,
-        stats, percentile, wordResults: state.wordResults, wordScores: state.wordScores,
-        words: state.roundTheme?.wordList,
-        explanation: getThemeExplanation(state.roundTheme?.explanation, state.roundTheme?.wordList),
-        streakBonus: state.streakBonus,
-        themeName: state.roundTheme?.themeName, isNewHighScore: newHigh,
-        isDailyChallenge: true, animateCelebration: true });
-      setTimeout(() => setShowFinalScore(true), 1500);
+        setModalResult({ dailyNumber: getDailyNumber(state.roundDate ?? today), score: state.score,
+          stats, percentile, wordResults: state.wordResults, wordScores: state.wordScores,
+          words: state.roundTheme?.wordList,
+          explanation: getThemeExplanation(state.roundTheme?.explanation, state.roundTheme?.wordList),
+          streakBonus: state.streakBonus,
+          themeName: state.roundTheme?.themeName, isNewHighScore: newHigh,
+          isDailyChallenge: true, animateCelebration: !duplicate });
+        setTimeout(() => setShowFinalScore(true), duplicate ? 0 : 1500);
+      };
+      if (completion instanceof Promise) void completion.then(finish);
+      else finish(completion);
     }
-  }, [state.phase, state.isDailyChallenge, gameCompleteHandled, state.score, state.streak, state.wordResults, state.streakBonus, state.wordScores, state.roundTheme, state.roundDate, today, recordDailyCompletion, playVictorySound, playHighScoreJingle]);
+  }, [state.phase, state.isDailyChallenge, state.hardModeEnabled, state.score, state.streak, state.wordResults, state.streakBonus, state.wordScores, state.roundTheme, state.roundDate, today, recordDailyCompletion, playVictorySound, playHighScoreJingle]);
 
   useEffect(() => {
     if (reducedMotion || state.phase !== 'complete' || !modalResult?.isNewHighScore || !modalResult.animateCelebration) return;
@@ -233,13 +239,13 @@ function GameContent({ tutorialBoot }: { tutorialBoot: TutorialBoot }) {
   }, [state.phase, modalResult, reducedMotion]);
 
   useEffect(() => {
-    if (showFinalScore) { setShowInstructions(false); setShowContact(false); }
+    if (showFinalScore) { setShowInstructions(false); setShowContact(false); setShowStats(false); }
   }, [showFinalScore]);
 
   // Reset gameCompleteHandled when game restarts
   useEffect(() => {
     if (state.phase === 'idle') {
-      setGameCompleteHandled(false);
+      gameCompleteHandled.current = false;
     }
   }, [state.phase]);
 
@@ -396,11 +402,19 @@ function GameContent({ tutorialBoot }: { tutorialBoot: TutorialBoot }) {
     isOpen={showFinalScore}
     onClose={handleCloseFinalScore}
     {...modalResult}
+    personalStats={dailyStats} currentStreak={getCurrentStreak} storageWarning={storageWarning}
   />;
+
+  const openStats = () => {
+    if (state.phase !== 'idle' || tutorial.active || showFinalScore) return;
+    setShowInstructions(false); setShowContact(false); setShowStats(true);
+  };
+  const statsModal = !showFinalScore && !showInstructions && !showContact && <StatsModal isOpen={showStats} onClose={() => setShowStats(false)}
+    stats={dailyStats} currentStreak={getCurrentStreak} storageWarning={storageWarning} />;
 
   const launchTutorial = (resume = false) => {
     // Never replace an unfinished daily or fallback round, even via a stale Help action.
-    if (state.phase !== 'idle' || showFinalScore || tutorial.active) return;
+    if (state.phase !== 'idle' || showFinalScore || showStats || tutorial.active) return;
     setShowInstructions(false);
     setShowContact(false);
     tutorial.send({ type: resume ? 'resume' : 'start' });
@@ -422,9 +436,9 @@ function GameContent({ tutorialBoot }: { tutorialBoot: TutorialBoot }) {
       </CyberButton>
     </div>
   </section>;
-  const instructionsModal = !showFinalScore && <InstructionsModal isOpen={showInstructions}
+  const instructionsModal = !showFinalScore && !showStats && <InstructionsModal isOpen={showInstructions}
     onClose={() => setShowInstructions(false)} tutorialActions={tutorialActions} />;
-  const invitation = !showInstructions && !showContact && !showFinalScore && <ModalShell id="tutorial-invitation" isOpen={tutorial.invitation && state.phase === 'idle'}
+  const invitation = !showInstructions && !showContact && !showFinalScore && !showStats && <ModalShell id="tutorial-invitation" isOpen={tutorial.invitation && state.phase === 'idle'}
     onClose={() => tutorial.send({ type: 'dismiss' })} labelledBy="tutorial-invitation-title" describedBy="tutorial-invitation-description" dismissOnBackdrop>
     <div className="modal-header">
       <h2 id="tutorial-invitation-title" className="modal-title">Try a quick practice?</h2>
@@ -453,7 +467,7 @@ function GameContent({ tutorialBoot }: { tutorialBoot: TutorialBoot }) {
   if (!canPlayToday && state.phase === 'idle') {
     return (
       <GameContainer>
-        <Header onInstructionsClick={() => setShowInstructions(true)} onContactClick={() => setShowContact(true)} />
+        <Header onStatsClick={state.phase === 'idle' ? openStats : undefined} onInstructionsClick={() => { setShowStats(false); setShowInstructions(true); }} onContactClick={() => { setShowStats(false); setShowContact(true); }} />
 
         <div id="already-played" className="already-played">
           <div className="already-played-content">
@@ -480,11 +494,12 @@ function GameContent({ tutorialBoot }: { tutorialBoot: TutorialBoot }) {
 
         {instructionsModal}
         {invitation}
-        {!showFinalScore && <ContactModal isOpen={showContact} onClose={() => setShowContact(false)} />}
+        {!showFinalScore && !showStats && <ContactModal isOpen={showContact} onClose={() => setShowContact(false)} />}
         {/* Monetization disabled — re-enable when ready
         <MerchModal isOpen={showMerch} onClose={() => setShowMerch(false)} />
         */}
 
+        {statsModal}
         {resultModal}
       </GameContainer>
     );
@@ -492,7 +507,7 @@ function GameContent({ tutorialBoot }: { tutorialBoot: TutorialBoot }) {
 
   return (
     <GameContainer>
-      <Header onInstructionsClick={() => setShowInstructions(true)} onContactClick={() => setShowContact(true)} />
+      <Header onStatsClick={state.phase === 'idle' ? openStats : undefined} onInstructionsClick={() => { setShowStats(false); setShowInstructions(true); }} onContactClick={() => { setShowStats(false); setShowContact(true); }} />
 
       {/* Settings Panel - only show before game starts */}
       {state.phase === 'idle' && !isComplete && (
@@ -619,7 +634,7 @@ function GameContent({ tutorialBoot }: { tutorialBoot: TutorialBoot }) {
         errorMessage={wordValidationError}
         onErrorClear={() => setWordValidationError(null)}
         wordIndex={state.wordIndex}
-        modalOpen={showInstructions || showContact || showFinalScore}
+        modalOpen={showInstructions || showContact || showFinalScore || showStats}
       />
 
       </section>
@@ -634,11 +649,12 @@ function GameContent({ tutorialBoot }: { tutorialBoot: TutorialBoot }) {
       {/* Modals */}
       {instructionsModal}
       {invitation}
-      {!showFinalScore && <ContactModal isOpen={showContact} onClose={() => setShowContact(false)} />}
+      {!showFinalScore && !showStats && <ContactModal isOpen={showContact} onClose={() => setShowContact(false)} />}
       {/* Monetization disabled — re-enable when ready
       <MerchModal isOpen={showMerch} onClose={() => setShowMerch(false)} />
       */}
 
+      {statsModal}
       {resultModal}
 
       {!reducedMotion && showFinalScore && modalResult?.isNewHighScore && modalResult.animateCelebration && <HighScoreCelebration />}

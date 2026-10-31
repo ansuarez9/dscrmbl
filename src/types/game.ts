@@ -51,6 +51,29 @@ export interface SavedGameState {
   savedDate: string; // Date string to check if game is from today
 }
 
+export type GameMode = 'normal' | 'hard';
+
+export interface DailyProgressRecord {
+  challengeDate: string;
+  mode: GameMode;
+  score: number;
+  wordResults: WordResult[];
+}
+
+export interface DailyProgress {
+  version: 1;
+  records: Record<string, DailyProgressRecord>;
+}
+
+export interface CompletedDaily {
+  challengeDate: string;
+  mode: GameMode;
+  score: number;
+  finalStreak: number;
+  results: NonNullable<DailyStats['lastGameResults']>;
+  theme: DailyTheme | null;
+}
+
 export interface DailyStats {
   score: number;
   average: number;
@@ -59,6 +82,7 @@ export interface DailyStats {
   history: number[];
   lastPlayed: string | null;
   currentStreak: number;
+  progress?: DailyProgress;
   // Additional data for showing results modal again
   lastGameResults?: {
     wordResults: WordResult[];
@@ -67,6 +91,7 @@ export interface DailyStats {
     isNewHighScore: boolean;
     percentile?: number;
     challengeDate?: string;
+    mode?: GameMode;
     dailyNumber?: number;
     themeName?: string;
     words?: string[];

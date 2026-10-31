@@ -91,3 +91,28 @@ it.each(['clipboard', 'native share'])('keeps %s text spoiler-free', async metho
   expect(text).not.toContain(explanation.summary);
   expect(text).not.toContain(explanation.wordNotes.bellows);
 });
+
+it('preserves the score payload and optional link without including personal progress', async () => {
+  const writeText = vi.fn().mockResolvedValue(undefined);
+  vi.stubGlobal('navigator', { userAgent: 'Desktop', maxTouchPoints: 0, clipboard: { writeText } });
+  render(<FinalScoreModal {...props} themeName="Workshop" />);
+  fireEvent.click(screen.getByRole('checkbox', { name: 'Include link to DSCRMBL' }));
+  fireEvent.click(document.getElementById('share-btn')!);
+  await Promise.resolve();
+  expect(writeText.mock.calls[0][0]).toBe('DSCRMBL Daily #1\nWorkshop\nScore: 50 / High: 50\n🟩🟩🟥🟩🟩\n');
+  fireEvent.click(screen.getByRole('checkbox', { name: 'Include link to DSCRMBL' }));
+  fireEvent.click(document.getElementById('share-btn')!);
+  await Promise.resolve();
+  expect(writeText.mock.calls[1][0]).toBe('DSCRMBL Daily #1\nWorkshop\nScore: 50 / High: 50\n🟩🟩🟥🟩🟩\n\n' + window.location.origin);
+});
+
+it('keeps native-share cancellation quiet and does not copy as a side effect', async () => {
+  const writeText = vi.fn();
+  const share = vi.fn().mockRejectedValue(Object.assign(new Error('Cancelled'), { name: 'AbortError' }));
+  vi.stubGlobal('navigator', { userAgent: 'iPhone', maxTouchPoints: 1, clipboard: { writeText }, share });
+  render(<FinalScoreModal {...props} />);
+  fireEvent.click(document.getElementById('share-btn')!);
+  await Promise.resolve(); await Promise.resolve();
+  expect(writeText).not.toHaveBeenCalled();
+  expect(document.getElementById('share-btn')!.textContent).toContain('SHARE SCORE');
+});
