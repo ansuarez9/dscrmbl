@@ -3,16 +3,17 @@ import type { WordResult } from '../../types/game';
 
 interface ProgressTrackProps {
   currentWordIndex: number;
+  totalWords?: number;
   wordResults: WordResult[];
   cumulativeScores: number[];
 }
 
-export function ProgressTrack({ currentWordIndex, wordResults, cumulativeScores }: ProgressTrackProps) {
+export function ProgressTrack({ currentWordIndex, wordResults, cumulativeScores, totalWords = 5 }: ProgressTrackProps) {
   return (
     <div className="progress-track">
       <div className="track-label">WORD PROGRESS</div>
       <div className="word-slots">
-        {[0, 1, 2, 3, 4].map((index) => {
+        {Array.from({ length: totalWords }, (_, index) => index).map((index) => {
           const result = wordResults[index];
           let status: 'pending' | 'active' | 'solved' | 'failed' = 'pending';
           let score: number | null = null;

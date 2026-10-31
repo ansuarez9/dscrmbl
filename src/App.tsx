@@ -11,6 +11,9 @@ import { AttemptsDisplay } from './components/Game/AttemptsDisplay';
 import { WordOutput } from './components/Game/WordOutput';
 import { InputZone } from './components/Game/InputZone';
 import { ProgressTrack } from './components/Game/ProgressTrack';
+import { TutorialScreen } from './components/Tutorial/TutorialScreen';
+import { ModalShell } from './components/Modals/ModalShell';
+import { loadTutorialBoot, useTutorial, type TutorialBoot } from './hooks/useTutorial';
 import { InstructionsModal } from './components/Modals/InstructionsModal';
 import { FinalScoreModal } from './components/Modals/FinalScoreModal';
 import { ContactModal } from './components/Modals/ContactModal';
@@ -48,7 +51,7 @@ type ResultSnapshot = {
   animateCelebration: boolean;
 };
 
-function GameContent() {
+function GameContent({ tutorialBoot }: { tutorialBoot: TutorialBoot }) {
   const { state, startGame, nextWord, startWordTimer, submitGuess, replayWord, timerExpired, toggleHardMode, resetGame } = useGameContext();
   const { playCorrectSound, playWrongSound, playVictorySound, playTimerWarningSound, playHighScoreJingle } = useAudioContext();
   const today = useLocalDay();
@@ -56,6 +59,8 @@ function GameContent() {
   const { dailyNumber, canPlayToday, todayScore, todayResults, dailyStats, recordDailyCompletion, getCurrentStreak, updateStreak } = useDailyChallenge(today, dailyRoundActive, state.roundDate);
   const { theme, practiceTheme, isLoading: isThemeLoading, error: themeError, retry } = useDailyTheme(today);
 
+  const tutorial = useTutorial(tutorialBoot);
+  const returnFromTutorial = useRef(false);
   const [showInstructions, setShowInstructions] = useState(false);
   const [showFinalScore, setShowFinalScore] = useState(false);
   const [showContact, setShowContact] = useState(false);
@@ -116,14 +121,12 @@ function GameContent() {
     (next ?? answer)?.focus({ preventScroll: true });
   }, [state.phase]);
 
-  // Auto-show instructions for new players
   useEffect(() => {
-    const hasSeenInstructions = localStorage.getItem('dscrmbl-seen-instructions');
-    if (!hasSeenInstructions) {
-      setShowInstructions(true);
-      localStorage.setItem('dscrmbl-seen-instructions', 'true');
-    }
-  }, []);
+    if (!returnFromTutorial.current || tutorial.active) return;
+    returnFromTutorial.current = false;
+    const selector = !canPlayToday ? '#view-results' : themeError ? '#retry-theme' : !isThemeLoading && theme ? '#start-game' : 'h1';
+    document.querySelector<HTMLElement>(selector)?.focus({ preventScroll: true });
+  }, [tutorial.active, canPlayToday, themeError, isThemeLoading, theme]);
 
   // Stable callbacks for timer
   const handleTimerExpire = useCallback((deadline: number) => {
@@ -395,6 +398,51 @@ function GameContent() {
     {...modalResult}
   />;
 
+  const launchTutorial = (resume = false) => {
+    // Never replace an unfinished daily or fallback round, even via a stale Help action.
+    if (state.phase !== 'idle' || showFinalScore || tutorial.active) return;
+    setShowInstructions(false);
+    setShowContact(false);
+    tutorial.send({ type: resume ? 'resume' : 'start' });
+  };
+  const exitTutorial = () => {
+    returnFromTutorial.current = true;
+    tutorial.send({ type: 'exit' });
+  };
+  const tutorialActions = <section className="instruction-section tutorial-help" aria-label="Practice tutorial">
+    <h3>QUICK PRACTICE</h3>
+    <p>Learn with two short words. Your daily score and streak won’t change.</p>
+    {state.phase !== 'idle' && <p id="tutorial-unavailable">Finish your current round to start the tutorial.</p>}
+    <div className="tutorial-help-actions">
+      {tutorial.record.run && <CyberButton variant="primary" disabled={state.phase !== 'idle'} onClick={() => launchTutorial(true)}
+        aria-describedby={state.phase !== 'idle' ? 'tutorial-unavailable' : undefined}>RESUME TUTORIAL</CyberButton>}
+      <CyberButton variant={tutorial.record.run ? 'secondary' : 'primary'} disabled={state.phase !== 'idle'}
+        aria-describedby={state.phase !== 'idle' ? 'tutorial-unavailable' : undefined} onClick={() => launchTutorial()}>
+        {tutorial.record.run ? 'RESTART TUTORIAL' : tutorial.record.completed ? 'REPLAY TUTORIAL' : 'START TUTORIAL'}
+      </CyberButton>
+    </div>
+  </section>;
+  const instructionsModal = !showFinalScore && <InstructionsModal isOpen={showInstructions}
+    onClose={() => setShowInstructions(false)} tutorialActions={tutorialActions} />;
+  const invitation = !showInstructions && !showContact && !showFinalScore && <ModalShell id="tutorial-invitation" isOpen={tutorial.invitation && state.phase === 'idle'}
+    onClose={() => tutorial.send({ type: 'dismiss' })} labelledBy="tutorial-invitation-title" describedBy="tutorial-invitation-description" dismissOnBackdrop>
+    <div className="modal-header">
+      <h2 id="tutorial-invitation-title" className="modal-title">Try a quick practice?</h2>
+      <button className="modal-close-btn" aria-label="Skip practice" onClick={() => tutorial.send({ type: 'dismiss' })}>✕</button>
+    </div>
+    <div className="modal-content">
+      <p id="tutorial-invitation-description">Learn with two short words. Your daily score and streak won’t change.</p>
+      <div className="tutorial-help-actions">
+        <CyberButton variant="primary" onClick={() => launchTutorial()}>START PRACTICE</CyberButton>
+        <CyberButton variant="secondary" onClick={() => tutorial.send({ type: 'dismiss' })}>SKIP FOR NOW</CyberButton>
+        <CyberButton variant="secondary" onClick={() => { tutorial.send({ type: 'dismiss' }); setShowInstructions(true); }}>READ INSTRUCTIONS</CyberButton>
+      </div>
+    </div>
+  </ModalShell>;
+
+  if (tutorial.active) return <TutorialScreen tutorial={tutorial} onExit={exitTutorial}
+    returnLabel={!canPlayToday ? 'BACK TO COMPLETED CHALLENGE' : !isThemeLoading && theme && !themeError ? 'BACK TO DAILY CHALLENGE' : 'BACK TO GAME'} />;
+
   // Monetization disabled — re-enable when ready
   // const handleMerchOpen = useCallback(() => {
   //   trackGameEvent.merchModalOpen();
@@ -430,7 +478,8 @@ function GameContent() {
           cumulativeScores={todayResults?.wordScores ?? []}
         />
 
-        {!showFinalScore && <InstructionsModal isOpen={showInstructions} onClose={() => setShowInstructions(false)} />}
+        {instructionsModal}
+        {invitation}
         {!showFinalScore && <ContactModal isOpen={showContact} onClose={() => setShowContact(false)} />}
         {/* Monetization disabled — re-enable when ready
         <MerchModal isOpen={showMerch} onClose={() => setShowMerch(false)} />
@@ -583,7 +632,8 @@ function GameContent() {
       />
 
       {/* Modals */}
-      {!showFinalScore && <InstructionsModal isOpen={showInstructions} onClose={() => setShowInstructions(false)} />}
+      {instructionsModal}
+      {invitation}
       {!showFinalScore && <ContactModal isOpen={showContact} onClose={() => setShowContact(false)} />}
       {/* Monetization disabled — re-enable when ready
       <MerchModal isOpen={showMerch} onClose={() => setShowMerch(false)} />
@@ -597,11 +647,12 @@ function GameContent() {
 }
 
 function App() {
+  const [tutorialBoot] = useState(loadTutorialBoot);
   return (
     <ThemeProvider>
       <AudioProvider>
         <GameProvider>
-          <GameContent />
+          <GameContent tutorialBoot={tutorialBoot} />
         </GameProvider>
       </AudioProvider>
     </ThemeProvider>

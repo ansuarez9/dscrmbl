@@ -2970,3 +2970,27 @@ body.light-mode .attempt-orb .result { color: #fff; }
     .word-output { --letter-start-transform: none; --letter-start-filter: none; }
     .cyber-btn:hover, .cyber-btn:active, .submit-btn:hover { transform: none !important; }
 }
+
+/* Short, inline practice guidance uses the same compact game surface. */
+.tutorial-toolbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
+.tutorial-label { color: var(--cyan); font-size: 0.75rem; font-weight: 700; }
+.tutorial-heading { margin: 0; font-size: 1rem; color: var(--cyan); }
+.tutorial-game { max-width: 100%; }
+.tutorial-game .action-grid > .cyber-btn:first-child { grid-column: auto; }
+.tutorial-game > p, .tutorial-colors { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5; }
+.tutorial-guidance { margin: 0; min-height: 3em; }
+.tutorial-feedback { margin: 0; }
+.tutorial-game .input-zone { margin-top: 0.25rem; }
+.tutorial-scoring { margin: 0; }
+.tutorial-points { margin: 0; }
+.tutorial-yellow { color: var(--amber); }
+.tutorial-colors { padding-left: 1.25rem; margin: 0; }
+.tutorial-colors li + li { margin-top: 0.5rem; }
+.tutorial-help-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem; }
+.tutorial-help-actions .cyber-btn { flex: 1 1 140px; }
+.tutorial-length { text-align: center; margin: 0; }
+@media (max-width: 576px) {
+    .tutorial-game > p, .tutorial-colors { font-size: 0.8rem; }
+    .tutorial-label { max-width: 13rem; }
+    .tutorial-toolbar > .cyber-btn { font-size: 0.75rem; }
+}
